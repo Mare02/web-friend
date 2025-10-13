@@ -1,36 +1,163 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Website Optimizer
+
+A powerful AI-driven tool to analyze websites for SEO, content quality, performance, and accessibility. Get actionable insights and recommendations powered by Groq AI.
+
+![Next.js](https://img.shields.io/badge/Next.js-15.5-black?style=flat-square)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38bdf8?style=flat-square)
+
+## Features
+
+- **SEO Analysis** - Title tags, meta descriptions, heading hierarchy, Open Graph tags
+- **Content Quality** - Readability, structure, and content depth assessment
+- **Performance Insights** - Script/stylesheet optimization, image analysis
+- **Accessibility Check** - Alt text coverage, semantic HTML, screen reader compatibility
+- **AI-Powered Recommendations** - Actionable suggestions from Groq's LLMs
+
+## Tech Stack
+
+- **Framework**: Next.js 15 (App Router)
+- **Styling**: Tailwind CSS 4 + shadcn/ui
+- **AI Provider**: Groq (with abstraction for future providers)
+- **Validation**: Zod
+- **HTML Parsing**: Cheerio
+- **TypeScript**: Full type safety
+
+## Architecture
+
+This application is built with scalability and maintainability in mind:
+
+```
+src/
+├── app/                    # Next.js app directory
+│   ├── api/analyze/        # API endpoint for website analysis
+│   └── page.tsx            # Main UI
+├── lib/
+│   ├── ai/                 # AI provider abstraction layer
+│   │   ├── providers/      # Individual AI provider implementations
+│   │   │   ├── base.ts     # Provider interface
+│   │   │   └── groq.ts     # Groq implementation
+│   │   └── index.ts        # Provider factory
+│   ├── services/           # Business logic
+│   │   ├── website-fetcher.ts  # HTML fetching & parsing
+│   │   └── analyzer.ts         # Analysis orchestration
+│   └── validators/         # Zod schemas
+└── components/             # React components
+    ├── ui/                 # shadcn components
+    ├── analyzer-form.tsx   # URL input form
+    └── analysis-results.tsx # Results display
+```
+
+### Key Design Decisions
+
+1. **Provider Pattern**: Easy to add OpenAI, Claude, or other AI providers
+2. **Service Layer**: Pure functions, framework-agnostic (ready for Cloudflare Workers)
+3. **Type Safety**: Zod validation + TypeScript for runtime & compile-time safety
+4. **Stateless API**: No server-side sessions, easy to scale horizontally
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 20+ 
+- npm, yarn, or pnpm
+- A Groq API key ([Get one free](https://console.groq.com))
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone <your-repo-url>
+cd web-friend
+
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Usage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Enter a website URL (e.g., `https://example.com`)
+2. Provide your Groq API key
+3. Click "Analyze Website"
+4. View comprehensive insights across 4 categories:
+   - Content Analysis
+   - SEO Insights
+   - Performance
+   - Accessibility
 
-## Learn More
+## API
 
-To learn more about Next.js, take a look at the following resources:
+### POST /api/analyze
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Analyzes a website URL.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Request Body:**
+```json
+{
+  "url": "https://example.com",
+  "apiKey": "gsk_..."
+}
+```
 
-## Deploy on Vercel
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "websiteData": {
+      "url": "https://example.com",
+      "title": "Example Domain",
+      "metaDescription": "...",
+      "headings": { "h1": [...], "h2": [...] },
+      "images": { "total": 5, "withAlt": 3, "withoutAlt": 2 },
+      ...
+    },
+    "analysis": {
+      "content": "...",
+      "seo": "...",
+      "performance": "...",
+      "accessibility": "..."
+    }
+  }
+}
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Future Enhancements
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [ ] Add OpenAI and Claude providers
+- [ ] User authentication & API key storage
+- [ ] Analysis history and dashboard
+- [ ] Cloudflare D1 database integration
+- [ ] Cloudflare Workers migration
+- [ ] Lighthouse integration for performance scores
+- [ ] PDF report generation
+- [ ] Scheduled monitoring & alerts
+
+## Development
+
+```bash
+# Run development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
+
+# Lint code
+npm run lint
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+MIT License - feel free to use this project for personal or commercial purposes.
