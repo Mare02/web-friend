@@ -9,9 +9,10 @@ import { Loader2, Sparkles } from "lucide-react";
 interface AnalyzerFormProps {
   onAnalyze: (url: string) => Promise<void>;
   isLoading: boolean;
+  compact?: boolean;
 }
 
-export function AnalyzerForm({ onAnalyze, isLoading }: AnalyzerFormProps) {
+export function AnalyzerForm({ onAnalyze, isLoading, compact = false }: AnalyzerFormProps) {
   const [url, setUrl] = useState("");
   const [errors, setErrors] = useState<{ url?: string }>({});
 
@@ -43,6 +44,40 @@ export function AnalyzerForm({ onAnalyze, isLoading }: AnalyzerFormProps) {
     await onAnalyze(url);
   };
 
+  // Compact mode for sticky header
+  if (compact) {
+    return (
+      <form onSubmit={handleSubmit} className="flex items-center gap-2 flex-1 w-full">
+        <Input
+          id="url-compact"
+          type="text"
+          placeholder="https://example.com"
+          value={url}
+          onChange={(e) => {
+            setUrl(e.target.value);
+            if (errors.url) setErrors({ ...errors, url: undefined });
+          }}
+          disabled={isLoading}
+          className={errors.url ? "border-red-500 flex-1" : "flex-1"}
+        />
+        <Button type="submit" disabled={isLoading} className="shrink-0">
+          {isLoading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              <span className="hidden sm:inline ml-2">Analyzing...</span>
+            </>
+          ) : (
+            <>
+              <Sparkles className="h-4 w-4" />
+              <span className="hidden sm:inline ml-2">Analyze</span>
+            </>
+          )}
+        </Button>
+      </form>
+    );
+  }
+
+  // Full card mode for landing page
   return (
     <Card className="w-full max-w-2xl">
       <CardHeader>

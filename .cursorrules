@@ -1,0 +1,273 @@
+# AI Website Optimizer - Cursor Rules
+
+## Project Overview
+This is an AI-powered website analysis tool built with Next.js 15, TypeScript, Tailwind CSS 4, and shadcn/ui. It analyzes websites for SEO, content quality, performance, and accessibility using Groq AI (with extensible provider abstraction).
+
+## Tech Stack & Versions
+- **Framework**: Next.js 15.5.5 (App Router with Turbopack)
+- **Language**: TypeScript 5 (strict mode)
+- **Styling**: Tailwind CSS 4 + shadcn/ui components
+- **State Management**: React 19 hooks (useState, useEffect)
+- **Validation**: Zod 4.1.12
+- **AI Provider**: Groq SDK (groq-sdk)
+- **HTML Parsing**: Cheerio
+- **Icons**: lucide-react
+- **Themes**: next-themes
+
+## Code Style & Conventions
+
+### TypeScript
+- **Always** use TypeScript with strict mode enabled
+- **Always** export types/interfaces from `@/lib/validators/schema.ts`
+- Use explicit return types for functions
+- Prefer `interface` over `type` for object shapes unless union types are needed
+- Use `const` by default, `let` only when reassignment is needed
+- Never use `any` - use `unknown` if type is truly unknown
+
+### React Components
+- **Use functional components only** (no class components)
+- **Use "use client" directive** for components with interactivity (hooks, event handlers)
+- Default to server components when possible (no "use client" needed)
+- Use named exports for components: `export function ComponentName() {}`
+- Place all hooks at the top of the component before any logic
+- Use custom hooks for reusable logic (prefix with `use`)
+
+### File Structure & Organization
+```
+src/
+├── app/                    # Next.js App Router pages & API routes
+│   ├── api/               # API route handlers (route.ts)
+│   ├── layout.tsx         # Root layout
+│   └── page.tsx           # Pages
+├── components/            # React components
+│   ├── ui/               # shadcn/ui components (DO NOT EDIT manually)
+│   └── *.tsx             # Custom components (kebab-case)
+├── lib/
+│   ├── ai/               # AI provider abstraction
+│   │   ├── index.ts      # Provider factory
+│   │   └── providers/    # Individual providers (implement AIProvider)
+│   ├── services/         # Business logic (pure functions)
+│   └── validators/       # Zod schemas
+```
+
+### Naming Conventions
+- **Files**: kebab-case (e.g., `analyzer-form.tsx`, `website-fetcher.ts`)
+- **Components**: PascalCase (e.g., `AnalyzerForm`, `ThemeToggle`)
+- **Functions/Variables**: camelCase (e.g., `handleAnalyze`, `isLoading`)
+- **Types/Interfaces**: PascalCase (e.g., `AnalysisResult`, `WebsiteData`)
+- **Constants**: UPPER_SNAKE_CASE or camelCase for configs
+
+### Import Statements
+- Use path aliases: `@/*` for `./src/*`
+- Order imports: React → Third-party → Local → Types
+- Group and separate with blank lines:
+  ```typescript
+  import { useState } from "react";
+
+  import { Button } from "@/components/ui/button";
+  import { cn } from "@/lib/utils";
+
+  import { AnalysisResult } from "@/lib/validators/schema";
+  ```
+
+## Architecture Patterns
+
+### Service Layer
+- Keep services **pure and framework-agnostic** (no Next.js dependencies)
+- Services should be easily portable to Cloudflare Workers
+- All services should:
+  - Be exported as named functions
+  - Have clear, single responsibilities
+  - Use dependency injection (pass AIProvider as parameter)
+  - Return typed results using Zod schemas
+
+### AI Provider Pattern
+- All AI providers must implement the `AIProvider` interface from `@/lib/ai/providers/base.ts`
+- Use factory pattern in `@/lib/ai/index.ts` to instantiate providers
+- Keep provider logic isolated - easy to add OpenAI, Claude, etc.
+
+### API Routes
+- Use Next.js App Router API routes (`app/api/*/route.ts`)
+- Always validate input with Zod schemas
+- Return consistent response format:
+  ```typescript
+  { success: true, data: {...} }
+  { success: false, error: "message" }
+  ```
+- Handle errors gracefully with try-catch
+- Use proper HTTP status codes
+
+### Component Patterns
+- **Server Components by default** - only use "use client" when needed
+- Keep components focused and single-purpose
+- Extract reusable logic into custom hooks
+- Use composition over prop drilling
+- Prefer controlled components for forms
+
+### State Management
+- Use React hooks (useState, useEffect) for local state
+- No external state management library needed yet
+- Lift state up when needed, but avoid prop drilling
+- Consider URL state for shareable data
+
+## Styling Guidelines
+
+### Tailwind CSS
+- Use Tailwind utility classes directly in JSX
+- Use `cn()` utility from `@/lib/utils` to conditionally combine classes
+- Follow mobile-first responsive design (sm, md, lg, xl)
+- Use CSS variables for theme colors (defined in `globals.css`)
+- Leverage shadcn/ui's design tokens
+
+### Component Styling
+- Use shadcn/ui components as base (button, card, input, etc.)
+- Customize with Tailwind classes, not inline styles
+- Use semantic color tokens: `primary`, `secondary`, `muted`, `destructive`
+- Maintain consistency with existing component styles
+
+### Theme Support
+- Support both light and dark modes using next-themes
+- Test components in both themes
+- Use semantic colors that adapt to theme
+
+## Code Quality
+
+### Error Handling
+- Always use try-catch for async operations
+- Provide user-friendly error messages
+- Log errors for debugging but don't expose internals to users
+- Validate all external inputs (URLs, API keys)
+
+### Performance
+- Run AI analyses in parallel using Promise.all() when possible
+- Use React.memo() sparingly - only for expensive renders
+- Lazy load heavy components if needed
+- Optimize images and assets
+
+### Type Safety
+- Use Zod schemas for runtime validation
+- Export and reuse types from validators
+- Type all function parameters and returns
+- Use discriminated unions for API responses
+
+### Comments & Documentation
+- Add JSDoc comments for exported functions/types
+- Explain **why**, not **what** - code should be self-documenting
+- Document complex algorithms or business logic
+- Keep comments up-to-date with code
+
+## Testing & Quality Assurance
+- Manually test both light and dark themes
+- Test error states and edge cases
+- Verify responsive design on mobile/tablet/desktop
+- Validate forms before submission
+- Ensure accessibility (keyboard nav, screen readers)
+
+## AI Prompt Best Practices
+When working with AI providers:
+- Keep prompts focused and structured
+- Provide clear role context ("You are an SEO expert...")
+- List specific focus areas as bullet points
+- Separate prompt from context data
+- Use consistent formatting for context data
+
+## Environment & Configuration
+- Store API keys in environment variables or user input
+- Never commit secrets
+- Keep configuration in root-level config files
+- Use `next.config.ts` for Next.js settings
+
+## Git & Versioning
+- Use semantic versioning
+- Keep commits atomic and focused
+- Write clear commit messages
+- Stage related changes together
+
+## When Adding New Features
+
+### New AI Provider
+1. Implement `AIProvider` interface in `src/lib/ai/providers/`
+2. Add provider case to factory in `src/lib/ai/index.ts`
+3. Update types/validation if needed
+
+### New Analysis Category
+1. Add analysis function to `src/lib/services/analyzer.ts`
+2. Update `AnalysisResult` schema in validators
+3. Add UI section to `analysis-results.tsx`
+4. Include in parallel Promise.all() execution
+
+### New UI Component
+1. Use shadcn/ui components as base when possible
+2. Create in `src/components/` with kebab-case filename
+3. Follow existing component patterns
+4. Support dark mode
+5. Ensure accessibility
+
+### New API Endpoint
+1. Create `route.ts` in `src/app/api/[endpoint]/`
+2. Define request/response schemas in validators
+3. Implement error handling
+4. Return consistent response format
+
+## Common Patterns in This Codebase
+
+### Parallel API Calls
+```typescript
+const [result1, result2, result3] = await Promise.all([
+  asyncCall1(),
+  asyncCall2(),
+  asyncCall3(),
+]);
+```
+
+### Zod Validation
+```typescript
+const MySchema = z.object({
+  field: z.string().min(1, "Required"),
+});
+
+const validated = MySchema.parse(data);
+```
+
+### Error Handling
+```typescript
+try {
+  const result = await riskyOperation();
+  return { success: true, data: result };
+} catch (error) {
+  return {
+    success: false,
+    error: error instanceof Error ? error.message : "Unknown error"
+  };
+}
+```
+
+### Component State
+```typescript
+const [loading, setLoading] = useState(false);
+const [data, setData] = useState<Type | null>(null);
+const [error, setError] = useState<string | null>(null);
+```
+
+## Helpful Commands
+- `npm run dev` - Start development server with Turbopack
+- `npm run build` - Build for production
+- `npm run lint` - Run ESLint
+- `npm start` - Start production server
+
+## Future Considerations
+- Cloudflare Workers migration planned
+- Database integration (Cloudflare D1)
+- User authentication
+- Analysis history
+
+## Priorities When Editing
+1. **Type safety** - maintain strict TypeScript
+2. **Consistency** - follow existing patterns
+3. **Accessibility** - support keyboard nav, screen readers
+4. **Responsive design** - mobile-first approach
+5. **Dark mode** - test both themes
+6. **Error handling** - graceful failures with user feedback
+7. **Performance** - parallel operations when possible
+8. **Maintainability** - clear, documented code
+
