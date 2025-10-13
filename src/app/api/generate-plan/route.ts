@@ -40,9 +40,9 @@ export async function POST(request: NextRequest) {
     // Use llama model which has higher token limits than gpt-oss-120b
     let actionPlan;
     try {
-      const aiProvider = createAIProvider("groq", { 
+      const aiProvider = createAIProvider("groq", {
         apiKey,
-        model: "llama-3.3-70b-versatile" // Better rate limits for larger requests
+        model: "llama-3.3-70b-versatile"
       });
       actionPlan = await generateActionPlan(analysis, websiteData, aiProvider);
     } catch (error) {

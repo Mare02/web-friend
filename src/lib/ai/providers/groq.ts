@@ -1,10 +1,6 @@
 import Groq from "groq-sdk";
 import { AIProvider, AIProviderConfig } from "./base";
 
-/**
- * Groq AI Provider Implementation
- * Fast inference using open-source models
- */
 export class GroqProvider implements AIProvider {
   name = "groq";
   private client: Groq;
@@ -14,8 +10,6 @@ export class GroqProvider implements AIProvider {
     this.client = new Groq({
       apiKey: config.apiKey,
     });
-    // Default to llama-3.3-70b-versatile for balanced performance
-    // this.model = config.model || "llama-3.3-70b-versatile";
     this.model = config.model || "openai/gpt-oss-120b";
   }
 

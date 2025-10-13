@@ -54,7 +54,7 @@ export default function Home() {
             <div className="container mx-auto px-4 py-3">
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
                 <div className="flex items-center justify-between sm:justify-start gap-2 shrink-0">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 cursor-pointer" onClick={() => location.reload()}>
                     <Sparkles className="h-5 w-5 text-primary" />
                     <h2 className="font-semibold text-base sm:text-lg">AI Website Optimizer</h2>
                   </div>
