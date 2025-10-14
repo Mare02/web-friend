@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { urlSchema, analyzeResponseSchema } from "@/lib/validators/schema";
 import { fetchWebsiteData } from "@/lib/services/website-fetcher";
 import { analyzeWebsite } from "@/lib/services/analyzer";
 import { createAIProvider } from "@/lib/ai";
+import { saveAnalysis } from "@/lib/services/analysis-service";
+import { getUserById, syncUserFromClerk } from "@/lib/services/user-service";
 
 /**
  * POST /api/analyze
@@ -73,12 +76,44 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Save analysis for authenticated users
+    let analysisId: string | undefined;
+    try {
+      const { userId } = await auth();
+      if (userId) {
+        // Ensure user profile exists in database before saving analysis
+        const existingUser = await getUserById(userId);
+
+        if (!existingUser) {
+          // User not synced yet - fetch from Clerk and sync
+          console.log(`User ${userId} not found in DB, syncing from Clerk...`);
+          const client = await clerkClient();
+          const clerkUser = await client.users.getUser(userId);
+
+          await syncUserFromClerk(
+            userId,
+            clerkUser.emailAddresses[0]?.emailAddress || null,
+            clerkUser.firstName || null,
+            clerkUser.lastName || null,
+            clerkUser.imageUrl || null
+          );
+          console.log(`User ${userId} synced successfully`);
+        }
+
+        analysisId = await saveAnalysis(userId, url, websiteData, analysis);
+      }
+    } catch (error) {
+      // Log error but don't fail the request
+      console.error("Failed to save analysis:", error);
+    }
+
     // Return successful response
     const response = analyzeResponseSchema.parse({
       success: true,
       data: {
         websiteData,
         analysis,
+        analysisId,
       },
     });
 

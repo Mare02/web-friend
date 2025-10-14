@@ -1,0 +1,19 @@
+name = "web-friend"
+compatibility_date = "2025-01-01"
+
+# D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "web-friend-db"
+database_id = "51b07dcc-f342-4d14-b2b5-d7a6be3beb61"
+
+# Environment variables
+# Set these in your Cloudflare dashboard or via wrangler secrets
+[vars]
+NODE_ENV = "production"
+
+# Note: Sensitive values should be set as secrets:
+# wrangler secret put GROQ_API_KEY
+# wrangler secret put CLERK_SECRET_KEY
+# wrangler secret put CLOUDFLARE_API_TOKEN
+

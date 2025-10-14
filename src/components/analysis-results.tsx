@@ -1,17 +1,11 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AnalyzeResponse, ActionPlan } from "@/lib/validators/schema";
+import { ResultsSignupBanner } from "@/components/results-signup-banner";
+import { GenerateTasksBanner } from "@/components/generate-tasks-banner";
+import { AnalyzeResponse } from "@/lib/validators/schema";
 import {
   FileText,
   Search,
@@ -20,57 +14,18 @@ import {
   CheckCircle2,
   AlertCircle,
   Info,
-  ListTodo,
-  Loader2,
+  ExternalLink,
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { ActionPlanView } from "./action-plan-view";
 
 interface AnalysisResultsProps {
   result: AnalyzeResponse;
+  showHeader?: boolean;
+  showGenerateTasksBanner?: boolean;
 }
 
-export function AnalysisResults({ result }: AnalysisResultsProps) {
-  const [actionPlan, setActionPlan] = useState<ActionPlan | null>(null);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState("insights");
-
-  // Refs for accordion items and container to enable scroll-to-view
-  const tabContentRef = useRef<HTMLDivElement | null>(null);
-  const accordionRefs = useRef<Record<string, HTMLDivElement | null>>({
-    content: null,
-    seo: null,
-    performance: null,
-    accessibility: null,
-    raw: null,
-  });
-
-  const handleAccordionChange = (value: string | undefined) => {
-    // Scroll to the accordion item when it opens (within the tab content container)
-    if (value && accordionRefs.current[value] && tabContentRef.current) {
-      // Wait for accordion close/open animation to complete before calculating scroll position
-      setTimeout(() => {
-        const accordionElement = accordionRefs.current[value];
-        const container = tabContentRef.current;
-
-        if (accordionElement && container) {
-          // Calculate the position of the accordion relative to the container
-          const containerRect = container.getBoundingClientRect();
-          const accordionRect = accordionElement.getBoundingClientRect();
-          const relativeTop = accordionRect.top - containerRect.top + container.scrollTop;
-
-          // Scroll the container to show the accordion at the top
-          container.scrollTo({
-            top: relativeTop,
-            behavior: "smooth"
-          });
-        }
-      }, 200); // Wait for accordion animation to complete (typically 200-300ms)
-    }
-  };
-
+export function AnalysisResults({ result, showHeader = false, showGenerateTasksBanner = false }: AnalysisResultsProps) {
   if (!result.success || !result.data) {
     return null;
   }
@@ -81,326 +36,250 @@ export function AnalysisResults({ result }: AnalysisResultsProps) {
   const seoScore = calculateSEOScore(websiteData);
   const accessibilityScore = calculateAccessibilityScore(websiteData);
 
-  const handleGeneratePlan = async () => {
-    setIsGenerating(true);
-    setError(null);
-
-    try {
-      // Switch to action plan
-      setActiveTab("action-plan");
-
-      const response = await fetch("/api/generate-plan", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          analysis,
-          websiteData,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!data.success) {
-        setError(data.error || "Failed to generate action plan");
-        return;
-      }
-
-      setActionPlan(data.data);
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Failed to generate action plan"
-      );
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
   return (
-    <div className="w-full max-w-7xl">
-      <div className="grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-6 items-start">
-        {/* Left Column - Overview Card */}
-        <div className="space-y-6">
+    <div className="w-full space-y-6">
+      {/* Generate Tasks Banner */}
+      {showGenerateTasksBanner && (
+        <GenerateTasksBanner websiteData={websiteData} analysis={analysis} />
+      )}
+
+      {/* Analysis Header */}
+      {showHeader && (
+        <div className="border-b pb-4">
+          <h1 className="text-2xl font-bold mb-2">
+            {websiteData.title || new URL(websiteData.url).hostname}
+          </h1>
+          <p className="text-sm text-muted-foreground flex items-center gap-2">
+            <ExternalLink className="h-4 w-4" />
+            <a
+              href={websiteData.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              {websiteData.url}
+            </a>
+          </p>
+        </div>
+      )}
+
+      {/* Overview Metrics */}
+      <Card>
+        <CardContent className="py-4">
+          <div className="flex flex-wrap items-center gap-6">
+            {/* Scores */}
+            <div className="flex items-center gap-1">
+              <p className="text-sm text-muted-foreground">SEO:</p>
+              <p className="text-lg font-bold">{seoScore}%</p>
+              {seoScore >= 80 ? (
+                <CheckCircle2 className="h-4 w-4 text-green-500" />
+              ) : seoScore >= 50 ? (
+                <AlertCircle className="h-4 w-4 text-yellow-500" />
+              ) : (
+                <AlertCircle className="h-4 w-4 text-red-500" />
+              )}
+            </div>
+
+            <div className="flex items-center gap-1">
+              <p className="text-sm text-muted-foreground">A11y:</p>
+              <p className="text-lg font-bold">{accessibilityScore}%</p>
+              {accessibilityScore >= 80 ? (
+                <CheckCircle2 className="h-4 w-4 text-green-500" />
+              ) : accessibilityScore >= 50 ? (
+                <AlertCircle className="h-4 w-4 text-yellow-500" />
+              ) : (
+                <AlertCircle className="h-4 w-4 text-red-500" />
+              )}
+            </div>
+
+            <div className="flex items-center gap-1">
+              <p className="text-sm text-muted-foreground">Words:</p>
+              <p className="text-lg font-bold">{websiteData.wordCount.toLocaleString()}</p>
+            </div>
+
+            {/* Divider */}
+            <div className="hidden sm:block h-6 w-px bg-border" />
+
+            {/* Badges */}
+            <div className="flex flex-wrap gap-1.5">
+              {websiteData.framework && (
+                <Badge variant="secondary" className="text-xs h-6">
+                  {websiteData.framework}
+                </Badge>
+              )}
+              <Badge variant="outline" className="text-xs h-6">{websiteData.images.total} images</Badge>
+              <Badge variant="outline" className="text-xs h-6">{websiteData.scripts} scripts</Badge>
+              <Badge variant="outline" className="text-xs h-6">{websiteData.stylesheets} stylesheets</Badge>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Tabs for Analysis Content */}
+      <Tabs defaultValue="content" className="w-full">
+        <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="content" className="flex items-center gap-2">
+            <FileText className="h-4 w-4" />
+            <span className="hidden sm:inline">Content</span>
+          </TabsTrigger>
+          <TabsTrigger value="seo" className="flex items-center gap-2">
+            <Search className="h-4 w-4" />
+            <span className="hidden sm:inline">SEO</span>
+          </TabsTrigger>
+          <TabsTrigger value="performance" className="flex items-center gap-2">
+            <Zap className="h-4 w-4" />
+            <span className="hidden sm:inline">Performance</span>
+          </TabsTrigger>
+          <TabsTrigger value="accessibility" className="flex items-center gap-2">
+            <Accessibility className="h-4 w-4" />
+            <span className="hidden sm:inline">Accessibility</span>
+          </TabsTrigger>
+          <TabsTrigger value="data" className="flex items-center gap-2">
+            <Info className="h-4 w-4" />
+            <span className="hidden sm:inline">Data</span>
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Content Analysis */}
+        <TabsContent value="content" className="mt-6">
           <Card>
             <CardHeader>
-              <CardTitle>Analysis Overview</CardTitle>
-              <CardDescription>{websiteData.url}</CardDescription>
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="h-5 w-5" />
+                Content Analysis
+              </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">SEO Score</p>
-                  <div className="flex items-center gap-2">
-                    <p className="text-2xl font-bold">{seoScore}%</p>
-                    {seoScore >= 80 ? (
-                      <CheckCircle2 className="h-5 w-5 text-green-500" />
-                    ) : seoScore >= 50 ? (
-                      <AlertCircle className="h-5 w-5 text-yellow-500" />
-                    ) : (
-                      <AlertCircle className="h-5 w-5 text-red-500" />
-                    )}
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">Accessibility</p>
-                  <div className="flex items-center gap-2">
-                    <p className="text-2xl font-bold">{accessibilityScore}%</p>
-                    {accessibilityScore >= 80 ? (
-                      <CheckCircle2 className="h-5 w-5 text-green-500" />
-                    ) : accessibilityScore >= 50 ? (
-                      <AlertCircle className="h-5 w-5 text-yellow-500" />
-                    ) : (
-                      <AlertCircle className="h-5 w-5 text-red-500" />
-                    )}
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">Word Count</p>
-                  <p className="text-2xl font-bold">{websiteData.wordCount.toLocaleString()}</p>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-2">
-                {websiteData.framework && (
-                  <Badge variant="secondary">
-                    <Info className="mr-1 h-3 w-3" />
-                    {websiteData.framework}
-                  </Badge>
-                )}
-                <Badge variant="outline">{websiteData.images.total} images</Badge>
-                <Badge variant="outline">{websiteData.scripts} scripts</Badge>
-                <Badge variant="outline">{websiteData.stylesheets} stylesheets</Badge>
+            <CardContent>
+              <div className="prose prose-sm max-w-none dark:prose-invert">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{analysis.content}</ReactMarkdown>
               </div>
             </CardContent>
           </Card>
-
-          {/* Generate Action Plan Section */}
-          {!actionPlan && (
-            <Card className="border-primary/40 bg-primary/5">
-              <CardContent className="pt-4 lg:pt-6 pb-4 lg:pb-6">
-                <div className="flex flex-col items-center text-center space-y-2 lg:space-y-4">
-                  <div className="flex items-center gap-2">
-                    <ListTodo className="h-5 w-5 lg:h-6 lg:w-6 text-primary" />
-                    <h3 className="font-semibold text-base lg:text-lg">Ready for next steps?</h3>
-                  </div>
-                  <p className="text-xs lg:text-sm text-muted-foreground hidden sm:block">
-                    Get a prioritized action plan with specific tasks to improve your website.
-                  </p>
-                  <Button
-                    onClick={handleGeneratePlan}
-                    disabled={isGenerating}
-                    size="default"
-                    className="gap-2 w-full sm:w-auto"
-                  >
-                    {isGenerating ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        <span className="hidden sm:inline">Generating Action Plan...</span>
-                        <span className="sm:hidden">Generating...</span>
-                      </>
-                    ) : (
-                      <>
-                        <ListTodo className="h-4 w-4" />
-                        <span className="hidden sm:inline">Generate Action Plan</span>
-                        <span className="sm:hidden">Generate Plan</span>
-                      </>
-                    )}
-                  </Button>
-                  {error && (
-                    <p className="text-xs lg:text-sm text-destructive">{error}</p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-        </div>
-
-        {/* Right Column - Tabbed Content */}
-        <div className="flex flex-col h-full min-w-0">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full flex flex-col h-full min-w-0">
-            <TabsList className="grid w-full grid-cols-2 shrink-0">
-              <TabsTrigger value="insights">Analysis Insights</TabsTrigger>
-              <TabsTrigger value="action-plan">Action Plan</TabsTrigger>
-            </TabsList>
-
-            {/* Insights Tab */}
-            <TabsContent value="insights" ref={tabContentRef} className="space-y-4 flex-1 overflow-y-auto max-h-[calc(100vh-12rem)]">
-              {/* AI Analysis Results */}
-              <Accordion type="single" collapsible onValueChange={handleAccordionChange} className="w-full space-y-2 min-w-0">
-        {/* Content Analysis */}
-        <AccordionItem value="content" ref={(el) => { accordionRefs.current.content = el; }} className="border rounded-lg px-4 min-w-0">
-          <AccordionTrigger className="hover:no-underline">
-            <div className="flex items-center gap-2">
-              <FileText className="h-5 w-5" />
-              <span className="font-semibold">Content Analysis</span>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="pt-4">
-            <div className="prose prose-sm max-w-none dark:prose-invert overflow-x-auto">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{analysis.content}</ReactMarkdown>
-            </div>
-          </AccordionContent>
-        </AccordionItem>
+        </TabsContent>
 
         {/* SEO Analysis */}
-        <AccordionItem value="seo" ref={(el) => { accordionRefs.current.seo = el; }} className="border rounded-lg px-4 min-w-0">
-          <AccordionTrigger className="hover:no-underline">
-            <div className="flex items-center gap-2">
-              <Search className="h-5 w-5" />
-              <span className="font-semibold">SEO Insights</span>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="pt-4">
-            <div className="prose prose-sm max-w-none dark:prose-invert overflow-x-auto">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{analysis.seo}</ReactMarkdown>
-            </div>
-          </AccordionContent>
-        </AccordionItem>
+        <TabsContent value="seo" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Search className="h-5 w-5" />
+                SEO Insights
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="prose prose-sm max-w-none dark:prose-invert">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{analysis.seo}</ReactMarkdown>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
         {/* Performance Analysis */}
-        <AccordionItem value="performance" ref={(el) => { accordionRefs.current.performance = el; }} className="border rounded-lg px-4 min-w-0">
-          <AccordionTrigger className="hover:no-underline">
-            <div className="flex items-center gap-2">
-              <Zap className="h-5 w-5" />
-              <span className="font-semibold">Performance</span>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="pt-4">
-            <div className="prose prose-sm max-w-none dark:prose-invert overflow-x-auto">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{analysis.performance}</ReactMarkdown>
-            </div>
-          </AccordionContent>
-        </AccordionItem>
+        <TabsContent value="performance" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Zap className="h-5 w-5" />
+                Performance
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="prose prose-sm max-w-none dark:prose-invert">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{analysis.performance}</ReactMarkdown>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
         {/* Accessibility Analysis */}
-        <AccordionItem value="accessibility" ref={(el) => { accordionRefs.current.accessibility = el; }} className="border rounded-lg px-4 min-w-0">
-          <AccordionTrigger className="hover:no-underline">
-            <div className="flex items-center gap-2">
-              <Accessibility className="h-5 w-5" />
-              <span className="font-semibold">Accessibility</span>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="pt-4">
-            <div className="prose prose-sm max-w-none dark:prose-invert overflow-x-auto">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{analysis.accessibility}</ReactMarkdown>
-            </div>
-          </AccordionContent>
-        </AccordionItem>
+        <TabsContent value="accessibility" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Accessibility className="h-5 w-5" />
+                Accessibility
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="prose prose-sm max-w-none dark:prose-invert">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{analysis.accessibility}</ReactMarkdown>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
         {/* Raw Data */}
-        <AccordionItem value="raw" ref={(el) => { accordionRefs.current.raw = el; }} className="border rounded-lg px-4">
-          <AccordionTrigger className="hover:no-underline">
-            <div className="flex items-center gap-2">
-              <Info className="h-5 w-5" />
-              <span className="font-semibold">Extracted Data</span>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="pt-4">
-            <div className="space-y-4 text-sm">
-              <div>
-                <p className="font-medium mb-1">Title</p>
-                <p className="text-muted-foreground">{websiteData.title || "No title found"}</p>
-              </div>
-
-              <div>
-                <p className="font-medium mb-1">Meta Description</p>
-                <p className="text-muted-foreground">
-                  {websiteData.metaDescription || "No meta description found"}
-                </p>
-              </div>
-
-              <div>
-                <p className="font-medium mb-1">Headings</p>
-                <div className="space-y-2">
-                  {Object.entries(websiteData.headings).map(([tag, headings]) => {
-                    if (headings.length === 0) return null;
-                    return (
-                      <div key={tag}>
-                        <Badge variant="outline" className="mb-1">
-                          {tag.toUpperCase()} ({headings.length})
-                        </Badge>
-                        <ul className="list-disc list-inside text-muted-foreground ml-2">
-                          {headings.slice(0, 3).map((heading, i) => (
-                            <li key={i}>{heading}</li>
-                          ))}
-                          {headings.length > 3 && (
-                            <li className="text-xs">...and {headings.length - 3} more</li>
-                          )}
-                        </ul>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {websiteData.openGraph && (
+        <TabsContent value="data" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Info className="h-5 w-5" />
+                Extracted Data
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4 text-sm">
                 <div>
-                  <p className="font-medium mb-1">Open Graph</p>
-                  <div className="space-y-1 text-muted-foreground">
-                    {websiteData.openGraph.title && (
-                      <p>Title: {websiteData.openGraph.title}</p>
-                    )}
-                    {websiteData.openGraph.description && (
-                      <p>Description: {websiteData.openGraph.description}</p>
-                    )}
-                    {websiteData.openGraph.image && (
-                      <p>Image: {websiteData.openGraph.image}</p>
-                    )}
+                  <p className="font-medium mb-1">Title</p>
+                  <p className="text-muted-foreground">{websiteData.title || "No title found"}</p>
+                </div>
+
+                <div>
+                  <p className="font-medium mb-1">Meta Description</p>
+                  <p className="text-muted-foreground">
+                    {websiteData.metaDescription || "No meta description found"}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="font-medium mb-1">Headings</p>
+                  <div className="space-y-2">
+                    {Object.entries(websiteData.headings).map(([tag, headings]) => {
+                      if (headings.length === 0) return null;
+                      return (
+                        <div key={tag}>
+                          <Badge variant="outline" className="mb-1">
+                            {tag.toUpperCase()} ({headings.length})
+                          </Badge>
+                          <ul className="list-disc list-inside text-muted-foreground ml-2">
+                            {headings.slice(0, 3).map((heading, i) => (
+                              <li key={i}>{heading}</li>
+                            ))}
+                            {headings.length > 3 && (
+                              <li className="text-xs">...and {headings.length - 3} more</li>
+                            )}
+                          </ul>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
-              )}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-              </Accordion>
-            </TabsContent>
 
-            {/* Action Plan Tab */}
-            <TabsContent value="action-plan" className="space-y-4 flex-1 overflow-y-auto max-h-[calc(100vh-12rem)]">
-              {actionPlan ? (
-                <ActionPlanView plan={actionPlan} />
-              ) : (
-                <Card>
-                  <CardContent className="pt-6">
-                    <div className="flex flex-col items-center text-center space-y-4 py-8">
-                      <ListTodo className="h-12 w-12 text-muted-foreground" />
-                      <div className="space-y-2">
-                        <h3 className="font-semibold text-lg">No Action Plan Yet</h3>
-                        <p className="text-sm text-muted-foreground max-w-md">
-                          Generate an action plan from the analysis insights to get started with specific, prioritized tasks.
-                        </p>
-                      </div>
-                      <Button
-                        onClick={handleGeneratePlan}
-                        disabled={isGenerating}
-                        size="lg"
-                        className="gap-2"
-                      >
-                        {isGenerating ? (
-                          <>
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                            Generating Action Plan...
-                          </>
-                        ) : (
-                          <>
-                            <ListTodo className="h-4 w-4" />
-                            Generate Action Plan
-                          </>
-                        )}
-                      </Button>
-                      {error && (
-                        <p className="text-sm text-destructive">{error}</p>
+                {websiteData.openGraph && (
+                  <div>
+                    <p className="font-medium mb-1">Open Graph</p>
+                    <div className="space-y-1 text-muted-foreground">
+                      {websiteData.openGraph.title && (
+                        <p>Title: {websiteData.openGraph.title}</p>
+                      )}
+                      {websiteData.openGraph.description && (
+                        <p>Description: {websiteData.openGraph.description}</p>
+                      )}
+                      {websiteData.openGraph.image && (
+                        <p>Image: {websiteData.openGraph.image}</p>
                       )}
                     </div>
-                  </CardContent>
-                </Card>
-              )}
-            </TabsContent>
-          </Tabs>
-        </div>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+
+      {/* Sign Up Banner */}
+      <div className="mt-8">
+        <ResultsSignupBanner />
       </div>
     </div>
   );

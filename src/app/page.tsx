@@ -1,17 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import { AnalyzerForm } from "@/components/analyzer-form";
 import { AnalysisResults } from "@/components/analysis-results";
+import { UserMenu } from "@/components/user-menu";
+import { SignupCTA } from "@/components/signup-cta";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AnalyzeResponse } from "@/lib/validators/schema";
 import { AlertCircle, Sparkles } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function Home() {
+  const { isSignedIn, isLoaded } = useUser();
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<AnalyzeResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Redirect authenticated users to dashboard
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      router.push("/dashboard");
+    }
+  }, [isSignedIn, isLoaded, router]);
 
   const handleAnalyze = async (url: string) => {
     setIsLoading(true);
@@ -35,6 +48,9 @@ export default function Home() {
       }
 
       setResult(data);
+
+      // Scroll to top to see results
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to analyze website"
@@ -56,14 +72,16 @@ export default function Home() {
                 <div className="flex items-center justify-between sm:justify-start gap-2 shrink-0">
                   <div className="flex items-center gap-2 cursor-pointer" onClick={() => location.reload()}>
                     <Sparkles className="h-5 w-5 text-primary" />
-                    <h2 className="font-semibold text-base sm:text-lg">AI Website Optimizer</h2>
+                    <h2 className="font-semibold text-base sm:text-lg">AI Website Analyzer</h2>
                   </div>
-                  <div className="sm:hidden">
+                  <div className="sm:hidden flex items-center gap-2">
+                    <UserMenu />
                     <ThemeToggle />
                   </div>
                 </div>
                 <AnalyzerForm onAnalyze={handleAnalyze} isLoading={isLoading} compact />
-                <div className="hidden sm:block shrink-0">
+                <div className="hidden sm:flex items-center gap-2 shrink-0">
+                  <UserMenu />
                   <ThemeToggle />
                 </div>
               </div>
@@ -92,9 +110,12 @@ export default function Home() {
         // Landing View with Full Hero
         <>
           {/* Landing Header with Theme Toggle */}
-          <div className="container mx-auto px-4 pt-4">
-            <div className="flex justify-end">
-              <ThemeToggle />
+          <div className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+            <div className="container mx-auto px-4 py-4">
+              <div className="flex justify-end gap-2">
+                <UserMenu />
+                <ThemeToggle />
+              </div>
             </div>
           </div>
 
@@ -105,7 +126,7 @@ export default function Home() {
                 <Sparkles className="h-8 w-8 text-primary" />
               </div>
               <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
-                AI Website Optimizer
+                AI Website Analyzer
               </h1>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                 Analyze your website for SEO, content quality, performance, and accessibility.
@@ -128,6 +149,11 @@ export default function Home() {
                 </Alert>
               </div>
             )}
+
+            {/* Sign Up CTA */}
+            <div className="max-w-5xl mx-auto mt-16">
+              <SignupCTA />
+            </div>
           </div>
 
           {/* Footer */}

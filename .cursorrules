@@ -1,4 +1,4 @@
-# AI Website Optimizer - Cursor Rules
+# AI Website Analyzer - Cursor Rules
 
 ## Project Overview
 This is an AI-powered website analysis tool built with Next.js 15, TypeScript, Tailwind CSS 4, and shadcn/ui. It analyzes websites for SEO, content quality, performance, and accessibility using Groq AI (with extensible provider abstraction).
@@ -137,6 +137,10 @@ src/
 - Provide user-friendly error messages
 - Log errors for debugging but don't expose internals to users
 - Validate all external inputs (URLs, API keys)
+
+### Documentation Files
+- **NEVER** create summary documents explaining the new feature or changes unless explicitly requested
+- Only create documentation when the user specifically asks for it
 
 ### Performance
 - Run AI analyses in parallel using Promise.all() when possible

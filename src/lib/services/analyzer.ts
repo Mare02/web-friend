@@ -41,7 +41,9 @@ Focus on:
 - Writing style and tone observations
 - Engagement potential and user experience
 
-Provide a comprehensive assessment with key findings and insights. Focus on what you observe rather than prescriptive action items.`;
+Provide a comprehensive assessment with key findings and insights. Focus on what you observe rather than prescriptive action items.
+
+IMPORTANT: Do NOT include any URLs, links, or web addresses in your response. Focus only on analysis and insights without referencing external resources.`;
 
   const context = `
 Website: ${data.url}
@@ -73,7 +75,9 @@ Focus on:
 - Open Graph tags for social sharing
 - Overall SEO health assessment
 
-Provide a comprehensive SEO evaluation with key findings, strengths, and areas for improvement. Focus on insights and assessment.`;
+Provide a comprehensive SEO evaluation with key findings, strengths, and areas for improvement. Focus on insights and assessment.
+
+IMPORTANT: Do NOT include any URLs, links, or web addresses in your response. Focus only on analysis and insights without referencing external resources.`;
 
   const context = `
 Website: ${data.url}
@@ -115,7 +119,9 @@ Focus on:
 - Framework-specific considerations
 - Performance characteristics and potential bottlenecks
 
-Provide a thorough performance assessment with observations about what could impact load times and user experience. Focus on analysis and insights.`;
+Provide a thorough performance assessment with observations about what could impact load times and user experience. Focus on analysis and insights.
+
+IMPORTANT: Do NOT include any URLs, links, or web addresses in your response. Focus only on analysis and insights without referencing external resources.`;
 
   const context = `
 Website: ${data.url}
@@ -153,7 +159,9 @@ Focus on:
 - Screen reader compatibility considerations
 - Keyboard navigation accessibility
 
-Provide a comprehensive accessibility assessment with key findings about what works well and what could be improved. Focus on insights and evaluation.`;
+Provide a comprehensive accessibility assessment with key findings about what works well and what could be improved. Focus on insights and evaluation.
+
+IMPORTANT: Do NOT include any URLs, links, or web addresses in your response. Focus only on analysis and insights without referencing external resources.`;
 
   const context = `
 Website: ${data.url}

@@ -45,7 +45,9 @@ Response must be valid JSON with this structure:
   "tasks": [array of task objects],
   "quickWins": [array of strings],
   "timeline": "string (2-3 sentences)"
-}`;
+}
+
+IMPORTANT: Do NOT include any URLs, links, or web addresses in your response. Focus only on actionable tasks and recommendations without referencing external resources.`;
 
   const context = `
 Website: ${websiteData.url}
