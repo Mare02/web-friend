@@ -22,7 +22,37 @@ export function ActionPlanInteractive({
   savedTasks,
   analysisUrl,
 }: ActionPlanInteractiveProps) {
-  const [tasks, setTasks] = useState<SavedTask[]>(savedTasks || []);
+  // Convert ActionPlanTask to SavedTask format if using plan.tasks
+  const convertActionPlanTasksToSavedTasks = (actionPlanTasks: typeof plan.tasks): SavedTask[] => {
+    return actionPlanTasks.map((task, index) => ({
+      id: task.id,
+      analysis_id: '', // Will be set when saved to database
+      user_id: null,
+      category: task.category,
+      priority: task.priority,
+      title: task.title,
+      description: task.description,
+      effort: task.effort,
+      impact: task.impact,
+      estimated_time: task.estimatedTime || null,
+      status: 'pending' as const,
+      completed_at: null,
+      started_at: null,
+      notes: null,
+      task_order: index,
+      created_at: Date.now(),
+      updated_at: null,
+      last_reanalysis: null,
+      last_reanalysis_at: null,
+    }));
+  };
+
+  // Use savedTasks if available (from database), otherwise convert plan.tasks to SavedTask format
+  const [tasks, setTasks] = useState<SavedTask[]>(
+    savedTasks && savedTasks.length > 0 
+      ? savedTasks 
+      : convertActionPlanTasksToSavedTasks(plan.tasks)
+  );
 
   const handleTaskUpdate = async (taskId: string, status: SavedTask["status"]) => {
     try {
