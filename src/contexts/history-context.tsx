@@ -28,6 +28,15 @@ export function HistoryProvider({ children }: { children: ReactNode }) {
       setError(null);
 
       const response = await fetch("/api/history");
+
+      // Check if response is HTML (404 page) instead of JSON
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        // User is not authenticated, set empty history
+        setHistory([]);
+        return;
+      }
+
       const data = await response.json();
 
       if (response.ok && data.success) {
@@ -37,7 +46,13 @@ export function HistoryProvider({ children }: { children: ReactNode }) {
       }
     } catch (err) {
       console.error("Error fetching history:", err);
-      setError(err instanceof Error ? err.message : "Failed to fetch history");
+      // If it's a JSON parsing error, user is likely not authenticated
+      if (err instanceof SyntaxError && err.message.includes("Unexpected token")) {
+        setHistory([]);
+        setError(null);
+      } else {
+        setError(err instanceof Error ? err.message : "Failed to fetch history");
+      }
     } finally {
       setIsLoading(false);
       stopLoading();
