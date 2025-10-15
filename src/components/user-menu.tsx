@@ -74,18 +74,20 @@ export function UserMenu() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href="/dashboard">
+          <Link href="/dashboard" className="cursor-pointer">
             <LayoutDashboard className="mr-2 h-4 w-4" />
             <span>Dashboard</span>
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <SignOutButton>
-            <button className="flex w-full items-center">
-              <LogOut className="mr-2 h-4 w-4" />
-              <span>Sign Out</span>
-            </button>
-          </SignOutButton>
+          <div className="w-full">
+            <SignOutButton>
+              <button className="flex w-full items-center gap-2">
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Sign Out</span>
+              </button>
+            </SignOutButton>
+          </div>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
