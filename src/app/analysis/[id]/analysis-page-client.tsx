@@ -53,7 +53,6 @@ export function AnalysisPageClient({
         analysisUrl={analysisUrl}
         websiteData={websiteData}
         analysisData={analysisData}
-        analysisId={analysisId}
         onDeleteAnalysis={handleDeleteAnalysis}
       />
     </div>
