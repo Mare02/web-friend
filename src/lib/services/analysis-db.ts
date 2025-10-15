@@ -220,3 +220,33 @@ export async function deleteAnalysis(analysisId: string, userId: string): Promis
     .run();
 }
 
+/**
+ * Deletes all analyses for a specific URL and user, along with all associated tasks
+ */
+export async function deleteAllAnalysesByUrl(analysisId: string, userId: string): Promise<{ deletedCount: number; url: string }> {
+  const db = createD1Client();
+
+  // First, get the URL from the analysis we're deleting
+  const analysis = await db.prepare('SELECT url FROM analyses WHERE id = ? AND user_id = ?')
+    .bind(analysisId, userId)
+    .first<{ url: string }>();
+
+  if (!analysis) {
+    throw new Error('Analysis not found');
+  }
+
+  // Get count of analyses to be deleted for the response
+  const countResult = await db.prepare('SELECT COUNT(*) as count FROM analyses WHERE url = ? AND user_id = ?')
+    .bind(analysis.url, userId)
+    .first<{ count: number }>();
+
+  const deletedCount = countResult?.count || 0;
+
+  // Delete all analyses for this URL (tasks will cascade delete automatically)
+  await db.prepare('DELETE FROM analyses WHERE url = ? AND user_id = ?')
+    .bind(analysis.url, userId)
+    .run();
+
+  return { deletedCount, url: analysis.url };
+}
+

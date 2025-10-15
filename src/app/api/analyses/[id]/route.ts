@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import { getAnalysis, deleteAnalysis } from '@/lib/services/analysis-db';
+import { getAnalysis, deleteAllAnalysesByUrl } from '@/lib/services/analysis-db';
 
 /**
  * GET /api/analyses/[id]
@@ -39,7 +39,7 @@ export async function GET(
 
 /**
  * DELETE /api/analyses/[id]
- * Deletes an analysis and all associated tasks
+ * Deletes all analyses for the same URL and all associated tasks
  */
 export async function DELETE(
   request: NextRequest,
@@ -57,19 +57,23 @@ export async function DELETE(
 
     const { id } = await params;
 
-    // Delete the analysis (tasks will cascade delete)
-    await deleteAnalysis(id, userId);
+    // Delete all analyses for the same URL (tasks will cascade delete)
+    const result = await deleteAllAnalysesByUrl(id, userId);
 
     return NextResponse.json({
       success: true,
-      message: 'Analysis deleted successfully',
+      message: `Deleted ${result.deletedCount} analysis${result.deletedCount === 1 ? '' : 'es'} for ${result.url}`,
+      data: {
+        deletedCount: result.deletedCount,
+        url: result.url,
+      },
     });
   } catch (error) {
-    console.error('Error deleting analysis:', error);
+    console.error('Error deleting analyses:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : 'Failed to delete analysis',
+        error: error instanceof Error ? error.message : 'Failed to delete analyses',
       },
       { status: 500 }
     );

@@ -116,8 +116,8 @@ export function AnalysisResults({ result, showHeader = false, showGenerateTasksB
       </Card>
 
       {/* Tabs for Analysis Content */}
-      <Tabs defaultValue="content" className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
+      <Tabs defaultValue="content" className="w-full flex flex-col h-full">
+        <TabsList className="grid w-full grid-cols-5 flex-shrink-0">
           <TabsTrigger value="content" className="flex items-center gap-2">
             <FileText className="h-4 w-4" />
             <span className="hidden sm:inline">Content</span>
@@ -141,15 +141,15 @@ export function AnalysisResults({ result, showHeader = false, showGenerateTasksB
         </TabsList>
 
         {/* Content Analysis */}
-        <TabsContent value="content" className="mt-6">
-          <Card>
-            <CardHeader>
+        <TabsContent value="content" className="mt-6 flex-1 flex flex-col">
+          <Card className="h-full flex flex-col">
+            <CardHeader className="flex-shrink-0">
               <CardTitle className="flex items-center gap-2">
                 <FileText className="h-5 w-5" />
                 Content Analysis
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-1 overflow-auto">
               <div className="prose prose-sm max-w-none dark:prose-invert">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>{analysis.content}</ReactMarkdown>
               </div>
@@ -158,15 +158,15 @@ export function AnalysisResults({ result, showHeader = false, showGenerateTasksB
         </TabsContent>
 
         {/* SEO Analysis */}
-        <TabsContent value="seo" className="mt-6">
-          <Card>
-            <CardHeader>
+        <TabsContent value="seo" className="mt-6 flex-1 flex flex-col">
+          <Card className="h-full flex flex-col">
+            <CardHeader className="flex-shrink-0">
               <CardTitle className="flex items-center gap-2">
                 <Search className="h-5 w-5" />
                 SEO Insights
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-1 overflow-auto">
               <div className="prose prose-sm max-w-none dark:prose-invert">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>{analysis.seo}</ReactMarkdown>
               </div>
@@ -175,15 +175,15 @@ export function AnalysisResults({ result, showHeader = false, showGenerateTasksB
         </TabsContent>
 
         {/* Performance Analysis */}
-        <TabsContent value="performance" className="mt-6">
-          <Card>
-            <CardHeader>
+        <TabsContent value="performance" className="mt-6 flex-1 flex flex-col">
+          <Card className="h-full flex flex-col">
+            <CardHeader className="flex-shrink-0">
               <CardTitle className="flex items-center gap-2">
                 <Zap className="h-5 w-5" />
                 Performance
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-1 overflow-auto">
               <div className="prose prose-sm max-w-none dark:prose-invert">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>{analysis.performance}</ReactMarkdown>
               </div>
@@ -192,15 +192,15 @@ export function AnalysisResults({ result, showHeader = false, showGenerateTasksB
         </TabsContent>
 
         {/* Accessibility Analysis */}
-        <TabsContent value="accessibility" className="mt-6">
-          <Card>
-            <CardHeader>
+        <TabsContent value="accessibility" className="mt-6 flex-1 flex flex-col">
+          <Card className="h-full flex flex-col">
+            <CardHeader className="flex-shrink-0">
               <CardTitle className="flex items-center gap-2">
                 <Accessibility className="h-5 w-5" />
                 Accessibility
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-1 overflow-auto">
               <div className="prose prose-sm max-w-none dark:prose-invert">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>{analysis.accessibility}</ReactMarkdown>
               </div>
@@ -209,15 +209,15 @@ export function AnalysisResults({ result, showHeader = false, showGenerateTasksB
         </TabsContent>
 
         {/* Raw Data */}
-        <TabsContent value="data" className="mt-6">
-          <Card>
-            <CardHeader>
+        <TabsContent value="data" className="mt-6 flex-1 flex flex-col">
+          <Card className="h-full flex flex-col">
+            <CardHeader className="flex-shrink-0">
               <CardTitle className="flex items-center gap-2">
                 <Info className="h-5 w-5" />
                 Extracted Data
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-1 overflow-auto">
               <div className="space-y-4 text-sm">
                 <div>
                   <p className="font-medium mb-1">Title</p>

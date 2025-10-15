@@ -2,12 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import { DashboardLayout } from "@/components/dashboard-layout";
+import { NewAnalysisDialog } from "@/components/new-analysis-dialog";
 import { TaskList } from "@/components/task-list";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
-import { SavedTask } from "@/lib/validators/schema";
+import { useHistory } from "@/contexts/history-context";
+import { useLoading } from "@/contexts/loading-context";
+import { SavedTask, AnalyzeResponse } from "@/lib/validators/schema";
 import { AlertCircle, CheckSquare } from "lucide-react";
 
 interface TaskWithUrl extends SavedTask {
@@ -17,9 +21,14 @@ interface TaskWithUrl extends SavedTask {
 
 export default function TasksPage() {
   const { user } = useUser();
+  const router = useRouter();
+  const { invalidateHistory } = useHistory();
+  const { startLoading, stopLoading } = useLoading();
   const [tasks, setTasks] = useState<TaskWithUrl[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -131,8 +140,53 @@ export default function TasksPage() {
     }
   };
 
+  const handleAnalyze = async (url: string) => {
+    setIsAnalyzing(true);
+    startLoading();
+    setError(null);
+
+    try {
+      const response = await fetch("/api/analyze", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url }),
+      });
+
+      const data: AnalyzeResponse = await response.json();
+
+      if (!data.success) {
+        setError(data.error || "An unexpected error occurred");
+        return;
+      }
+
+      // Invalidate history cache to refetch with new analysis
+      invalidateHistory();
+
+      // Close the dialog on success
+      setDialogOpen(false);
+
+      // If analysis was saved (has ID), navigate to the analysis page
+      if (data.data?.analysisId) {
+        router.push(`/analysis/${data.data.analysisId}`);
+      }
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Failed to analyze website"
+      );
+    } finally {
+      setIsAnalyzing(false);
+      stopLoading();
+    }
+  };
+
+  const handleNewAnalysis = () => {
+    setDialogOpen(true);
+  };
+
   return (
-    <DashboardLayout>
+    <DashboardLayout onNewAnalysis={handleNewAnalysis}>
       <div className="p-6">
         <div className="max-w-6xl mx-auto space-y-6">
           {/* Header */}
@@ -202,6 +256,14 @@ export default function TasksPage() {
           )}
         </div>
       </div>
+
+      {/* New Analysis Dialog */}
+      <NewAnalysisDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        onAnalyze={handleAnalyze}
+        isLoading={isAnalyzing}
+      />
     </DashboardLayout>
   );
 }

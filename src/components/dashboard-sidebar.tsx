@@ -1,10 +1,20 @@
 "use client";
 
+import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useLoading } from "@/contexts/loading-context";
+import { useHistory } from "@/contexts/history-context";
 import { cn } from "@/lib/utils";
 import {
   Home,
@@ -13,7 +23,8 @@ import {
   ExternalLink,
   Sparkles,
   BarChart3,
-  CheckSquare
+  CheckSquare,
+  Trash2
 } from "lucide-react";
 import type { AnalysisHistoryItem, WebsiteData } from "@/lib/validators/schema";
 
@@ -30,7 +41,12 @@ export function DashboardSidebar({
 }: DashboardSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const { startLoading } = useLoading();
+  const { startLoading, stopLoading } = useLoading();
+  const { invalidateHistory } = useHistory();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleNavigation = (href: string) => {
     if (pathname !== href) {
@@ -76,6 +92,56 @@ export function DashboardSidebar({
     } catch {
       return url;
     }
+  };
+
+  const handleDeleteClick = (analysisId: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDeletingId(analysisId);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deletingId) return;
+
+    try {
+      setIsDeleting(true);
+      startLoading();
+      setError(null);
+
+      const response = await fetch(`/api/analyses/${deletingId}`, {
+        method: "DELETE",
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || "Failed to delete analysis");
+      }
+
+      // Invalidate history cache to refetch without deleted analysis
+      invalidateHistory();
+
+      // If we're currently viewing the deleted analysis, redirect to dashboard
+      if (pathname === `/analysis/${deletingId}`) {
+        router.push("/dashboard");
+      }
+
+      setDeleteDialogOpen(false);
+      setDeletingId(null);
+    } catch (err) {
+      console.error("Error deleting analysis:", err);
+      setError(err instanceof Error ? err.message : "Failed to delete analysis");
+    } finally {
+      setIsDeleting(false);
+      stopLoading();
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false);
+    setDeletingId(null);
+    setError(null);
   };
 
   return (
@@ -156,26 +222,39 @@ export function DashboardSidebar({
                 return (
                   <div
                     key={item.latest_analysis_id}
-                    onClick={() => handleNavigation(href)}
                     className={cn(
-                      "block group rounded-lg border transition-colors cursor-pointer",
-                      isActive 
-                        ? "bg-primary/10 border-primary hover:bg-primary/15" 
+                      "block group rounded-lg border transition-colors",
+                      isActive
+                        ? "bg-primary/10 border-primary hover:bg-primary/15"
                         : "bg-card hover:bg-accent/50"
                     )}
                   >
-                    <div className="p-3 space-y-2">
-                      <div className="flex-1 min-w-0">
-                        <h4 className={cn(
-                          "text-sm font-medium line-clamp-1 mb-1",
-                          isActive && "text-primary"
-                        )}>
-                          {websiteTitle}
-                        </h4>
-                        <p className="text-xs text-muted-foreground line-clamp-1 flex items-center gap-1">
-                          <ExternalLink className="h-3 w-3 shrink-0" />
-                          {hostname}
-                        </p>
+                    <div
+                      onClick={() => handleNavigation(href)}
+                      className="p-3 space-y-2 cursor-pointer"
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <h4 className={cn(
+                            "text-sm font-medium line-clamp-1 mb-1",
+                            isActive && "text-primary"
+                          )}>
+                            {websiteTitle}
+                          </h4>
+                          <p className="text-xs text-muted-foreground line-clamp-1 flex items-center gap-1">
+                            <ExternalLink className="h-3 w-3 shrink-0" />
+                            {hostname}
+                          </p>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6 text-muted-foreground hover:text-destructive shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={(e) => handleDeleteClick(item.latest_analysis_id, e)}
+                          title="Delete analysis"
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
                       </div>
 
                       <div className="flex items-center gap-1 text-xs text-muted-foreground">
@@ -190,6 +269,40 @@ export function DashboardSidebar({
           </div>
         </ScrollArea>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Analysis</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this analysis? This will delete ALL analyses for this website URL.
+              This action cannot be undone and all associated tasks will also be deleted.
+            </DialogDescription>
+          </DialogHeader>
+          {error && (
+            <div className="text-sm text-destructive bg-destructive/10 p-3 rounded-md">
+              {error}
+            </div>
+          )}
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={handleDeleteCancel}
+              disabled={isDeleting}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDeleteConfirm}
+              disabled={isDeleting}
+            >
+              {isDeleting ? "Deleting..." : "Delete"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

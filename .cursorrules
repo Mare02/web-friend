@@ -138,6 +138,10 @@ src/
 - Log errors for debugging but don't expose internals to users
 - Validate all external inputs (URLs, API keys)
 
+### Code Formatting
+- **NEVER** leave trailing whitespace in generated code and text
+- Ensure consistent indentation and spacing
+
 ### Documentation Files
 - **NEVER** create summary documents explaining the new feature or changes unless explicitly requested
 - Only create documentation when the user specifically asks for it
@@ -182,6 +186,8 @@ When working with AI providers:
 - Use `next.config.ts` for Next.js settings
 
 ## Git & Versioning
+- **NEVER** perform git operations (commit, push, pull, etc.) automatically
+- **ONLY** perform git operations when explicitly instructed by the user
 - Use semantic versioning
 - Keep commits atomic and focused
 - Write clear commit messages

@@ -49,8 +49,8 @@ export function ActionPlanInteractive({
 
   // Use savedTasks if available (from database), otherwise convert plan.tasks to SavedTask format
   const [tasks, setTasks] = useState<SavedTask[]>(
-    savedTasks && savedTasks.length > 0 
-      ? savedTasks 
+    savedTasks && savedTasks.length > 0
+      ? savedTasks
       : convertActionPlanTasksToSavedTasks(plan.tasks)
   );
 

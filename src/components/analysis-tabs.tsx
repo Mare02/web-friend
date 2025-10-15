@@ -15,6 +15,7 @@ interface AnalysisTabsProps {
   analysisUrl: string;
   websiteData: WebsiteData;
   analysisData: AnalysisResult;
+  onDeleteAnalysis: () => void;
 }
 
 export function AnalysisTabs({
@@ -26,6 +27,7 @@ export function AnalysisTabs({
   analysisUrl,
   websiteData,
   analysisData,
+  onDeleteAnalysis,
 }: AnalysisTabsProps) {
   return (
     <Tabs defaultValue={defaultTab} className="w-full flex flex-col h-full">
@@ -36,29 +38,42 @@ export function AnalysisTabs({
         </TabsList>
       </div>
 
-      <div className="p-6 pt-4">
-        <TabsContent value="analysis" className="mt-0">
-          <AnalysisResults
-            result={analysisResult}
-            showHeader={true}
-            showGenerateTasksBanner={showGenerateTasksBanner}
-          />
-        </TabsContent>
+      {/* Scrollable content area */}
+      <div className="flex-1 overflow-auto">
+        <div className="p-6 pt-4">
+          <TabsContent value="analysis" className="mt-0">
+            <AnalysisResults
+              result={analysisResult}
+              showHeader={false}
+              showGenerateTasksBanner={showGenerateTasksBanner}
+            />
+          </TabsContent>
 
-        <TabsContent value="tasks" className="mt-0">
-          {transformedActionPlan ? (
-            <ActionPlanInteractive
-              plan={transformedActionPlan}
-              savedTasks={savedTasks}
-              analysisUrl={analysisUrl}
-            />
-          ) : (
-            <EmptyTasksState
-              websiteData={websiteData}
-              analysis={analysisData}
-            />
-          )}
-        </TabsContent>
+          <TabsContent value="tasks" className="mt-0">
+            {transformedActionPlan ? (
+              <ActionPlanInteractive
+                plan={transformedActionPlan}
+                savedTasks={savedTasks}
+                analysisUrl={analysisUrl}
+              />
+            ) : (
+              <EmptyTasksState
+                websiteData={websiteData}
+                analysis={analysisData}
+              />
+            )}
+          </TabsContent>
+        </div>
+      </div>
+
+      {/* Delete Analysis Button at the bottom */}
+      <div className="border-t px-6 py-4 bg-muted/10 flex-shrink-0">
+        <button
+          onClick={onDeleteAnalysis}
+          className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-destructive hover:text-destructive/80 hover:bg-destructive/10 rounded-md transition-colors"
+        >
+          Delete Analysis
+        </button>
       </div>
     </Tabs>
   );

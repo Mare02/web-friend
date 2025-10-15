@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getAnalysis } from "@/lib/services/analysis-db";
 import { AnalysisPageLayout } from "@/components/analysis-page-layout";
-import { AnalysisTabs } from "@/components/analysis-tabs";
+import { AnalysisPageClient } from "./analysis-page-client";
 
 interface AnalysisPageProps {
   params: Promise<{ id: string }>;
@@ -56,18 +56,17 @@ export default async function AnalysisPage({ params, searchParams }: AnalysisPag
 
   return (
     <AnalysisPageLayout>
-      <div className="animate-in fade-in duration-500">
-        <AnalysisTabs
-          defaultTab={tab === "tasks" ? "tasks" : "analysis"}
-          analysisResult={result}
-          showGenerateTasksBanner={!hasActionPlan}
-          transformedActionPlan={transformedActionPlan}
-          savedTasks={analysis.actionPlan?.tasks || []}
-          analysisUrl={analysis.url}
-          websiteData={analysis.websiteData}
-          analysisData={analysis.analysisResult}
-        />
-      </div>
+      <AnalysisPageClient
+        analysisId={id}
+        analysisResult={result}
+        showGenerateTasksBanner={!hasActionPlan}
+        transformedActionPlan={transformedActionPlan}
+        savedTasks={analysis.actionPlan?.tasks || []}
+        analysisUrl={analysis.url}
+        websiteData={analysis.websiteData}
+        analysisData={analysis.analysisResult}
+        defaultTab={tab === "tasks" ? "tasks" : "analysis"}
+      />
     </AnalysisPageLayout>
   );
 }
