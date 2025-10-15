@@ -234,7 +234,7 @@ export function ActionPlanInteractive({
 
       {/* Stats Summary */}
       <Card className="bg-muted/50">
-        <CardContent className="pt-6">
+        <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <div>
               <p className="text-2xl font-bold">{plan.tasks.length}</p>
