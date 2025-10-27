@@ -46,27 +46,49 @@ export async function saveAnalysis(params: {
   for (let i = 0; i < params.actionPlan.tasks.length; i++) {
     const task = params.actionPlan.tasks[i];
 
-    await db.prepare(`
+    // Prefer provided task.id but generate one if missing
+    let taskId = task.id || generateId('task');
+
+    const insertTask = async (id: string) => {
+      // Use upsert so we don't fail on duplicate ids
+      await db.prepare(`
       INSERT INTO tasks (
         id, analysis_id, user_id, category, priority,
         title, description, effort, impact, estimated_time,
         status, task_order, created_at
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT(id) DO UPDATE SET
+        analysis_id = excluded.analysis_id,
+        user_id = excluded.user_id,
+        category = excluded.category,
+        priority = excluded.priority,
+        title = excluded.title,
+        description = excluded.description,
+        effort = excluded.effort,
+        impact = excluded.impact,
+        estimated_time = excluded.estimated_time,
+        status = excluded.status,
+        task_order = excluded.task_order,
+        updated_at = excluded.created_at
     `).bind(
-      task.id,
-      analysisId,
-      params.userId,
-      task.category,
-      task.priority,
-      task.title,
-      task.description,
-      task.effort,
-      task.impact,
-      task.estimatedTime || null,
-      'pending',
-      i,
-      now
-    ).run();
+        id,
+        analysisId,
+        params.userId,
+        task.category,
+        task.priority,
+        task.title,
+        task.description,
+        task.effort,
+        task.impact,
+        task.estimatedTime || null,
+        'pending',
+        i,
+        now
+      ).run();
+    };
+
+    // Perform upsert; let unexpected errors bubble
+    await insertTask(taskId);
   }
 
   return analysisId;
@@ -147,27 +169,49 @@ export async function updateAnalysisWithActionPlan(
   for (let i = 0; i < actionPlan.tasks.length; i++) {
     const task = actionPlan.tasks[i];
 
-    await db.prepare(`
+    // Prefer provided task.id but generate one if missing
+    let taskId = task.id || generateId('task');
+
+    const insertTask = async (id: string) => {
+      // Use upsert so we don't fail on duplicate ids
+      await db.prepare(`
       INSERT INTO tasks (
         id, analysis_id, user_id, category, priority,
         title, description, effort, impact, estimated_time,
         status, task_order, created_at
       ) VALUES (?, ?, (SELECT user_id FROM analyses WHERE id = ?), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT(id) DO UPDATE SET
+        analysis_id = excluded.analysis_id,
+        user_id = excluded.user_id,
+        category = excluded.category,
+        priority = excluded.priority,
+        title = excluded.title,
+        description = excluded.description,
+        effort = excluded.effort,
+        impact = excluded.impact,
+        estimated_time = excluded.estimated_time,
+        status = excluded.status,
+        task_order = excluded.task_order,
+        updated_at = excluded.created_at
     `).bind(
-      task.id,
-      analysisId,
-      analysisId, // Subquery to get user_id from analysis
-      task.category,
-      task.priority,
-      task.title,
-      task.description,
-      task.effort,
-      task.impact,
-      task.estimatedTime || null,
-      'pending',
-      i,
-      now
-    ).run();
+        id,
+        analysisId,
+        analysisId, // Subquery to get user_id from analysis
+        task.category,
+        task.priority,
+        task.title,
+        task.description,
+        task.effort,
+        task.impact,
+        task.estimatedTime || null,
+        'pending',
+        i,
+        now
+      ).run();
+    };
+
+    // Perform upsert; let unexpected errors bubble
+    await insertTask(taskId);
   }
 }
 

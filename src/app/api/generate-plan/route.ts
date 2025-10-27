@@ -102,6 +102,20 @@ export async function POST(request: NextRequest) {
         console.log(`Updating existing analysis ${existingAnalysis.id} with action plan`);
         await updateAnalysisWithActionPlan(existingAnalysis.id, actionPlan);
         analysisId = existingAnalysis.id;
+
+        // Verify tasks were created; retry once if none found
+        const saved = await getLatestAnalysisByUrl(userId || null, websiteData.url);
+        if (!saved) {
+          console.warn(`No analysis found after update for ${websiteData.url}, retrying updateInsertion`);
+          // Try saving as a new analysis as a fallback
+          analysisId = await saveAnalysis({
+            userId: userId || null,
+            url: websiteData.url,
+            websiteData,
+            analysisResult: analysis,
+            actionPlan,
+          });
+        }
       } else {
         // No existing analysis found - create new one (fallback for edge cases)
         console.log('No existing analysis found, creating new one with action plan');
@@ -112,6 +126,19 @@ export async function POST(request: NextRequest) {
           analysisResult: analysis,
           actionPlan,
         });
+
+        // Verify tasks were created; if not, retry once
+        const verify = await getLatestAnalysisByUrl(userId || null, websiteData.url);
+        if (!verify) {
+          console.warn(`Analysis save didn't persist for ${websiteData.url}, retrying save once`);
+          analysisId = await saveAnalysis({
+            userId: userId || null,
+            url: websiteData.url,
+            websiteData,
+            analysisResult: analysis,
+            actionPlan,
+          });
+        }
       }
 
       // Return successful response with analysis ID
