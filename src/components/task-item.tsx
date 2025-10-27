@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -138,6 +138,33 @@ export function TaskItem({ task, onStatusChange, onDelete, onReanalyze, showUrl,
       console.error("Failed to parse reanalysis data:", error);
     }
   }
+
+  // Format dates deterministically on the server and localize on the client
+  const [formattedCompletedAt, setFormattedCompletedAt] = useState<string | null>(
+    task.completed_at ? new Date(task.completed_at).toISOString().slice(0, 10) : null
+  );
+
+  const [formattedReanalysisCheckedAt, setFormattedReanalysisCheckedAt] = useState<string | null>(
+    reanalysisData?.checked_at ? new Date(reanalysisData.checked_at).toISOString() : null
+  );
+
+  useEffect(() => {
+    if (task.completed_at) {
+      try {
+        setFormattedCompletedAt(new Date(task.completed_at).toLocaleDateString());
+      } catch (e) {
+        // Fallback to ISO already set
+      }
+    }
+
+    if (reanalysisData?.checked_at) {
+      try {
+        setFormattedReanalysisCheckedAt(new Date(reanalysisData.checked_at).toLocaleString());
+      } catch (e) {
+        // Fallback to ISO already set
+      }
+    }
+  }, [task.completed_at, reanalysisData?.checked_at]);
 
   const getReanalysisIcon = (status: string) => {
     switch (status) {
@@ -386,10 +413,8 @@ export function TaskItem({ task, onStatusChange, onDelete, onReanalyze, showUrl,
             <p className="text-xs text-muted-foreground">{task.notes}</p>
           </div>
         )}
-        {task.completed_at && (
-          <p className="text-xs text-muted-foreground">
-            Completed {new Date(task.completed_at).toLocaleDateString()}
-          </p>
+        {formattedCompletedAt && (
+          <p className="text-xs text-muted-foreground">Completed {formattedCompletedAt}</p>
         )}
 
         {/* Verification Prompt - shown when no reanalysis yet */}
@@ -443,9 +468,7 @@ export function TaskItem({ task, onStatusChange, onDelete, onReanalyze, showUrl,
                   </div>
                 )}
 
-                <p className="text-xs text-muted-foreground mt-3">
-                  Checked {new Date(reanalysisData.checked_at).toLocaleString()}
-                </p>
+                <p className="text-xs text-muted-foreground mt-3">Checked {formattedReanalysisCheckedAt}</p>
               </div>
               <Button
                 variant="ghost"

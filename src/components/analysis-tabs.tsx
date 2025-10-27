@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AnalysisResults } from "@/components/analysis-results";
 import { ActionPlanInteractive } from "@/components/action-plan-interactive";
@@ -29,8 +31,25 @@ export function AnalysisTabs({
   analysisData,
   onDeleteAnalysis,
 }: AnalysisTabsProps) {
+  const searchParams = useSearchParams();
+  const tabParam = searchParams?.get("tab") || null;
+  const [activeTab, setActiveTab] = useState<"analysis" | "tasks">(defaultTab);
+
+  useEffect(() => {
+    if (tabParam === "tasks" || tabParam === "analysis") {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam]);
+
+  // Listen for manual events (e.g., after generating tasks) to switch tabs
+  useEffect(() => {
+    const handler = () => setActiveTab("tasks");
+    window.addEventListener("tasks-generated", handler as EventListener);
+    return () => window.removeEventListener("tasks-generated", handler as EventListener);
+  }, []);
+
   return (
-    <Tabs defaultValue={defaultTab} className="w-full flex flex-col h-full">
+    <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "analysis" | "tasks") } className="w-full flex flex-col h-full">
       <div className="sticky top-0 z-10 bg-background border-b px-6 py-4">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="analysis">Analysis</TabsTrigger>

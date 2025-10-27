@@ -47,7 +47,7 @@ export async function saveAnalysis(params: {
     const task = params.actionPlan.tasks[i];
 
     // Prefer provided task.id but generate one if missing
-    let taskId = task.id || generateId('task');
+    const taskId = task.id || generateId('task');
 
     const insertTask = async (id: string) => {
       // Use upsert so we don't fail on duplicate ids
@@ -170,7 +170,7 @@ export async function updateAnalysisWithActionPlan(
     const task = actionPlan.tasks[i];
 
     // Prefer provided task.id but generate one if missing
-    let taskId = task.id || generateId('task');
+    const taskId = task.id || generateId('task');
 
     const insertTask = async (id: string) => {
       // Use upsert so we don't fail on duplicate ids

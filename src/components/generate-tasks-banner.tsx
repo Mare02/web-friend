@@ -46,6 +46,12 @@ export function GenerateTasksBanner({ websiteData, analysis }: GenerateTasksBann
       const currentPath = window.location.pathname;
       router.push(`${currentPath}?tab=tasks`);
       router.refresh();
+      // notify any mounted analysis page to switch tabs immediately
+      try {
+        window.dispatchEvent(new CustomEvent("tasks-generated"));
+      } catch (e) {
+        // ignore if window is not available
+      }
     } catch (err) {
       console.error("Error generating action plan:", err);
       setError(err instanceof Error ? err.message : "Failed to generate action plan");
