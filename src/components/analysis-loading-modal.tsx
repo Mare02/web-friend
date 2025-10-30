@@ -3,6 +3,7 @@
 import {
   Dialog,
   DialogContent,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Loader2 } from "lucide-react";
 import { useLoadingMessages } from "@/lib/use-loading-messages";
@@ -33,6 +34,7 @@ export function AnalysisLoadingModal({ isOpen, isLoading }: AnalysisLoadingModal
           }
         }}
       >
+        <DialogTitle className="sr-only">Analyzing Website</DialogTitle>
         <div className="flex flex-col items-center justify-center space-y-6 py-8">
           <div className="relative">
             <Loader2 className="h-12 w-12 animate-spin text-primary" />

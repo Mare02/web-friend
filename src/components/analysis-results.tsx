@@ -117,11 +117,6 @@ export function AnalysisResults({ result, showHeader = false, showGenerateTasksB
 
             {/* Badges */}
             <div className="flex flex-wrap gap-1.5">
-              {websiteData.framework && (
-                <Badge variant="secondary" className="text-xs h-6">
-                  {websiteData.framework}
-                </Badge>
-              )}
               <Badge variant="outline" className="text-xs h-6">{websiteData.images.total} images</Badge>
               <Badge variant="outline" className="text-xs h-6">{websiteData.scripts} scripts</Badge>
               <Badge variant="outline" className="text-xs h-6">{websiteData.stylesheets} stylesheets</Badge>
@@ -441,12 +436,6 @@ export function AnalysisResults({ result, showHeader = false, showGenerateTasksB
                       <p className="font-medium">Word Count</p>
                       <p className="text-muted-foreground">{websiteData.wordCount.toLocaleString()}</p>
                     </div>
-                    {websiteData.framework && (
-                      <div>
-                        <p className="font-medium">Framework</p>
-                        <p className="text-muted-foreground">{websiteData.framework}</p>
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>

@@ -4,7 +4,7 @@ import { urlSchema, analyzeResponseSchema } from "@/lib/validators/schema";
 import { fetchWebsiteData } from "@/lib/services/website-fetcher";
 import { analyzeWebsite } from "@/lib/services/analyzer";
 import { createAIProvider } from "@/lib/ai";
-import { saveAnalysis } from "@/lib/services/analysis-service";
+import { saveAnalysis, deleteOldAnalysesForUrl } from "@/lib/services/analysis-service";
 import { getUserById, syncUserFromClerk } from "@/lib/services/user-service";
 
 /**
@@ -100,6 +100,12 @@ export async function POST(request: NextRequest) {
             clerkUser.imageUrl || null
           );
           console.log(`User ${userId} synced successfully`);
+        }
+
+        // Delete old analyses for this URL before saving the new one
+        const deletedCount = await deleteOldAnalysesForUrl(userId, url);
+        if (deletedCount > 0) {
+          console.log(`Deleted ${deletedCount} old analyses for URL: ${url}`);
         }
 
         analysisId = await saveAnalysis(userId, url, websiteData, analysis, lighthouseData);

@@ -139,6 +139,50 @@ export async function getAnalysisHistory(
 }
 
 /**
+ * Deletes all analyses for a URL except the most recent one
+ * Returns the number of analyses deleted
+ */
+export async function deleteOldAnalysesForUrl(
+  userId: string | null,
+  url: string
+): Promise<number> {
+  if (!userId) {
+    // For anonymous users, we don't store analyses, so nothing to delete
+    return 0;
+  }
+
+  const db = createD1Client();
+
+  // Find the most recent analysis for this URL
+  const latestResult = await db
+    .prepare(
+      `SELECT id FROM analyses
+       WHERE user_id = ? AND url = ?
+       ORDER BY analyzed_at DESC
+       LIMIT 1`
+    )
+    .bind(userId, url)
+    .first<{ id: string }>();
+
+  if (!latestResult) {
+    // No analyses exist for this URL, nothing to delete
+    return 0;
+  }
+
+  // Delete all analyses for this URL except the latest one
+  // Tasks will cascade delete automatically due to foreign key constraints
+  const deleteResult = await db
+    .prepare(
+      `DELETE FROM analyses
+       WHERE user_id = ? AND url = ? AND id != ?`
+    )
+    .bind(userId, url, latestResult.id)
+    .run();
+
+  return (deleteResult.meta?.changes as number) || 0;
+}
+
+/**
  * Fetches a single analysis by ID
  * Only returns if it belongs to the specified user
  */

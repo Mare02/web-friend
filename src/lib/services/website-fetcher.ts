@@ -86,8 +86,6 @@ export async function fetchWebsiteData(url: string): Promise<WebsiteData> {
       .split(/\s+/)
       .filter((word) => word.length > 0).length;
 
-    // Detect framework
-    const framework = detectFramework($, html);
 
     // Extract Open Graph tags
     const openGraph = {
@@ -160,7 +158,6 @@ export async function fetchWebsiteData(url: string): Promise<WebsiteData> {
       scripts,
       stylesheets,
       wordCount,
-      framework,
       openGraph: (openGraph.title || openGraph.description) ? openGraph : undefined,
       twitterCard: (twitterCard.card || twitterCard.title) ? twitterCard : undefined,
       structuredData: structuredData.length > 0 ? structuredData : undefined,
@@ -175,44 +172,4 @@ export async function fetchWebsiteData(url: string): Promise<WebsiteData> {
   }
 }
 
-/**
- * Attempts to detect the framework/platform used by the website
- */
-function detectFramework(
-  $: cheerio.CheerioAPI,
-  html: string
-): string | undefined {
-  // Check for Next.js
-  if ($("#__next").length > 0 || html.includes("_next")) {
-    return "Next.js";
-  }
-
-  // Check for React
-  if ($("#root").length > 0 && html.includes("react")) {
-    return "React";
-  }
-
-  // Check for Vue
-  if ($("[data-v-]").length > 0 || html.includes("vue")) {
-    return "Vue.js";
-  }
-
-  // Check for Angular
-  if ($("[ng-version]").length > 0 || html.includes("angular")) {
-    return "Angular";
-  }
-
-  // Check for WordPress
-  if (html.includes("wp-content") || html.includes("wordpress")) {
-    return "WordPress";
-  }
-
-  // Check for common meta generators
-  const generator = $('meta[name="generator"]').attr("content");
-  if (generator) {
-    return generator;
-  }
-
-  return undefined;
-}
 

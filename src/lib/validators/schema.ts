@@ -40,7 +40,6 @@ export const websiteDataSchema = z.object({
   scripts: z.number(),
   stylesheets: z.number(),
   wordCount: z.number(),
-  framework: z.string().optional(),
   openGraph: z
     .object({
       title: z.string().optional(),

@@ -197,7 +197,7 @@ export function DashboardSidebar({
         </div>
 
         <ScrollArea className="flex-1">
-          <div className="p-2 space-y-1">
+          <div className="p-2 space-y-2">
             {isLoadingHistory ? (
               <>
                 {[1, 2, 3, 4, 5].map((i) => (

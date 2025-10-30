@@ -92,7 +92,6 @@ Current Website State:
 URL: ${data.url}
 Title: ${data.title || "No title"}
 Meta Description: ${data.metaDescription || "No meta description"}
-Framework: ${data.framework || "Unknown"}
 Word Count: ${data.wordCount}
 `;
 
@@ -145,8 +144,6 @@ Images:
 - Total: ${data.images.total}
 - With alt text: ${data.images.withAlt}
 - Without alt text: ${data.images.withoutAlt}
-
-Framework: ${data.framework || "Unknown"}
 `;
       break;
 

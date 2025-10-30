@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { DashboardLayout } from "@/components/dashboard-layout";
 import { NewAnalysisDialog } from "@/components/new-analysis-dialog";
+import { AnalysisLoadingModal } from "@/components/analysis-loading-modal";
 import { useHistory } from "@/contexts/history-context";
 import { useLoading } from "@/contexts/loading-context";
 
@@ -75,6 +76,9 @@ export function AnalysisPageLayout({ children }: AnalysisPageLayoutProps) {
         onAnalyze={handleAnalyze}
         isLoading={isLoading}
       />
+
+      {/* Loading Modal */}
+      <AnalysisLoadingModal isOpen={isLoading} isLoading={isLoading} />
     </DashboardLayout>
   );
 }

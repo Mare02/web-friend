@@ -158,8 +158,6 @@ Headings:
 ${formatHeadings(data.headings)}
 
 Word Count: ${data.wordCount}
-
-Framework: ${data.framework || "Unknown"}
 `;
 
   return ai.analyze(prompt, context);
@@ -229,7 +227,6 @@ IMPORTANT: Do NOT include any URLs, links, or web addresses in your response. Fo
 
   const context = `
 Website: ${data.url}
-Framework: ${data.framework || "Unknown"}
 
 Resources:
 - Scripts: ${data.scripts}
