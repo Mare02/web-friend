@@ -36,10 +36,8 @@ export async function POST(request: NextRequest) {
     const lighthousePath = path.join(process.cwd(), 'node_modules', '.bin', 'lighthouse');
 
     // Create a unique temporary file path for results
-    const tempDir = path.join(process.cwd(), 'temp');
-    if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir, { recursive: true });
-    }
+    // Use /tmp for serverless environments (Vercel, etc.)
+    const tempDir = '/tmp';
     const outputPath = path.join(tempDir, `lighthouse-result-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.json`);
 
     // Run Lighthouse CLI with optimized Chrome flags for macOS
