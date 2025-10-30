@@ -1,6 +1,6 @@
 # Clerk Authentication Setup Guide
 
-This guide will help you set up Clerk authentication for the AI Website Analyzer project.
+This guide will help you set up Clerk authentication for the Web Friend project.
 
 ## Prerequisites
 
@@ -12,7 +12,7 @@ This guide will help you set up Clerk authentication for the AI Website Analyzer
 
 1. Go to https://dashboard.clerk.com
 2. Click "Add application" or create your first application
-3. Choose your application name (e.g., "AI Website Analyzer")
+3. Choose your application name (e.g., "Web Friend")
 4. Select the authentication methods you want to support:
    - Email + Password
    - Google OAuth (recommended)

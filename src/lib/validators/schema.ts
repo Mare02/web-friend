@@ -15,6 +15,10 @@ export const websiteDataSchema = z.object({
   title: z.string().optional(),
   metaDescription: z.string().optional(),
   metaKeywords: z.string().optional(),
+  charset: z.string().optional(),
+  viewport: z.string().optional(),
+  robots: z.string().optional(),
+  canonical: z.string().optional(),
   headings: z.object({
     h1: z.array(z.string()),
     h2: z.array(z.string()),
@@ -27,6 +31,11 @@ export const websiteDataSchema = z.object({
     total: z.number(),
     withAlt: z.number(),
     withoutAlt: z.number(),
+    details: z.array(z.object({
+      src: z.string(),
+      alt: z.string().optional(),
+      title: z.string().optional(),
+    })),
   }),
   scripts: z.number(),
   stylesheets: z.number(),
@@ -38,8 +47,62 @@ export const websiteDataSchema = z.object({
       description: z.string().optional(),
       image: z.string().optional(),
       type: z.string().optional(),
+      url: z.string().optional(),
+      siteName: z.string().optional(),
     })
     .optional(),
+  twitterCard: z
+    .object({
+      card: z.string().optional(),
+      title: z.string().optional(),
+      description: z.string().optional(),
+      image: z.string().optional(),
+      site: z.string().optional(),
+      creator: z.string().optional(),
+    })
+    .optional(),
+  structuredData: z.array(z.object({
+    type: z.string(),
+    data: z.any(),
+  })).optional(),
+  linkTags: z.array(z.object({
+    rel: z.string(),
+    href: z.string(),
+    type: z.string().optional(),
+    hreflang: z.string().optional(),
+  })),
+  metaTags: z.array(z.object({
+    name: z.string().optional(),
+    property: z.string().optional(),
+    content: z.string(),
+    httpEquiv: z.string().optional(),
+  })),
+});
+
+/**
+ * Schema for Lighthouse analytics data
+ */
+export const lighthouseDataSchema = z.object({
+  performance: z.number(),
+  accessibility: z.number(),
+  seo: z.number(),
+  bestPractices: z.number(),
+  coreWebVitals: z.object({
+    largestContentfulPaint: z.number(),
+    firstInputDelay: z.number(),
+    cumulativeLayoutShift: z.number(),
+  }),
+  loadingMetrics: z.object({
+    firstContentfulPaint: z.number(),
+    speedIndex: z.number(),
+    timeToInteractive: z.number(),
+    totalBlockingTime: z.number(),
+  }),
+  resourceMetrics: z.object({
+    totalSize: z.number(),
+    requestCount: z.number(),
+  }),
+  analyzedAt: z.number(),
 });
 
 /**
@@ -61,6 +124,7 @@ export const analyzeResponseSchema = z.object({
     .object({
       websiteData: websiteDataSchema,
       analysis: analysisResultSchema,
+      lighthouseData: lighthouseDataSchema.optional(),
       analysisId: z.string().optional(),
     })
     .optional(),
@@ -116,6 +180,7 @@ export const savedAnalysisSchema = z.object({
   url: z.string(),
   website_data: z.string(), // JSON string
   analysis_result: z.string(), // JSON string
+  lighthouse_data: z.string().nullable(), // JSON string
   action_plan_summary: z.string().nullable(),
   action_plan_timeline: z.string().nullable(),
   quick_wins: z.string().nullable(), // JSON array string
@@ -218,6 +283,7 @@ export const taskReanalysisResponseSchema = z.object({
 // Export inferred types for TypeScript
 export type UrlInput = z.infer<typeof urlSchema>;
 export type WebsiteData = z.infer<typeof websiteDataSchema>;
+export type LighthouseData = z.infer<typeof lighthouseDataSchema>;
 export type AnalysisResult = z.infer<typeof analysisResultSchema>;
 export type AnalyzeResponse = z.infer<typeof analyzeResponseSchema>;
 export type ActionPlanTask = z.infer<typeof actionPlanTaskSchema>;

@@ -108,6 +108,7 @@ export async function getAnalysis(analysisId: string) {
       url: string;
       website_data: string;
       analysis_result: string;
+      lighthouse_data: string | null;
       action_plan_summary: string;
       action_plan_timeline: string | null;
       quick_wins: string;
@@ -126,6 +127,7 @@ export async function getAnalysis(analysisId: string) {
     url: analysis.url,
     websiteData: JSON.parse(analysis.website_data),
     analysisResult: JSON.parse(analysis.analysis_result),
+    lighthouseData: analysis.lighthouse_data ? JSON.parse(analysis.lighthouse_data) : undefined,
     actionPlan: {
       summary: analysis.action_plan_summary,
       timeline: analysis.action_plan_timeline,

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { DashboardLayout } from "@/components/dashboard-layout";
 import { NewAnalysisDialog } from "@/components/new-analysis-dialog";
 import { AnalysisResults } from "@/components/analysis-results";
+import { AnalysisLoadingModal } from "@/components/analysis-loading-modal";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useHistory } from "@/contexts/history-context";
@@ -101,7 +102,7 @@ export default function DashboardPage() {
             <div className="space-y-2">
               <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
                 <Sparkles className="h-8 w-8 text-primary" />
-                {userName ? `Welcome ${userName}!` : "Welcome to AI Website Analyzer"}
+                {userName ? `Welcome ${userName}!` : "Welcome to Web Friend"}
               </h1>
               <p className="text-lg text-muted-foreground">
                 Get AI-powered insights to improve your website&apos;s SEO, content, performance, and accessibility.
@@ -159,6 +160,9 @@ export default function DashboardPage() {
         onAnalyze={handleAnalyze}
         isLoading={isLoading}
       />
+
+      {/* Loading Modal */}
+      <AnalysisLoadingModal isOpen={isLoading} isLoading={isLoading} />
     </DashboardLayout>
   );
 }

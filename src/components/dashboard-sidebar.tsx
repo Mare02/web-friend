@@ -150,7 +150,7 @@ export function DashboardSidebar({
       <div className="p-4 border-b">
         <div className="flex items-center gap-2 mb-4">
           <Sparkles className="h-5 w-5 text-primary" />
-          <h2 className="font-semibold text-sm">AI Website Analyzer</h2>
+          <h2 className="font-semibold text-sm">Web Friend</h2>
         </div>
 
         <Button

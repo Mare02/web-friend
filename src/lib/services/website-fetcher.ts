@@ -30,6 +30,12 @@ export async function fetchWebsiteData(url: string): Promise<WebsiteData> {
       $('meta[name="description"]').attr("content")?.trim() || undefined;
     const metaKeywords =
       $('meta[name="keywords"]').attr("content")?.trim() || undefined;
+    const charset = $('meta[charset]').attr("charset") || undefined;
+    const viewport = $('meta[name="viewport"]').attr("content")?.trim() || undefined;
+    const robots = $('meta[name="robots"]').attr("content")?.trim() || undefined;
+
+    // Extract canonical URL
+    const canonical = $('link[rel="canonical"]').attr("href")?.trim() || undefined;
 
     // Extract all headings with their hierarchy
     const headings = {
@@ -53,16 +59,20 @@ export async function fetchWebsiteData(url: string): Promise<WebsiteData> {
         .get(),
     };
 
-    // Analyze images
+    // Analyze images with detailed information
     const images = $("img");
-    const imagesWithAlt = images.filter((_, el) => {
-      const alt = $(el).attr("alt");
-      return alt !== undefined && alt !== "";
-    }).length;
+    const imageDetails = images.map((_, el) => ({
+      src: $(el).attr("src") || "",
+      alt: $(el).attr("alt")?.trim(),
+      title: $(el).attr("title")?.trim(),
+    })).get();
+
+    const imagesWithAlt = imageDetails.filter(img => img.alt && img.alt !== "").length;
     const imageData = {
       total: images.length,
       withAlt: imagesWithAlt,
       withoutAlt: images.length - imagesWithAlt,
+      details: imageDetails,
     };
 
     // Count scripts and stylesheets
@@ -85,23 +95,77 @@ export async function fetchWebsiteData(url: string): Promise<WebsiteData> {
       description: $('meta[property="og:description"]').attr("content")?.trim(),
       image: $('meta[property="og:image"]').attr("content")?.trim(),
       type: $('meta[property="og:type"]').attr("content")?.trim(),
+      url: $('meta[property="og:url"]').attr("content")?.trim(),
+      siteName: $('meta[property="og:site_name"]').attr("content")?.trim(),
     };
+
+    // Extract Twitter Card tags
+    const twitterCard = {
+      card: $('meta[name="twitter:card"]').attr("content")?.trim(),
+      title: $('meta[name="twitter:title"]').attr("content")?.trim(),
+      description: $('meta[name="twitter:description"]').attr("content")?.trim(),
+      image: $('meta[name="twitter:image"]').attr("content")?.trim(),
+      site: $('meta[name="twitter:site"]').attr("content")?.trim(),
+      creator: $('meta[name="twitter:creator"]').attr("content")?.trim(),
+    };
+
+    // Extract structured data (JSON-LD)
+    const structuredData = $('script[type="application/ld+json"]')
+      .map((_, el) => {
+        try {
+          const data = JSON.parse($(el).html() || "{}");
+          return {
+            type: data["@type"] || "Unknown",
+            data,
+          };
+        } catch {
+          return null;
+        }
+      })
+      .get()
+      .filter(Boolean);
+
+    // Extract link tags
+    const linkTags = $('link')
+      .map((_, el) => ({
+        rel: $(el).attr("rel") || "",
+        href: $(el).attr("href") || "",
+        type: $(el).attr("type")?.trim(),
+        hreflang: $(el).attr("hreflang")?.trim(),
+      }))
+      .get();
+
+    // Extract all meta tags
+    const metaTags = $('meta')
+      .map((_, el) => ({
+        name: $(el).attr("name")?.trim(),
+        property: $(el).attr("property")?.trim(),
+        content: $(el).attr("content") || "",
+        httpEquiv: $(el).attr("http-equiv")?.trim(),
+      }))
+      .get()
+      .filter(meta => meta.name || meta.property || meta.httpEquiv);
 
     return {
       url,
       title,
       metaDescription,
       metaKeywords,
+      charset,
+      viewport,
+      robots,
+      canonical,
       headings,
       images: imageData,
       scripts,
       stylesheets,
       wordCount,
       framework,
-      openGraph:
-        openGraph.title || openGraph.description
-          ? openGraph
-          : undefined,
+      openGraph: (openGraph.title || openGraph.description) ? openGraph : undefined,
+      twitterCard: (twitterCard.card || twitterCard.title) ? twitterCard : undefined,
+      structuredData: structuredData.length > 0 ? structuredData : undefined,
+      linkTags,
+      metaTags,
     };
   } catch (error) {
     if (error instanceof Error) {

@@ -5,6 +5,7 @@ import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { AnalyzerForm } from "@/components/analyzer-form";
 import { AnalysisResults } from "@/components/analysis-results";
+import { AnalysisLoadingModal } from "@/components/analysis-loading-modal";
 import { UserMenu } from "@/components/user-menu";
 import { SignupCTA } from "@/components/signup-cta";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -72,7 +73,7 @@ export default function Home() {
                 <div className="flex items-center justify-between sm:justify-start gap-2 shrink-0">
                   <div className="flex items-center gap-2 cursor-pointer" onClick={() => location.reload()}>
                     <Sparkles className="h-5 w-5 text-primary" />
-                    <h2 className="font-semibold text-base sm:text-lg">AI Website Analyzer</h2>
+                    <h2 className="font-semibold text-base sm:text-lg">Web Friend</h2>
                   </div>
                   <div className="sm:hidden flex items-center gap-2">
                     <UserMenu />
@@ -126,7 +127,7 @@ export default function Home() {
                 <Sparkles className="h-8 w-8 text-primary" />
               </div>
               <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
-                AI Website Analyzer
+                Web Friend
               </h1>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                 Analyze your website for SEO, content quality, performance, and accessibility.
@@ -166,6 +167,9 @@ export default function Home() {
           </footer>
         </>
       )}
+
+      {/* Loading Modal */}
+      <AnalysisLoadingModal isOpen={isLoading} isLoading={isLoading} />
     </div>
   );
 }

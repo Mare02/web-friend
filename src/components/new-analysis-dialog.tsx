@@ -60,8 +60,18 @@ export function NewAnalysisDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]" aria-describedby="dialog-description">
+    <Dialog open={open} onOpenChange={(newOpen) => {
+      // Prevent closing the dialog while analysis is loading
+      if (isLoading && !newOpen) {
+        return;
+      }
+      onOpenChange(newOpen);
+    }}>
+      <DialogContent
+        className="sm:max-w-[500px]"
+        aria-describedby="dialog-description"
+        showCloseButton={!isLoading}
+      >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />

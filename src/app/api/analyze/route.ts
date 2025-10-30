@@ -59,10 +59,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Create AI provider and analyze
-    let analysis;
+    let analysisResult;
     try {
       const aiProvider = createAIProvider("groq", { apiKey });
-      analysis = await analyzeWebsite(websiteData, aiProvider);
+      analysisResult = await analyzeWebsite(websiteData, aiProvider);
     } catch (error) {
       return NextResponse.json(
         {
@@ -75,6 +75,8 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
+
+    const { analysis, lighthouseData } = analysisResult;
 
     // Save analysis for authenticated users
     let analysisId: string | undefined;
@@ -100,11 +102,22 @@ export async function POST(request: NextRequest) {
           console.log(`User ${userId} synced successfully`);
         }
 
-        analysisId = await saveAnalysis(userId, url, websiteData, analysis);
+        analysisId = await saveAnalysis(userId, url, websiteData, analysis, lighthouseData);
       }
     } catch (error) {
       // Log error but don't fail the request
       console.error("Failed to save analysis:", error);
+    }
+
+    // Validate that we have complete data before responding
+    if (!websiteData || !analysis) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Incomplete analysis data generated",
+        },
+        { status: 500 }
+      );
     }
 
     // Return successful response
@@ -113,6 +126,7 @@ export async function POST(request: NextRequest) {
       data: {
         websiteData,
         analysis,
+        lighthouseData,
         analysisId,
       },
     });

@@ -1,4 +1,4 @@
-# AI Website Analyzer
+# Web Friend
 
 A powerful AI-driven tool to analyze websites for SEO, content quality, performance, and accessibility. Get actionable insights and recommendations powered by Groq AI.
 

@@ -4,7 +4,7 @@
  */
 
 import { createD1Client } from "@/lib/db";
-import type { WebsiteData, AnalysisResult } from "@/lib/validators/schema";
+import type { WebsiteData, AnalysisResult, LighthouseData } from "@/lib/validators/schema";
 
 export interface SavedAnalysis {
   id: string;
@@ -12,6 +12,7 @@ export interface SavedAnalysis {
   url: string;
   website_data: string; // JSON string
   analysis_result: string; // JSON string
+  lighthouse_data: string | null; // JSON string
   action_plan_summary: string | null;
   action_plan_timeline: string | null;
   quick_wins: string | null; // JSON array string
@@ -35,7 +36,8 @@ export async function saveAnalysis(
   userId: string | null,
   url: string,
   websiteData: WebsiteData,
-  analysisResult: AnalysisResult
+  analysisResult: AnalysisResult,
+  lighthouseData?: LighthouseData
 ): Promise<string> {
   const db = createD1Client();
   const now = Date.now(); // Use milliseconds for consistency
@@ -43,8 +45,8 @@ export async function saveAnalysis(
 
   await db
     .prepare(
-      `INSERT INTO analyses (id, user_id, url, website_data, analysis_result, analyzed_at, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`
+      `INSERT INTO analyses (id, user_id, url, website_data, analysis_result, lighthouse_data, analyzed_at, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
     )
     .bind(
       id,
@@ -52,6 +54,7 @@ export async function saveAnalysis(
       url,
       JSON.stringify(websiteData),
       JSON.stringify(analysisResult),
+      lighthouseData ? JSON.stringify(lighthouseData) : null,
       now,
       now
     )

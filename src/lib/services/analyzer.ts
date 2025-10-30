@@ -1,28 +1,132 @@
 import { AIProvider } from "../ai";
-import { WebsiteData, AnalysisResult } from "../validators/schema";
+import { WebsiteData, AnalysisResult, LighthouseData } from "../validators/schema";
 
 /**
- * Orchestrates AI analysis of website data
+ * Orchestrates AI analysis of website data with real analytics
  * Generates structured prompts for different analysis categories
+ * Combines AI insights with real Lighthouse performance data
  */
 export async function analyzeWebsite(
   websiteData: WebsiteData,
   aiProvider: AIProvider
-): Promise<AnalysisResult> {
-  // Run all analyses in parallel for better performance
-  const [content, seo, performance, accessibility] = await Promise.all([
+): Promise<{ analysis: AnalysisResult; lighthouseData?: LighthouseData }> {
+  // Run AI analysis and Lighthouse metrics in parallel for better performance
+  const [content, seo, performance, accessibility, lighthouseResponse] = await Promise.all([
     analyzeContent(websiteData, aiProvider),
     analyzeSEO(websiteData, aiProvider),
     analyzePerformance(websiteData, aiProvider),
     analyzeAccessibility(websiteData, aiProvider),
+    // Fetch real analytics data from Lighthouse API
+    fetchLighthouseData(websiteData.url),
   ]);
 
-  return {
+  // Enhance AI analysis with real metrics if available
+  const enhancedResults = {
     content,
-    seo,
-    performance,
-    accessibility,
+    seo: lighthouseResponse.success
+      ? enhanceSEOAnalysis(seo, lighthouseResponse.data!)
+      : seo,
+    performance: lighthouseResponse.success
+      ? enhancePerformanceAnalysis(performance, lighthouseResponse.data!)
+      : performance,
+    accessibility: lighthouseResponse.success
+      ? enhanceAccessibilityAnalysis(accessibility, lighthouseResponse.data!)
+      : accessibility,
   };
+
+  return {
+    analysis: enhancedResults,
+    lighthouseData: lighthouseResponse.success ? lighthouseResponse.data : undefined,
+  };
+}
+
+/**
+ * Fetch Lighthouse analytics data from our API
+ */
+async function fetchLighthouseData(url: string): Promise<{ success: boolean; data?: LighthouseData; error?: string }> {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/lighthouse`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ url }),
+    });
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error('Failed to fetch Lighthouse data:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    };
+  }
+}
+
+/**
+ * Enhance SEO analysis with real Lighthouse SEO score
+ */
+function enhanceSEOAnalysis(aiAnalysis: string, lighthouseData: LighthouseData): string {
+  const realScore = lighthouseData.seo;
+  const scoreColor = realScore >= 90 ? '🟢' : realScore >= 70 ? '🟡' : '🔴';
+
+  return `${aiAnalysis}
+
+## 📊 Real SEO Metrics
+${scoreColor} **SEO Score: ${realScore}/100**
+
+This score is calculated by Google's Lighthouse using real website data, measuring technical SEO factors like meta tags, heading structure, and mobile-friendliness.`;
+}
+
+/**
+ * Enhance performance analysis with real Core Web Vitals
+ */
+function enhancePerformanceAnalysis(aiAnalysis: string, lighthouseData: LighthouseData): string {
+  const { performance, coreWebVitals, loadingMetrics } = lighthouseData;
+  const scoreColor = performance >= 90 ? '🟢' : performance >= 70 ? '🟡' : '🔴';
+
+  const lcpStatus = coreWebVitals.largestContentfulPaint <= 2500 ? '🟢 Good' :
+                   coreWebVitals.largestContentfulPaint <= 4000 ? '🟡 Needs improvement' : '🔴 Poor';
+
+  const fidStatus = coreWebVitals.firstInputDelay <= 100 ? '🟢 Good' :
+                   coreWebVitals.firstInputDelay <= 300 ? '🟡 Needs improvement' : '🔴 Poor';
+
+  const clsStatus = coreWebVitals.cumulativeLayoutShift <= 0.1 ? '🟢 Good' :
+                   coreWebVitals.cumulativeLayoutShift <= 0.25 ? '🟡 Needs improvement' : '🔴 Poor';
+
+  return `${aiAnalysis}
+
+## 📊 Real Performance Metrics
+${scoreColor} **Performance Score: ${performance}/100**
+
+### Core Web Vitals
+- **Largest Contentful Paint (LCP):** ${coreWebVitals.largestContentfulPaint}ms ${lcpStatus}
+- **First Input Delay (FID):** ${coreWebVitals.firstInputDelay}ms ${fidStatus}
+- **Cumulative Layout Shift (CLS):** ${coreWebVitals.cumulativeLayoutShift} ${clsStatus}
+
+### Loading Metrics
+- **First Contentful Paint:** ${loadingMetrics.firstContentfulPaint}ms
+- **Speed Index:** ${loadingMetrics.speedIndex}ms
+- **Time to Interactive:** ${loadingMetrics.timeToInteractive}ms
+- **Total Blocking Time:** ${loadingMetrics.totalBlockingTime}ms
+
+*These metrics are measured on real devices and provide accurate performance data.*`;
+}
+
+/**
+ * Enhance accessibility analysis with real Lighthouse accessibility score
+ */
+function enhanceAccessibilityAnalysis(aiAnalysis: string, lighthouseData: LighthouseData): string {
+  const realScore = lighthouseData.accessibility;
+  const scoreColor = realScore >= 90 ? '🟢' : realScore >= 70 ? '🟡' : '🔴';
+
+  return `${aiAnalysis}
+
+## 📊 Real Accessibility Metrics
+${scoreColor} **Accessibility Score: ${realScore}/100**
+
+This automated accessibility audit checks for common issues like missing alt text, insufficient color contrast, missing form labels, and proper heading structure. The score reflects actual technical accessibility compliance.`;
 }
 
 /**

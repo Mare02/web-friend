@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI Website Analyzer | SEO, Content & Performance Analysis",
+  title: "Web Friend | SEO, Content & Performance Analysis",
   description: "Analyze your website for SEO, content quality, performance, and accessibility with AI-powered insights and recommendations.",
 };
 

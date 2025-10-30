@@ -33,6 +33,7 @@ export default async function AnalysisPage({ params, searchParams }: AnalysisPag
     data: {
       websiteData: analysis.websiteData,
       analysis: analysis.analysisResult,
+      lighthouseData: analysis.lighthouseData,
     },
   };
 
