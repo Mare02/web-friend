@@ -347,3 +347,24 @@ export type ColorPalette = z.infer<typeof colorPaletteSchema>;
 export type ColorPaletteResult = z.infer<typeof colorPaletteResultSchema>;
 export type ColorPaletteInput = z.infer<typeof colorPaletteInputSchema>;
 
+/**
+ * Schema for QR code generation options
+ */
+export const qrCodeSchema = z.object({
+  text: z.string().min(1, "Text is required").max(2000, "Text too long for QR code"),
+  size: z.number().min(128).max(1024).default(256),
+  errorCorrectionLevel: z.enum(['L', 'M', 'Q', 'H']).default('M'),
+  format: z.enum(['png', 'svg', 'jpeg']).default('png'),
+  margin: z.number().min(0).max(10).default(4),
+  color: z.object({
+    dark: z.string().regex(/^#[0-9A-F]{6}$/i, "Invalid hex color").default('#000000'),
+    light: z.string().regex(/^#[0-9A-F]{6}$/i, "Invalid hex color").default('#FFFFFF'),
+  }).default({
+    dark: '#000000',
+    light: '#FFFFFF',
+  }),
+});
+
+// Export inferred types for TypeScript
+export type QRCodeOptions = z.infer<typeof qrCodeSchema>;
+

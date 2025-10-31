@@ -17,6 +17,7 @@ import {
   FileText,
   Palette,
   Globe,
+  QrCode,
   ChevronDown
 } from "lucide-react";
 
@@ -47,6 +48,13 @@ const tools = [
     description: "Test and debug REST APIs with authentication",
     href: "/tools/api-tester",
     icon: Globe,
+    badges: ["Free"],
+  },
+  {
+    name: "QR Code Generator",
+    description: "Generate QR codes for URLs, text, and more",
+    href: "/tools/qr-code-generator",
+    icon: QrCode,
     badges: ["Free"],
   },
 ];

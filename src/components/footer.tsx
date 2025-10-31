@@ -29,6 +29,21 @@ export function Footer() {
                   Text Analyzer
                 </Link>
               </li>
+              <li>
+                <Link href="/tools/api-tester" className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+                  API Tester
+                </Link>
+              </li>
+              <li>
+                <Link href="/tools/color-palette-generator" className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+                  Color Palette Generator
+                </Link>
+              </li>
+              <li>
+                <Link href="/tools/qr-code-generator" className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+                  QR Code Generator
+                </Link>
+              </li>
             </ul>
           </div>
           <div>

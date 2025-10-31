@@ -12,7 +12,8 @@ import {
   Globe,
   Target,
   Palette,
-  Code
+  Code,
+  QrCode
 } from "lucide-react";
 
 const tools = [
@@ -51,6 +52,15 @@ const tools = [
     badges: ["Free Tool"],
     color: "from-orange-500 to-yellow-500",
     features: ["API Testing Suite", "Auth Support", "Save & Load Requests"]
+  },
+  {
+    title: "QR Code Generator",
+    description: "Generate custom QR codes for URLs, text, email addresses, phone numbers, and WiFi networks",
+    icon: QrCode,
+    href: "/tools/qr-code-generator",
+    badges: ["Free Tool"],
+    color: "from-red-500 to-pink-500",
+    features: ["Multiple Content Types", "Custom Colors", "Download Options", "Advanced Settings"]
   }
 ];
 
@@ -58,7 +68,7 @@ const features = [
   {
     icon: Sparkles,
     title: "Specialized Tools",
-    description: "Complete toolkit with AI website analyzer, text analyzer, color palette generator, and API tester"
+    description: "Complete toolkit with AI website analyzer, text analyzer, color palette generator, API tester, and QR code generator"
   },
   {
     icon: BarChart3,
