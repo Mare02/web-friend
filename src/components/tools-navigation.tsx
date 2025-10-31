@@ -16,6 +16,7 @@ import {
   Search,
   FileText,
   Palette,
+  Globe,
   ChevronDown
 } from "lucide-react";
 
@@ -39,6 +40,13 @@ const tools = [
     description: "Generate harmonious color palettes",
     href: "/tools/color-palette-generator",
     icon: Palette,
+    badge: "Free",
+  },
+  {
+    name: "API Tester",
+    description: "Test and debug REST APIs with authentication",
+    href: "/tools/api-tester",
+    icon: Globe,
     badge: "Free",
   },
 ];

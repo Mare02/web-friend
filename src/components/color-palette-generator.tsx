@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   generateColorPalettes,
   generateRandomPalette,
@@ -52,10 +52,6 @@ export function ColorPaletteGenerator({ onBack }: ColorPaletteGeneratorProps) {
   const [gradientAngle, setGradientAngle] = useState(90);
   const [angleInputValue, setAngleInputValue] = useState('90');
 
-  // Sync angleInputValue with gradientAngle
-  useEffect(() => {
-    setAngleInputValue(gradientAngle.toString());
-  }, [gradientAngle]);
 
   const handleGenerateFromBase = async () => {
     if (!isValidHexColor(baseColor)) {
@@ -162,6 +158,7 @@ export function ColorPaletteGenerator({ onBack }: ColorPaletteGeneratorProps) {
     const numValue = Number(angleInputValue);
     if (!isNaN(numValue) && numValue >= 0 && numValue <= 360) {
       setGradientAngle(numValue);
+      setAngleInputValue(numValue.toString()); // Sync input after successful apply
     } else {
       // Reset to current valid angle if input is invalid
       setAngleInputValue(gradientAngle.toString());
@@ -213,9 +210,6 @@ export function ColorPaletteGenerator({ onBack }: ColorPaletteGeneratorProps) {
               <PaletteIcon className="h-5 w-5" />
               {palette.name}
             </CardTitle>
-            <CardDescription>
-              {palette.type.charAt(0).toUpperCase() + palette.type.slice(1)} palette
-            </CardDescription>
           </div>
           <div className="flex gap-2">
             <Button
@@ -273,11 +267,11 @@ export function ColorPaletteGenerator({ onBack }: ColorPaletteGeneratorProps) {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* {(gradientType === 'linear' || gradientType === 'conic') && (
+            {(gradientType === 'linear' || gradientType === 'conic') && (
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground">Angle:</span>
                 <Input
-                  type="text"
+                  type="number"
                   value={angleInputValue}
                   onChange={(e) => {
                     setAngleInputValue(e.target.value);
@@ -287,7 +281,7 @@ export function ColorPaletteGenerator({ onBack }: ColorPaletteGeneratorProps) {
                       handleApplyAngle();
                     }
                   }}
-                  className="w-16 h-8 text-sm [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                  className="w-16 h-8 text-sm"
                   placeholder="90"
                 />
                 <Button
@@ -300,7 +294,7 @@ export function ColorPaletteGenerator({ onBack }: ColorPaletteGeneratorProps) {
                 </Button>
                 <span className="text-sm text-muted-foreground">°</span>
               </div>
-            )} */}
+            )}
           </div>
 
           {/* Gradient Preview */}
