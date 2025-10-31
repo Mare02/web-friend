@@ -10,7 +10,8 @@ import {
   CheckCircle,
   ArrowRight,
   Globe,
-  Target
+  Target,
+  Palette
 } from "lucide-react";
 
 const tools = [
@@ -31,6 +32,15 @@ const tools = [
     badge: "Free Tool",
     color: "from-green-500 to-emerald-500",
     features: ["Readability Scores", "Keyword Density", "SEO Analysis", "Content Metrics"]
+  },
+  {
+    title: "Color Palette Generator",
+    description: "Generate harmonious color palettes using color theory and design principles",
+    icon: Palette,
+    href: "/tools/color-palette-generator",
+    badge: "Free Tool",
+    color: "from-purple-500 to-pink-500",
+    features: ["Color Picker", "Color Harmonies", "CSS Gradients", "Palette Export"]
   }
 ];
 
@@ -73,7 +83,7 @@ export default function Home() {
         </div>
 
         {/* Tools Grid */}
-        <div className="grid md:grid-cols-2 gap-8 mb-20">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
           {tools.map((tool) => {
             const Icon = tool.icon;
             return (

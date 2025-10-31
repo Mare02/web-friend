@@ -298,3 +298,52 @@ export type TaskReanalysis = z.infer<typeof taskReanalysisSchema>;
 export type TaskReanalysisRequest = z.infer<typeof taskReanalysisRequestSchema>;
 export type TaskReanalysisResponse = z.infer<typeof taskReanalysisResponseSchema>;
 
+/**
+ * Schema for color information
+ */
+export const colorInfoSchema = z.object({
+  hex: z.string().regex(/^#[0-9A-F]{6}$/i, "Invalid hex color format"),
+  rgb: z.object({
+    r: z.number().min(0).max(255),
+    g: z.number().min(0).max(255),
+    b: z.number().min(0).max(255),
+  }),
+  hsl: z.object({
+    h: z.number().min(0).max(360),
+    s: z.number().min(0).max(100),
+    l: z.number().min(0).max(100),
+  }),
+  name: z.string().optional(),
+});
+
+/**
+ * Schema for color palette
+ */
+export const colorPaletteSchema = z.object({
+  baseColor: colorInfoSchema,
+  colors: z.array(colorInfoSchema),
+  type: z.enum(['monochromatic', 'analogous', 'complementary', 'triadic', 'tetradic', 'split-complementary', 'random']),
+  name: z.string(),
+});
+
+/**
+ * Schema for color palette generation result
+ */
+export const colorPaletteResultSchema = z.object({
+  palettes: z.array(colorPaletteSchema),
+  generatedAt: z.date(),
+});
+
+/**
+ * Schema for color palette generation input
+ */
+export const colorPaletteInputSchema = z.object({
+  baseColor: z.string().regex(/^#[0-9A-F]{6}$/i, "Please enter a valid hex color (e.g., #FF5733)"),
+});
+
+// Export inferred types for TypeScript
+export type ColorInfo = z.infer<typeof colorInfoSchema>;
+export type ColorPalette = z.infer<typeof colorPaletteSchema>;
+export type ColorPaletteResult = z.infer<typeof colorPaletteResultSchema>;
+export type ColorPaletteInput = z.infer<typeof colorPaletteInputSchema>;
+

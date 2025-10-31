@@ -15,6 +15,7 @@ import {
   Wrench,
   Search,
   FileText,
+  Palette,
   ChevronDown
 } from "lucide-react";
 
@@ -31,6 +32,13 @@ const tools = [
     description: "Readability and SEO content analysis",
     href: "/tools/text-analyzer",
     icon: FileText,
+    badge: "Free",
+  },
+  {
+    name: "Color Palette Generator",
+    description: "Generate harmonious color palettes",
+    href: "/tools/color-palette-generator",
+    icon: Palette,
     badge: "Free",
   },
 ];
