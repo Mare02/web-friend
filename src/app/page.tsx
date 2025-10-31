@@ -57,24 +57,24 @@ const tools = [
 const features = [
   {
     icon: Sparkles,
-    title: "AI-Powered Analysis",
-    description: "Get intelligent insights and actionable recommendations powered by advanced AI"
+    title: "Specialized Tools",
+    description: "Complete toolkit with AI website analyzer, text analyzer, color palette generator, and API tester"
   },
   {
     icon: BarChart3,
-    title: "Comprehensive Metrics",
-    description: "Detailed analytics covering SEO, performance, accessibility, and content quality"
+    title: "AI-Enhanced Features",
+    description: "Intelligent analysis powered by AI across website SEO, content quality, and design tools"
   },
   {
     icon: Target,
-    title: "Actionable Insights",
-    description: "Clear recommendations and step-by-step guidance to improve your website"
+    title: "Zero Cost Utilities",
+    description: "High-quality web development tools available completely free for everyone"
   }
 ];
 
 export default function Home() {
   return (
-    <div className="bg-gradient-to-b from-background to-muted/20">
+    <div className="bg-linear-to-b from-background to-muted/20">
 
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-16 md:py-24">
@@ -144,7 +144,7 @@ export default function Home() {
               Why Choose Web Friend?
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Professional-grade web analysis tools designed for developers, marketers, and content creators.
+              A comprehensive suite of free web development tools designed for developers, designers, marketers, and content creators.
             </p>
           </div>
 
