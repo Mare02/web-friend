@@ -15,8 +15,7 @@ import {
   Wrench,
   Search,
   FileText,
-  ChevronDown,
-  Sparkles
+  ChevronDown
 } from "lucide-react";
 
 const tools = [

@@ -21,7 +21,6 @@ import {
   Plus,
   Clock,
   ExternalLink,
-  Sparkles,
   BarChart3,
   CheckSquare,
   Trash2

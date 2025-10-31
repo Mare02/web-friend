@@ -49,7 +49,7 @@ export function GenerateTasksBanner({ websiteData, analysis }: GenerateTasksBann
       // notify any mounted analysis page to switch tabs immediately
       try {
         window.dispatchEvent(new CustomEvent("tasks-generated"));
-      } catch (e) {
+      } catch {
         // ignore if window is not available
       }
     } catch (err) {

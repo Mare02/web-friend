@@ -397,7 +397,7 @@ function SEOAnalysisTab({ result }: { result: TextAnalysisResult }) {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Badge variant="outline">{index + 1}</Badge>
-                      <span className="font-medium">"{phrase.phrase}"</span>
+                      <span className="font-medium">&quot;{phrase.phrase}&quot;</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <span>{phrase.count}x</span>
@@ -429,7 +429,7 @@ function SEOAnalysisTab({ result }: { result: TextAnalysisResult }) {
                 <div key={phrase.phrase} className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Badge variant="outline">{index + 1}</Badge>
-                    <span className="font-medium">"{phrase.phrase}"</span>
+                    <span className="font-medium">&quot;{phrase.phrase}&quot;</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <span>{phrase.count}x</span>

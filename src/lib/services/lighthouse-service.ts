@@ -26,12 +26,17 @@ export interface LighthouseData {
   analyzedAt: number;
 }
 
+interface ChromeInstance {
+  port: number;
+  kill: () => void;
+}
+
 export async function runLighthouseAnalysis(url: string): Promise<LighthouseData> {
   // Dynamic imports to avoid Next.js build issues
   const lighthouse = await import('lighthouse').then(m => m.default);
   const { launch: launchChrome } = await import('chrome-launcher');
 
-  let chrome: unknown = null;
+  let chrome: ChromeInstance | null = null;
 
   try {
     console.log('Launching Chrome instance...');
@@ -57,7 +62,7 @@ export async function runLighthouseAnalysis(url: string): Promise<LighthouseData
     const runnerResult = await lighthouse(url, {
       logLevel: 'info',
       output: 'json',
-      port: (chrome as any).port,
+      port: chrome.port,
       throttlingMethod: 'devtools',
       maxWaitForLoad: 30000,
     });
@@ -97,7 +102,7 @@ export async function runLighthouseAnalysis(url: string): Promise<LighthouseData
     // Always clean up Chrome instance
     if (chrome) {
       try {
-        await (chrome as any).kill();
+        await chrome.kill();
       } catch {
         // Ignore cleanup errors
       }

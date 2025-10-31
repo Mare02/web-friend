@@ -152,7 +152,8 @@ export function TaskItem({ task, onStatusChange, onDelete, onReanalyze, showUrl,
     if (task.completed_at) {
       try {
         setFormattedCompletedAt(new Date(task.completed_at).toLocaleDateString());
-      } catch (e) {
+      } catch (error) {
+        console.error("Failed to format completed at:", error);
         // Fallback to ISO already set
       }
     }
@@ -160,7 +161,8 @@ export function TaskItem({ task, onStatusChange, onDelete, onReanalyze, showUrl,
     if (reanalysisData?.checked_at) {
       try {
         setFormattedReanalysisCheckedAt(new Date(reanalysisData.checked_at).toLocaleString());
-      } catch (e) {
+      } catch (error) {
+        console.error("Failed to format reanalysis checked at:", error);
         // Fallback to ISO already set
       }
     }
