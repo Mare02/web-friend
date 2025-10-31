@@ -11,7 +11,8 @@ import {
   ArrowRight,
   Globe,
   Target,
-  Palette
+  Palette,
+  Code
 } from "lucide-react";
 
 const tools = [
@@ -20,7 +21,7 @@ const tools = [
     description: "Comprehensive SEO, performance, and accessibility analysis with AI-powered insights",
     icon: Search,
     href: "/tools/website-analyzer",
-    badge: "AI Powered",
+    badges: ["AI Powered", "Free Tool"],
     color: "from-blue-500 to-cyan-500",
     features: ["SEO Analysis", "Performance Metrics", "Accessibility Audit", "AI Recommendations"]
   },
@@ -29,7 +30,7 @@ const tools = [
     description: "Analyze text readability, SEO keywords, and content quality metrics",
     icon: FileText,
     href: "/tools/text-analyzer",
-    badge: "Free Tool",
+    badges: ["Free Tool"],
     color: "from-green-500 to-emerald-500",
     features: ["Readability Scores", "Keyword Density", "SEO Analysis", "Content Metrics"]
   },
@@ -38,9 +39,18 @@ const tools = [
     description: "Generate harmonious color palettes using color theory and design principles",
     icon: Palette,
     href: "/tools/color-palette-generator",
-    badge: "Free Tool",
+    badges: ["Free Tool"],
     color: "from-purple-500 to-pink-500",
     features: ["Color Picker", "Color Harmonies", "CSS Gradients", "Palette Export"]
+  },
+  {
+    title: "API Tester",
+    description: "Test your APIs with ease using a simple and intuitive interface",
+    icon: Code,
+    href: "/tools/api-tester",
+    badges: ["Free Tool"],
+    color: "from-orange-500 to-yellow-500",
+    features: ["API Testing", "API Documentation", "API Monitoring", "API Management"]
   }
 ];
 
@@ -93,9 +103,13 @@ export default function Home() {
                     <div className={`p-3 rounded-xl bg-linear-to-r ${tool.color} text-white`}>
                       <Icon className="h-6 w-6" />
                     </div>
-                    <Badge variant="secondary" className="text-xs">
-                      {tool.badge}
-                    </Badge>
+                    <div className="flex flex-wrap gap-1">
+                      {tool.badges.map((badge) => (
+                        <Badge key={badge} variant="secondary" className="text-xs">
+                          {badge}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
                   <CardTitle className="text-2xl mb-2">{tool.title}</CardTitle>
                   <CardDescription className="text-base leading-relaxed">

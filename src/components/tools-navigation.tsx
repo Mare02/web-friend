@@ -26,28 +26,28 @@ const tools = [
     description: "SEO, performance, and accessibility analysis",
     href: "/tools/website-analyzer",
     icon: Search,
-    badge: "AI",
+    badges: ["AI", "Free"],
   },
   {
     name: "Text Analyzer",
     description: "Readability and SEO content analysis",
     href: "/tools/text-analyzer",
     icon: FileText,
-    badge: "Free",
+    badges: ["Free"],
   },
   {
     name: "Color Palette Generator",
     description: "Generate harmonious color palettes",
     href: "/tools/color-palette-generator",
     icon: Palette,
-    badge: "Free",
+    badges: ["Free"],
   },
   {
     name: "API Tester",
     description: "Test and debug REST APIs with authentication",
     href: "/tools/api-tester",
     icon: Globe,
-    badge: "Free",
+    badges: ["Free"],
   },
 ];
 
@@ -87,9 +87,13 @@ export function ToolsNavigation() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-sm">{tool.name}</span>
-                    <Badge variant="secondary" className="text-xs">
-                      {tool.badge}
-                    </Badge>
+                    <div className="flex flex-wrap gap-1">
+                      {tool.badges.map((badge) => (
+                        <Badge key={badge} variant="secondary" className="text-xs">
+                          {badge}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
                     {tool.description}
