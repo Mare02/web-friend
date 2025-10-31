@@ -50,7 +50,7 @@ const tools = [
     href: "/tools/api-tester",
     badges: ["Free Tool"],
     color: "from-orange-500 to-yellow-500",
-    features: ["API Testing", "API Documentation", "API Monitoring", "API Management"]
+    features: ["API Testing Suite", "Auth Support", "Save & Load Requests"]
   }
 ];
 
