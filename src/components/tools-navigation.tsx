@@ -84,16 +84,6 @@ export function ToolsNavigation() {
             </DropdownMenuItem>
           );
         })}
-        <div className="border-t mt-2 pt-2 px-2">
-          <Link
-            href="/"
-            className="flex items-center gap-2 p-2 text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-            onClick={() => setIsOpen(false)}
-          >
-            <Sparkles className="h-4 w-4" />
-            View all tools
-          </Link>
-        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );
