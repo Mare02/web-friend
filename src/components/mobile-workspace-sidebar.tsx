@@ -3,21 +3,21 @@
 import { Sheet, SheetContent, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
-import { DashboardSidebar } from "@/components/dashboard-sidebar";
+import { WorkspaceSidebar } from "@/components/workspace-sidebar";
 import { useState } from "react";
 import type { AnalysisHistoryItem } from "@/lib/validators/schema";
 
-interface MobileSidebarProps {
+interface MobileWorkspaceSidebarProps {
   onNewAnalysis?: () => void;
   history: AnalysisHistoryItem[];
   isLoadingHistory: boolean;
 }
 
-export function MobileSidebar({
+export function MobileWorkspaceSidebar({
   onNewAnalysis,
   history,
   isLoadingHistory
-}: MobileSidebarProps) {
+}: MobileWorkspaceSidebarProps) {
   const [open, setOpen] = useState(false);
 
   const handleNewAnalysis = () => {
@@ -38,7 +38,7 @@ export function MobileSidebar({
         <SheetDescription id="mobile-menu-description" className="sr-only">
           Access your analysis history and create new website analyses
         </SheetDescription>
-        <DashboardSidebar
+        <WorkspaceSidebar
           onNewAnalysis={handleNewAnalysis}
           history={history}
           isLoadingHistory={isLoadingHistory}

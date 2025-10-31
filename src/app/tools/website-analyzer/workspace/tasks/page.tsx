@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { DashboardLayout } from "@/components/dashboard-layout";
+import { WorkspaceLayout } from "@/components/workspace-layout";
 import { NewAnalysisDialog } from "@/components/new-analysis-dialog";
 import { TaskList } from "@/components/task-list";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -169,7 +169,7 @@ export default function TasksPage() {
 
       // If analysis was saved (has ID), navigate to the analysis page
       if (data.data?.analysisId) {
-        router.push(`/analysis/${data.data.analysisId}`);
+        router.push(`/tools/website-analyzer/analysis/${data.data.analysisId}`);
       }
     } catch (err) {
       setError(
@@ -186,7 +186,7 @@ export default function TasksPage() {
   };
 
   return (
-    <DashboardLayout onNewAnalysis={handleNewAnalysis}>
+    <WorkspaceLayout onNewAnalysis={handleNewAnalysis}>
       <div className="p-6">
         <div className="max-w-6xl mx-auto space-y-6">
           {/* Header */}
@@ -264,7 +264,7 @@ export default function TasksPage() {
         onAnalyze={handleAnalyze}
         isLoading={isAnalyzing}
       />
-    </DashboardLayout>
+    </WorkspaceLayout>
   );
 }
 

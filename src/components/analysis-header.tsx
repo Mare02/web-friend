@@ -62,8 +62,8 @@ export const AnalysisHeader = forwardRef<AnalysisHeaderRef, AnalysisHeaderProps>
       // Invalidate history cache to refetch without deleted analysis
       invalidateHistory();
 
-      // Redirect to dashboard after successful deletion
-      router.push("/dashboard");
+      // Redirect to workspace after successful deletion
+      router.push("/tools/website-analyzer/workspace");
     } catch (err) {
       console.error("Error deleting analysis:", err);
       setError(err instanceof Error ? err.message : "Failed to delete analysis");

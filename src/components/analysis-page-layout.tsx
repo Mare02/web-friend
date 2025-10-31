@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { DashboardLayout } from "@/components/dashboard-layout";
+import { WorkspaceLayout } from "@/components/workspace-layout";
 import { NewAnalysisDialog } from "@/components/new-analysis-dialog";
 import { AnalysisLoadingModal } from "@/components/analysis-loading-modal";
 import { useHistory } from "@/contexts/history-context";
@@ -46,17 +46,17 @@ export function AnalysisPageLayout({ children }: AnalysisPageLayoutProps) {
         invalidateHistory();
 
         // Redirect to the new analysis page
-        router.push(`/analysis/${data.data.analysisId}`);
+        router.push(`/tools/website-analyzer/analysis/${data.data.analysisId}`);
       } else {
-        // If no analysisId, go to dashboard
-        router.push("/dashboard");
+        // If no analysisId, go to workspace
+        router.push("/tools/website-analyzer/workspace");
       }
     } catch (err) {
       console.error("Error analyzing:", err);
       // Close dialog even on error before navigation
       setDialogOpen(false);
-      // On error, still go to dashboard
-      router.push("/dashboard");
+      // On error, still go to workspace
+      router.push("/tools/website-analyzer/workspace");
     } finally {
       setIsLoading(false);
       stopLoading();
@@ -64,7 +64,7 @@ export function AnalysisPageLayout({ children }: AnalysisPageLayoutProps) {
   };
 
   return (
-    <DashboardLayout
+    <WorkspaceLayout
       onNewAnalysis={handleNewAnalysis}
     >
       {children}
@@ -79,7 +79,7 @@ export function AnalysisPageLayout({ children }: AnalysisPageLayoutProps) {
 
       {/* Loading Modal */}
       <AnalysisLoadingModal isOpen={isLoading} isLoading={isLoading} />
-    </DashboardLayout>
+    </WorkspaceLayout>
   );
 }
 

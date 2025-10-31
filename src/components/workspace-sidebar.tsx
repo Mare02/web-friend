@@ -28,17 +28,17 @@ import {
 } from "lucide-react";
 import type { AnalysisHistoryItem, WebsiteData } from "@/lib/validators/schema";
 
-interface DashboardSidebarProps {
+interface WorkspaceSidebarProps {
   onNewAnalysis?: () => void;
   history: AnalysisHistoryItem[];
   isLoadingHistory: boolean;
 }
 
-export function DashboardSidebar({
+export function WorkspaceSidebar({
   onNewAnalysis,
   history,
   isLoadingHistory
-}: DashboardSidebarProps) {
+}: WorkspaceSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { startLoading, stopLoading } = useLoading();
@@ -122,9 +122,9 @@ export function DashboardSidebar({
       // Invalidate history cache to refetch without deleted analysis
       invalidateHistory();
 
-      // If we're currently viewing the deleted analysis, redirect to dashboard
-      if (pathname === `/analysis/${deletingId}`) {
-        router.push("/dashboard");
+      // If we're currently viewing the deleted analysis, redirect to workspace
+      if (pathname === `/tools/website-analyzer/analysis/${deletingId}`) {
+        router.push("/tools/website-analyzer/workspace");
       }
 
       setDeleteDialogOpen(false);
@@ -148,11 +148,6 @@ export function DashboardSidebar({
     <div className="flex flex-col h-full border-r bg-muted/10">
       {/* Header */}
       <div className="p-4 border-b">
-        <div className="flex items-center gap-2 mb-4">
-          <Sparkles className="h-5 w-5 text-primary" />
-          <h2 className="font-semibold text-sm">Web Friend</h2>
-        </div>
-
         <Button
           onClick={onNewAnalysis}
           className="w-full"
@@ -167,19 +162,19 @@ export function DashboardSidebar({
       <div className="p-3 border-b">
         <nav className="space-y-1">
           <Button
-            variant={pathname === "/dashboard" ? "secondary" : "ghost"}
+            variant={pathname === "/tools/website-analyzer/workspace" ? "secondary" : "ghost"}
             className="w-full justify-start"
             size="sm"
-            onClick={() => handleNavigation("/dashboard")}
+            onClick={() => handleNavigation("/tools/website-analyzer/workspace")}
           >
             <Home className="h-4 w-4 mr-2" />
-            Dashboard
+            Workspace
           </Button>
           <Button
-            variant={pathname === "/dashboard/tasks" ? "secondary" : "ghost"}
+            variant={pathname === "/tools/website-analyzer/workspace/tasks" ? "secondary" : "ghost"}
             className="w-full justify-start"
             size="sm"
-            onClick={() => handleNavigation("/dashboard/tasks")}
+            onClick={() => handleNavigation("/tools/website-analyzer/workspace/tasks")}
           >
             <CheckSquare className="h-4 w-4 mr-2" />
             My Tasks
@@ -216,8 +211,8 @@ export function DashboardSidebar({
               history.map((item) => {
                 const websiteTitle = getWebsiteTitle(item.preview_data);
                 const hostname = getWebsiteHostname(item.url);
-                const isActive = pathname === `/analysis/${item.latest_analysis_id}`;
-                const href = `/analysis/${item.latest_analysis_id}`;
+                const isActive = pathname === `/tools/website-analyzer/analysis/${item.latest_analysis_id}`;
+                const href = `/tools/website-analyzer/analysis/${item.latest_analysis_id}`;
 
                 return (
                   <div

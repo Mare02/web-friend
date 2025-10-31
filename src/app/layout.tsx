@@ -8,6 +8,8 @@ import { HistoryProvider } from "@/contexts/history-context";
 import { LoadingProvider } from "@/contexts/loading-context";
 import { GlobalLoadingBar } from "@/components/global-loading-bar";
 import { NavigationLoading } from "@/components/navigation-loading";
+import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
         <ThemeProvider
           attribute="class"
@@ -47,7 +49,11 @@ export default function RootLayout({
                 <Suspense fallback={null}>
                   <NavigationLoading />
                 </Suspense>
-                {children}
+                <Header />
+                <main className="flex-1">
+                  {children}
+                </main>
+                <Footer />
               </HistoryProvider>
             </LoadingProvider>
           </ClerkThemeProvider>

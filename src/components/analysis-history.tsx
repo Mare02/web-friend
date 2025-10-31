@@ -169,7 +169,7 @@ export function AnalysisHistory({ onAnalyze }: AnalysisHistoryProps) {
 
           return (
             <Card key={item.latest_analysis_id} className="hover:shadow-lg transition-shadow group cursor-pointer">
-              <Link href={`/analysis/${item.latest_analysis_id}`} className="block">
+              <Link href={`/tools/website-analyzer/analysis/${item.latest_analysis_id}`} className="block cursor-pointer">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { DashboardLayout } from "@/components/dashboard-layout";
+import { WorkspaceLayout } from "@/components/workspace-layout";
 import { NewAnalysisDialog } from "@/components/new-analysis-dialog";
 import { AnalysisResults } from "@/components/analysis-results";
 import { AnalysisLoadingModal } from "@/components/analysis-loading-modal";
@@ -58,7 +58,7 @@ export default function DashboardPage() {
 
       // If analysis was saved (has ID), navigate to the analysis page
       if (data.data?.analysisId) {
-        router.push(`/analysis/${data.data.analysisId}`);
+        router.push(`/tools/website-analyzer/analysis/${data.data.analysisId}`);
       } else {
         // If not saved (unauthenticated user), scroll to top to see results
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -78,7 +78,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <DashboardLayout
+    <WorkspaceLayout
       onNewAnalysis={handleNewAnalysis}
     >
       <div className="p-6">
@@ -163,7 +163,7 @@ export default function DashboardPage() {
 
       {/* Loading Modal */}
       <AnalysisLoadingModal isOpen={isLoading} isLoading={isLoading} />
-    </DashboardLayout>
+    </WorkspaceLayout>
   );
 }
 

@@ -1,175 +1,147 @@
-"use client";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Sparkles,
+  Search,
+  FileText,
+  BarChart3,
+  CheckCircle,
+  ArrowRight,
+  Globe,
+  Target
+} from "lucide-react";
 
-import { useState, useEffect } from "react";
-import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
-import { AnalyzerForm } from "@/components/analyzer-form";
-import { AnalysisResults } from "@/components/analysis-results";
-import { AnalysisLoadingModal } from "@/components/analysis-loading-modal";
-import { UserMenu } from "@/components/user-menu";
-import { SignupCTA } from "@/components/signup-cta";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AnalyzeResponse } from "@/lib/validators/schema";
-import { AlertCircle, Sparkles } from "lucide-react";
-import { ThemeToggle } from "@/components/theme-toggle";
+const tools = [
+  {
+    title: "AI Website Analyzer",
+    description: "Comprehensive SEO, performance, and accessibility analysis with AI-powered insights",
+    icon: Search,
+    href: "/tools/website-analyzer",
+    badge: "AI Powered",
+    color: "from-blue-500 to-cyan-500",
+    features: ["SEO Analysis", "Performance Metrics", "Accessibility Audit", "AI Recommendations"]
+  },
+  {
+    title: "Text Analyzer",
+    description: "Analyze text readability, SEO keywords, and content quality metrics",
+    icon: FileText,
+    href: "/tools/text-analyzer",
+    badge: "Free Tool",
+    color: "from-green-500 to-emerald-500",
+    features: ["Readability Scores", "Keyword Density", "SEO Analysis", "Content Metrics"]
+  }
+];
+
+const features = [
+  {
+    icon: Sparkles,
+    title: "AI-Powered Analysis",
+    description: "Get intelligent insights and actionable recommendations powered by advanced AI"
+  },
+  {
+    icon: BarChart3,
+    title: "Comprehensive Metrics",
+    description: "Detailed analytics covering SEO, performance, accessibility, and content quality"
+  },
+  {
+    icon: Target,
+    title: "Actionable Insights",
+    description: "Clear recommendations and step-by-step guidance to improve your website"
+  }
+];
 
 export default function Home() {
-  const { isSignedIn, isLoaded } = useUser();
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState<AnalyzeResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  // Redirect authenticated users to dashboard
-  useEffect(() => {
-    if (isLoaded && isSignedIn) {
-      router.push("/dashboard");
-    }
-  }, [isSignedIn, isLoaded, router]);
-
-  const handleAnalyze = async (url: string) => {
-    setIsLoading(true);
-    setError(null);
-    setResult(null);
-
-    try {
-      const response = await fetch("/api/analyze", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ url }),
-      });
-
-      const data: AnalyzeResponse = await response.json();
-
-      if (!data.success) {
-        setError(data.error || "An unexpected error occurred");
-        return;
-      }
-
-      setResult(data);
-
-      // Scroll to top to see results
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Failed to analyze website"
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      {result ? (
-        // Results View with Compact Header
-        <>
-          {/* Compact Sticky Header */}
-          <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-md border-b shadow-sm">
-            <div className="container mx-auto px-4 py-3">
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
-                <div className="flex items-center justify-between sm:justify-start gap-2 shrink-0">
-                  <div className="flex items-center gap-2 cursor-pointer" onClick={() => location.reload()}>
-                    <Sparkles className="h-5 w-5 text-primary" />
-                    <h2 className="font-semibold text-base sm:text-lg">Web Friend</h2>
+    <div className="bg-gradient-to-b from-background to-muted/20">
+
+      {/* Hero Section */}
+      <div className="container mx-auto px-4 py-16 md:py-24">
+        <div className="text-center mb-16 space-y-6">
+          <div className="inline-flex items-center justify-center p-3 bg-primary/10 rounded-full mb-6">
+            <Globe className="h-10 w-10 text-primary" />
+          </div>
+          <h1 className="text-4xl md:text-7xl font-bold tracking-tight">
+            Web Tools for
+            <span className="block text-primary">Modern Creators</span>
+          </h1>
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            Comprehensive web analysis tools powered by AI and advanced algorithms.
+            Optimize your website&apos;s SEO, performance, accessibility, and content quality.
+          </p>
+        </div>
+
+        {/* Tools Grid */}
+        <div className="grid md:grid-cols-2 gap-8 mb-20">
+          {tools.map((tool) => {
+            const Icon = tool.icon;
+            return (
+              <Card key={tool.title} className="group hover:shadow-lg transition-all duration-300 border-2 hover:border-primary/20 max-h-max">
+                <CardHeader className="pb-4">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className={`p-3 rounded-xl bg-linear-to-r ${tool.color} text-white`}>
+                      <Icon className="h-6 w-6" />
+                    </div>
+                    <Badge variant="secondary" className="text-xs">
+                      {tool.badge}
+                    </Badge>
                   </div>
-                  <div className="sm:hidden flex items-center gap-2">
-                    <UserMenu />
-                    <ThemeToggle />
+                  <CardTitle className="text-2xl mb-2">{tool.title}</CardTitle>
+                  <CardDescription className="text-base leading-relaxed">
+                    {tool.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    {tool.features.map((feature, featureIndex) => (
+                      <div key={featureIndex} className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-500 shrink-0" />
+                        <span className="text-sm">{feature}</span>
+                      </div>
+                    ))}
                   </div>
+                  <Link href={tool.href} className="block cursor-pointer">
+                    <Button className="w-full group-hover:bg-primary/90 transition-colors">
+                      Get Started
+                      <ArrowRight className="h-4 w-4 ml-2" />
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+
+        {/* Features Section */}
+        <div className="mb-20">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Why Choose Web Friend?
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Professional-grade web analysis tools designed for developers, marketers, and content creators.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {features.map((feature) => {
+              const Icon = feature.icon;
+              return (
+                <div key={feature.title} className="text-center group">
+                  <div className="inline-flex items-center justify-center p-4 bg-primary/10 rounded-full mb-4 group-hover:bg-primary/20 transition-colors">
+                    <Icon className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="font-semibold mb-2">{feature.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {feature.description}
+                  </p>
                 </div>
-                <AnalyzerForm onAnalyze={handleAnalyze} isLoading={isLoading} compact />
-                <div className="hidden sm:flex items-center gap-2 shrink-0">
-                  <UserMenu />
-                  <ThemeToggle />
-                </div>
-              </div>
-            </div>
+              );
+            })}
           </div>
-
-          {/* Error State */}
-          {error && (
-            <div className="container mx-auto px-4 pt-4">
-              <Alert variant="destructive" className="max-w-2xl mx-auto">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            </div>
-          )}
-
-          {/* Results */}
-          <div className="container mx-auto px-4 py-6">
-            <div className="flex justify-center animate-in fade-in duration-500">
-              <AnalysisResults result={result} />
-            </div>
-          </div>
-        </>
-      ) : (
-        // Landing View with Full Hero
-        <>
-          {/* Landing Header with Theme Toggle */}
-          <div className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-            <div className="container mx-auto px-4 py-4">
-              <div className="flex justify-end gap-2">
-                <UserMenu />
-                <ThemeToggle />
-              </div>
-            </div>
-          </div>
-
-          {/* Hero Section */}
-          <div className="container mx-auto px-4 py-8 md:py-16">
-            <div className="text-center mb-12 space-y-4">
-              <div className="inline-flex items-center justify-center p-2 bg-primary/10 rounded-full mb-4">
-                <Sparkles className="h-8 w-8 text-primary" />
-              </div>
-              <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
-                Web Friend
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Analyze your website for SEO, content quality, performance, and accessibility.
-                Get AI-powered insights and actionable recommendations.
-              </p>
-            </div>
-
-            {/* Analyzer Form */}
-            <div className="flex justify-center mb-12">
-              <AnalyzerForm onAnalyze={handleAnalyze} isLoading={isLoading} />
-            </div>
-
-            {/* Error State */}
-            {error && (
-              <div className="flex justify-center mb-8">
-                <Alert variant="destructive" className="max-w-2xl">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>Error</AlertTitle>
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              </div>
-            )}
-
-            {/* Sign Up CTA */}
-            <div className="max-w-5xl mx-auto mt-16">
-              <SignupCTA />
-            </div>
-          </div>
-
-          {/* Footer */}
-          <footer className="border-t mt-24">
-            <div className="container mx-auto px-4 py-8">
-              <p className="text-center text-sm text-muted-foreground">
-                Powered by AI • Built with Next.js, shadcn/ui, and Tailwind CSS
-              </p>
-            </div>
-          </footer>
-        </>
-      )}
-
-      {/* Loading Modal */}
-      <AnalysisLoadingModal isOpen={isLoading} isLoading={isLoading} />
+        </div>
+      </div>
     </div>
   );
 }

@@ -20,7 +20,7 @@ export default function AnalysisNotFound() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Link href="/">
+          <Link href="/" className="cursor-pointer">
             <Button className="w-full gap-2">
               <Home className="h-4 w-4" />
               Back to Home
