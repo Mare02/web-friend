@@ -67,18 +67,18 @@ const tools = [
 const features = [
   {
     icon: Sparkles,
-    title: "Specialized Tools",
-    description: "Complete toolkit with AI website analyzer, text analyzer, color palette generator, API tester, and QR code generator"
+    title: "Comprehensive Toolkit",
+    description: "Everything you need for web development: AI analysis, API testing, design tools, content creation, and more - all in one place"
   },
   {
     icon: BarChart3,
-    title: "AI-Enhanced Features",
-    description: "Intelligent analysis powered by AI across website SEO, content quality, and design tools"
+    title: "Professional Quality",
+    description: "Industry-standard tools used by developers, designers, marketers, and content creators worldwide"
   },
   {
     icon: Target,
-    title: "Zero Cost Utilities",
-    description: "High-quality web development tools available completely free for everyone"
+    title: "100% Free Forever",
+    description: "No subscriptions, no limits, no ads. High-quality web development tools available completely free"
   }
 ];
 
@@ -97,8 +97,8 @@ export default function Home() {
             <span className="block text-primary">Modern Creators</span>
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Comprehensive web analysis tools powered by AI and advanced algorithms.
-            Optimize your website&apos;s SEO, performance, accessibility, and content quality.
+            Your complete toolkit for web development, design, and content creation.
+            From AI-powered website analysis to API testing, color palettes, and QR codes - all free.
           </p>
         </div>
 
@@ -154,7 +154,7 @@ export default function Home() {
               Why Choose Web Friend?
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              A comprehensive suite of free web development tools designed for developers, designers, marketers, and content creators.
+              The ultimate collection of professional web development tools. Whether you&apos;re a developer testing APIs, a designer creating color palettes, a marketer analyzing content, or anyone building for the web - we have you covered.
             </p>
           </div>
 

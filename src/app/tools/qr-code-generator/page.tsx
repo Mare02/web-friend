@@ -1,29 +1,22 @@
-"use client";
+import type { Metadata } from "next";
+import QRCodeGeneratorClient from "./qr-code-generator-client";
 
-import { QRCodeGenerator } from "@/components/qr-code-generator";
-import { QrCode } from "lucide-react";
+export const metadata: Metadata = {
+  title: "QR Code Generator | Create Custom QR Codes Online Free",
+  description: "Free QR code generator for URLs, text, email, phone numbers, and WiFi networks. Create custom QR codes with colors, logos, and advanced settings. Download in PNG, SVG formats.",
+  keywords: ["QR code generator", "free QR code", "custom QR code", "QR code maker", "URL to QR", "text to QR", "WiFi QR code", "contact QR code", "download QR code"],
+  openGraph: {
+    title: "QR Code Generator | Create Custom QR Codes Online Free",
+    description: "Free QR code generator for URLs, text, email, phone numbers, and WiFi networks. Create custom QR codes with colors, logos, and advanced settings.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "QR Code Generator | Create Custom QR Codes Online Free",
+    description: "Free QR code generator for URLs, text, email, phone numbers, and WiFi networks. Create custom QR codes with colors, logos, and advanced settings.",
+  },
+};
 
 export default function QRCodeGeneratorPage() {
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      {/* Hero Section */}
-      <div className="container mx-auto px-4 pt-8 md:pt-16">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center p-2 bg-primary/10 rounded-full mb-4">
-            <QrCode className="h-8 w-8 text-primary" />
-          </div>
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
-            QR Code Generator
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mt-4">
-            Generate custom QR codes for URLs, text, email addresses, phone numbers,
-            and WiFi networks. Fully customizable with advanced options.
-          </p>
-        </div>
-      </div>
-
-      {/* Tool */}
-      <QRCodeGenerator />
-    </div>
-  );
+  return <QRCodeGeneratorClient />;
 }

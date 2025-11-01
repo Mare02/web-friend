@@ -1,29 +1,22 @@
-"use client";
+import type { Metadata } from "next";
+import TextAnalyzerClient from "./text-analyzer-client";
 
-import { TextAnalyzer } from "@/components/text-analyzer";
-import { FileText } from "lucide-react";
+export const metadata: Metadata = {
+  title: "Text Analyzer | Readability, SEO & Content Quality Analysis Tool",
+  description: "Free text analyzer tool for writers, marketers, and content creators. Check readability scores, SEO keywords, content metrics, and grammar analysis. Improve your writing quality instantly.",
+  keywords: ["text analyzer", "readability checker", "SEO content analysis", "content quality", "grammar checker", "writing tool", "keyword density", "text metrics", "free writing tool"],
+  openGraph: {
+    title: "Text Analyzer | Readability, SEO & Content Quality Analysis Tool",
+    description: "Free text analyzer tool for writers, marketers, and content creators. Check readability scores, SEO keywords, content metrics, and grammar analysis.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Text Analyzer | Readability, SEO & Content Quality Analysis Tool",
+    description: "Free text analyzer tool for writers, marketers, and content creators. Check readability scores, SEO keywords, content metrics, and grammar analysis.",
+  },
+};
 
 export default function TextAnalyzerPage() {
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      {/* Hero Section */}
-      <div className="container mx-auto px-4 pt-8 md:pt-16">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center p-2 bg-primary/10 rounded-full mb-4">
-            <FileText className="h-8 w-8 text-primary" />
-          </div>
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
-            Text Analyzer
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mt-4">
-            Analyze your text for readability, SEO optimization, and content quality.
-            Get detailed statistics and insights without using AI.
-          </p>
-        </div>
-      </div>
-
-      {/* Analyzer Tool */}
-      <TextAnalyzer />
-    </div>
-  );
+  return <TextAnalyzerClient />;
 }

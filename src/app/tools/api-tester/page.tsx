@@ -1,29 +1,22 @@
-"use client";
+import type { Metadata } from "next";
+import ApiTesterClient from "./api-tester-client";
 
-import { ApiTester } from "@/components/api-tester";
-import { Globe } from "lucide-react";
+export const metadata: Metadata = {
+  title: "API Tester | REST API Testing Tool with Authentication Support",
+  description: "Free API testing tool for developers. Test REST APIs with GET, POST, PUT, DELETE methods. Support for authentication, headers, query parameters, and request body. Save and organize your API calls.",
+  keywords: ["API tester", "REST API testing", "API debugging", "HTTP client", "API development tool", "REST client", "API authentication", "developer tools", "free API tester"],
+  openGraph: {
+    title: "API Tester | REST API Testing Tool with Authentication Support",
+    description: "Free API testing tool for developers. Test REST APIs with GET, POST, PUT, DELETE methods. Support for authentication, headers, query parameters, and request body.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "API Tester | REST API Testing Tool with Authentication Support",
+    description: "Free API testing tool for developers. Test REST APIs with GET, POST, PUT, DELETE methods. Support for authentication, headers, query parameters, and request body.",
+  },
+};
 
 export default function ApiTesterPage() {
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      {/* Hero Section */}
-      <div className="container mx-auto px-4 pt-8 md:pt-16">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center p-2 bg-primary/10 rounded-full mb-4">
-            <Globe className="h-8 w-8 text-primary" />
-          </div>
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
-            API Tester
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mt-4">
-            Test and debug REST APIs with a comprehensive interface. Send requests, inspect responses,
-            manage authentication, and save your API calls for later use.
-          </p>
-        </div>
-      </div>
-
-      {/* Tool */}
-      <ApiTester />
-    </div>
-  );
+  return <ApiTesterClient />;
 }
