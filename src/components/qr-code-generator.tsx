@@ -28,11 +28,7 @@ import {
   Zap,
 } from "lucide-react";
 
-interface QRCodeGeneratorProps {
-  onBack?: () => void;
-}
-
-export function QRCodeGenerator({ onBack }: QRCodeGeneratorProps) {
+export function QRCodeGenerator() {
   const [content, setContent] = useState("");
   const [contentType, setContentType] = useState("text");
   const [result, setResult] = useState<QRCodeResult | null>(null);
@@ -140,20 +136,6 @@ export function QRCodeGenerator({ onBack }: QRCodeGeneratorProps) {
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-6">
         <div className="max-w-4xl mx-auto space-y-6">
-          {/* Back Button */}
-          {onBack && (
-            <div className="flex justify-start">
-              <Button
-                variant="ghost"
-                onClick={onBack}
-                className="flex items-center gap-2"
-              >
-                <QrCode className="h-4 w-4" />
-                Back to QR Code Generator
-              </Button>
-            </div>
-          )}
-
           {/* Input Section */}
           <Card>
             <CardHeader>

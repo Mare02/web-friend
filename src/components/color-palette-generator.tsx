@@ -36,11 +36,7 @@ import {
   Code
 } from "lucide-react";
 
-interface ColorPaletteGeneratorProps {
-  onBack?: () => void;
-}
-
-export function ColorPaletteGenerator({ onBack }: ColorPaletteGeneratorProps) {
+export function ColorPaletteGenerator() {
   const [baseColor, setBaseColor] = useState("#3B82F6");
   const [result, setResult] = useState<ColorPaletteResult | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -370,20 +366,6 @@ export function ColorPaletteGenerator({ onBack }: ColorPaletteGeneratorProps) {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-6">
         <div className="max-w-6xl mx-auto space-y-6">
-          {/* Back Button */}
-          {onBack && (
-            <div className="flex justify-start">
-              <Button
-                variant="ghost"
-                onClick={onBack}
-                className="flex items-center gap-2"
-              >
-                <Palette className="h-4 w-4" />
-                Back to Color Palette Generator
-              </Button>
-            </div>
-          )}
-
           {/* Input Section */}
           <Card>
             <CardHeader>

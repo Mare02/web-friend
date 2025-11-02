@@ -36,7 +36,7 @@ export function RecentArticlesHomeSection({ articles }: RecentBlogsHomeSectionPr
       {/* See More Blogs CTA */}
       <div className="text-center mt-12">
         <Link href="/blogs">
-          <Button size="lg" className="gap-2">
+          <Button size="lg" variant="outline" className="gap-2">
             See More Blogs
             <ArrowRight className="w-4 h-4" />
           </Button>

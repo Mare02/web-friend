@@ -12,7 +12,7 @@ export function Header() {
         <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer">
             <Sparkles className="h-6 w-6 text-primary" />
-            <span className="font-bold text-xl">Web Friend</span>
+            <span className="hidden sm:inline font-bold text-lg">Web Friend</span>
           </Link>
           <div className="flex items-center gap-4">
             <ToolsNavigation />

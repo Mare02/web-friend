@@ -29,17 +29,20 @@ export function WorkspaceLayout({
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Main Content Area */}
-        <main className="flex-1 overflow-auto relative">
-          {/* Mobile Sidebar Trigger */}
-          <div className="lg:hidden fixed top-20 left-4 z-30">
-            <MobileWorkspaceSidebar
-              onNewAnalysis={onNewAnalysis}
-              history={history}
-              isLoadingHistory={isLoadingHistory}
-            />
-          </div>
+        <main className="flex-1 overflow-auto relative pt-10 lg:pt-0">
           {children}
         </main>
+      </div>
+
+      {/* Secondary Header with Mobile Menu - Fixed to viewport */}
+      <div
+        className="lg:hidden fixed top-16 left-0 right-0 z-10 flex items-center h-12 px-4 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80"
+      >
+        <MobileWorkspaceSidebar
+          onNewAnalysis={onNewAnalysis}
+          history={history}
+          isLoadingHistory={isLoadingHistory}
+        />
       </div>
     </div>
   );

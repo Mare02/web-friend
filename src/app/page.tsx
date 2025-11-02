@@ -53,17 +53,7 @@ export default async function Home() {
         </div>
 
         {/* Featured Tools Section */}
-        <div className="py-20" id="tools">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Featured Tools
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Professional digital tools for everyone working online.
-              From website analysis to QR codes and color palettes - everything you need.
-            </p>
-          </div>
-
+        <div className="pb-20" id="tools">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {tools.slice(0, 3).map((tool) => (
               <ToolCard key={tool.title} tool={tool} variant="compact" />

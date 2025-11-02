@@ -108,16 +108,6 @@ function ArticleDetail({ article }: { article: BlogDetail }) {
 
   return (
     <article className="container mx-auto px-4 py-8 max-w-4xl">
-      {/* Back button */}
-      <div className="mb-6">
-        <Link href="/blogs">
-          <Button variant="ghost" className="pl-0">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Blogs
-          </Button>
-        </Link>
-      </div>
-
       {/* Article header */}
       <header className="mb-8">
         <div className="flex flex-wrap gap-2 mb-4">
