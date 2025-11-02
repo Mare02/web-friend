@@ -35,6 +35,12 @@ const categories = [
     slug: { _type: 'slug', current: 'tips-tricks' },
     description: 'Quick tips and helpful techniques',
   },
+  {
+    _type: 'category',
+    title: 'Tutorials',
+    slug: { _type: 'slug', current: 'tutorials' },
+    description: 'Step-by-step guides and tutorials',
+  },
 ]
 
 async function seedCategories() {

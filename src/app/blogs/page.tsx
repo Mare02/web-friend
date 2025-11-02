@@ -5,10 +5,14 @@ import { BlogsList } from '@/components/blogs/blogs-list'
 import { BlogsFilters } from '@/components/blogs/blogs-filters'
 import { BlogFilters } from '@/lib/validators/schema'
 import { Skeleton } from '@/components/ui/skeleton'
+import { logger } from '@/lib/logger'
 
 interface BlogsPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
+
+// Enable Incremental Static Regeneration
+export const revalidate = 3600 // Revalidate every hour
 
 export async function generateMetadata({ searchParams }: BlogsPageProps): Promise<Metadata> {
   const params = await searchParams
@@ -63,51 +67,81 @@ export async function generateMetadata({ searchParams }: BlogsPageProps): Promis
 }
 
 async function BlogsContent({ searchParams }: BlogsPageProps) {
-  const params = await searchParams
+  try {
+    const params = await searchParams
 
-  // Parse filters from search params
-  const filters: BlogFilters = {
-    category: typeof params.category === 'string' ? params.category : undefined,
-    tag: typeof params.tag === 'string' ? params.tag : undefined,
-    page: typeof params.page === 'string' ? parseInt(params.page, 10) || 1 : 1,
-  }
+    // Parse filters from search params
+    const filters: BlogFilters = {
+      category: typeof params.category === 'string' ? params.category : undefined,
+      tag: typeof params.tag === 'string' ? params.tag : undefined,
+      page: typeof params.page === 'string' ? parseInt(params.page, 10) || 1 : 1,
+    }
 
-  // Fetch data in parallel
-  const [articlesResponse, categories, tags] = await Promise.all([
-    getArticles(filters),
-    getCategories(),
-    getTags(),
-  ])
+    // Fetch data in parallel
+    const [articlesResponse, categories, tags] = await Promise.all([
+      getArticles(filters),
+      getCategories(),
+      getTags(),
+    ])
 
-  return (
-    <div>
-      <div className="container mx-auto px-4 py-4">
-        <div>
-          <h1 className="text-3xl font-bold mb-2">Blogs</h1>
-          <p className="text-base text-muted-foreground">
-            Explore our collection of blogs on web development, SEO, best practices, and more.
-          </p>
+    return (
+      <div>
+        <div className="container mx-auto px-4 py-4">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">Blogs</h1>
+            <p className="text-base text-muted-foreground">
+              Explore our collection of blogs on web development, SEO, best practices, and more.
+            </p>
+          </div>
+        </div>
+
+        <BlogsFilters
+          categories={categories}
+          tags={tags}
+          currentFilters={filters}
+        />
+
+        <div className="container mx-auto px-4 py-6">
+          <BlogsList
+            articles={articlesResponse.articles}
+            total={articlesResponse.total}
+            currentPage={articlesResponse.currentPage}
+            hasNextPage={articlesResponse.hasNextPage}
+            basePath="/blogs"
+            filters={filters}
+          />
         </div>
       </div>
+    )
+  } catch (error) {
+    logger.error('Error loading blogs listing page', error instanceof Error ? error : new Error(String(error)), {
+      operation: 'BlogsPage',
+      searchParams
+    })
 
-      <BlogsFilters
-        categories={categories}
-        tags={tags}
-        currentFilters={filters}
-      />
+    // Return error state
+    return (
+      <div>
+        <div className="container mx-auto px-4 py-4">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">Blogs</h1>
+            <p className="text-base text-muted-foreground">
+              Explore our collection of blogs on web development, SEO, best practices, and more.
+            </p>
+          </div>
+        </div>
 
-      <div className="container mx-auto px-4 py-6">
-        <BlogsList
-          articles={articlesResponse.articles}
-          total={articlesResponse.total}
-          currentPage={articlesResponse.currentPage}
-          hasNextPage={articlesResponse.hasNextPage}
-          basePath="/blogs"
-          filters={filters}
-        />
+        <div className="container mx-auto px-4 py-12">
+          <div className="text-center">
+            <h2 className="text-xl font-semibold mb-4">Unable to Load Blogs</h2>
+            <p className="text-muted-foreground mb-6">
+              We&apos;re experiencing issues loading the blog content. Please try again later.
+            </p>
+          </div>
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 }
 
 function BlogsSkeleton() {

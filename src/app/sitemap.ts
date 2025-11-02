@@ -1,28 +1,38 @@
 import { MetadataRoute } from 'next'
-import { readFileSync } from 'fs'
-import { join } from 'path'
+import { client } from '@/lib/sanity/client'
 
 interface SitemapArticle {
-  slug: string
+  slug: {
+    current: string
+  }
   publishedAt: string
+}
+
+/**
+ * Fetch all articles for sitemap generation
+ */
+async function getAllArticlesForSitemap(): Promise<SitemapArticle[]> {
+  try {
+    const query = `*[_type == 'article'] | order(publishedAt desc) {
+      slug,
+      publishedAt
+    }`
+    return await client.fetch(query)
+  } catch (error) {
+    console.error('Failed to fetch articles for sitemap:', error)
+    return []
+  }
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://web-friend.vercel.app'
 
-  // Read pre-generated sitemap data
-  let allArticles: SitemapArticle[] = []
-  try {
-    const sitemapDataPath = join(process.cwd(), 'public', 'sitemap-data.json')
-    const sitemapData = readFileSync(sitemapDataPath, 'utf-8')
-    allArticles = JSON.parse(sitemapData)
-  } catch (error) {
-    console.warn('Could not read sitemap data file, falling back to empty array:', error)
-  }
+  // Fetch articles dynamically from Sanity
+  const allArticles = await getAllArticlesForSitemap()
 
   // Generate sitemap entries for blog posts
   const blogEntries = allArticles.map((article) => ({
-    url: `${baseUrl}/blogs/${article.slug}`,
+    url: `${baseUrl}/blogs/${article.slug.current}`,
     lastModified: new Date(article.publishedAt),
     changeFrequency: 'monthly' as const,
     priority: 0.8,

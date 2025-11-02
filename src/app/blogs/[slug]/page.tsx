@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import { getArticleBySlug } from '@/lib/services/article-service'
 import { BlogDetail } from '@/lib/validators/schema'
+import { client } from '@/lib/sanity/client'
+import { logger } from '@/lib/logger'
 import { Badge } from '@/components/ui/badge'
 import { urlFor } from '@/lib/sanity/client'
 import { format } from 'date-fns'
@@ -13,6 +15,24 @@ import Image from 'next/image'
 
 interface BlogPageProps {
   params: Promise<{ slug: string }>
+}
+
+// Enable Incremental Static Regeneration
+export const revalidate = 3600 // Revalidate every hour
+
+// Generate static params for all blog posts
+export async function generateStaticParams() {
+  try {
+    const query = `*[_type == 'article'] { slug }`
+    const articles = await client.fetch(query)
+
+    return articles.map((article: { slug: { current: string } }) => ({
+      slug: article.slug.current,
+    }))
+  } catch (error) {
+    console.error('Failed to generate static params for blog posts:', error)
+    return []
+  }
 }
 
 // Generate structured data for Article/BlogPosting
@@ -183,25 +203,50 @@ function ArticleDetail({ article }: { article: BlogDetail }) {
 }
 
 export default async function BlogPage({ params }: BlogPageProps) {
-  const { slug } = await params
-  const article = await getArticleBySlug(slug)
+  try {
+    const { slug } = await params
+    const article = await getArticleBySlug(slug)
 
-  if (!article) {
-    notFound()
+    if (!article) {
+      notFound()
+    }
+
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://web-friend.vercel.app'
+    const structuredData = generateArticleStructuredData(article, baseUrl)
+
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData),
+          }}
+        />
+        <ArticleDetail article={article} />
+      </>
+    )
+  } catch (error) {
+    logger.error('Error loading blog post page', error instanceof Error ? error : new Error(String(error)), {
+      operation: 'BlogPage',
+      slug: params.slug
+    })
+
+    // Return a fallback error page
+    return (
+      <div className="container mx-auto px-4 py-12">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Blog Post Unavailable</h1>
+          <p className="text-muted-foreground mb-6">
+            We encountered an error loading this blog post. Please try again later.
+          </p>
+          <Link href="/blogs">
+            <Button>
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Blogs
+            </Button>
+          </Link>
+        </div>
+      </div>
+    )
   }
-
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://web-friend.vercel.app'
-  const structuredData = generateArticleStructuredData(article, baseUrl)
-
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(structuredData),
-        }}
-      />
-      <ArticleDetail article={article} />
-    </>
-  )
 }
