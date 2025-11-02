@@ -1,25 +1,25 @@
 import { Suspense } from 'react'
 import { Metadata } from 'next'
 import { getArticles, getCategories, getTags } from '@/lib/services/article-service'
-import { ArticlesList } from '@/components/articles/articles-list'
-import { ArticlesFilters } from '@/components/articles/articles-filters'
-import { ArticleFilters } from '@/lib/validators/schema'
+import { BlogsList } from '@/components/blogs/blogs-list'
+import { BlogsFilters } from '@/components/blogs/blogs-filters'
+import { BlogFilters } from '@/lib/validators/schema'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export const metadata: Metadata = {
-  title: 'Articles | Web Friend',
-  description: 'Explore our collection of articles on web development, SEO, best practices, and more.',
+  title: 'Blogs | Web Friend',
+  description: 'Explore our collection of blogs on web development, SEO, best practices, and more.',
 }
 
-interface ArticlesPageProps {
+interface BlogsPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
-async function ArticlesContent({ searchParams }: ArticlesPageProps) {
+async function BlogsContent({ searchParams }: BlogsPageProps) {
   const params = await searchParams
 
   // Parse filters from search params
-  const filters: ArticleFilters = {
+  const filters: BlogFilters = {
     category: typeof params.category === 'string' ? params.category : undefined,
     tag: typeof params.tag === 'string' ? params.tag : undefined,
     page: typeof params.page === 'string' ? parseInt(params.page, 10) || 1 : 1,
@@ -36,26 +36,26 @@ async function ArticlesContent({ searchParams }: ArticlesPageProps) {
     <div>
       <div className="container mx-auto px-4 py-4">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Articles</h1>
+          <h1 className="text-3xl font-bold mb-2">Blogs</h1>
           <p className="text-base text-muted-foreground">
-            Explore our collection of articles on web development, SEO, best practices, and more.
+            Explore our collection of blogs on web development, SEO, best practices, and more.
           </p>
         </div>
       </div>
 
-      <ArticlesFilters
+      <BlogsFilters
         categories={categories}
         tags={tags}
         currentFilters={filters}
       />
 
       <div className="container mx-auto px-4 py-6">
-        <ArticlesList
+        <BlogsList
           articles={articlesResponse.articles}
           total={articlesResponse.total}
           currentPage={articlesResponse.currentPage}
           hasNextPage={articlesResponse.hasNextPage}
-          basePath="/articles"
+          basePath="/blogs"
           filters={filters}
         />
       </div>
@@ -63,7 +63,7 @@ async function ArticlesContent({ searchParams }: ArticlesPageProps) {
   )
 }
 
-function ArticlesSkeleton() {
+function BlogsSkeleton() {
   return (
     <div>
       <div className="container mx-auto px-4 py-4">
@@ -99,10 +99,10 @@ function ArticlesSkeleton() {
   )
 }
 
-export default function ArticlesPage({ searchParams }: ArticlesPageProps) {
+export default function BlogsPage({ searchParams }: BlogsPageProps) {
   return (
-    <Suspense fallback={<ArticlesSkeleton />}>
-      <ArticlesContent searchParams={searchParams} />
+    <Suspense fallback={<BlogsSkeleton />}>
+      <BlogsContent searchParams={searchParams} />
     </Suspense>
   )
 }

@@ -1,32 +1,32 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArticleListItem, ArticleFilters } from '@/lib/validators/schema'
+import { BlogListItem, BlogFilters } from '@/lib/validators/schema'
 import { Button } from '@/components/ui/button'
 import { urlFor } from '@/lib/sanity/client'
 import { format } from 'date-fns'
 import { ChevronLeft, ChevronRight, Clock } from 'lucide-react'
 
-interface ArticlesListProps {
-  articles: ArticleListItem[]
+interface BlogsListProps {
+  articles: BlogListItem[]
   total: number
   currentPage: number
   hasNextPage: boolean
   basePath: string
-  filters: ArticleFilters
+  filters: BlogFilters
 }
 
-export function ArticlesList({
+export function BlogsList({
   articles,
   total,
   currentPage,
   hasNextPage,
   basePath,
   filters,
-}: ArticlesListProps) {
+}: BlogsListProps) {
   if (articles.length === 0) {
     return (
       <div className="text-center py-12">
-        <h3 className="text-lg font-semibold mb-2">No articles found</h3>
+        <h3 className="text-lg font-semibold mb-2">No blogs found</h3>
         <p className="text-muted-foreground">
           Try adjusting your filters or check back later for new content.
         </p>
@@ -49,13 +49,13 @@ export function ArticlesList({
     <div className="space-y-8 pb-20">
       {/* Results summary */}
       <div className="text-sm text-muted-foreground">
-        Showing {articles.length} of {total} articles
+        Showing {articles.length} of {total} blogs
       </div>
 
       {/* Articles grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {articles.map((article) => (
-          <ArticleCard key={article._id} article={article} />
+          <BlogCard key={article._id} article={article} />
         ))}
       </div>
 
@@ -89,11 +89,11 @@ export function ArticlesList({
   )
 }
 
-interface ArticleCardProps {
-  article: ArticleListItem
+interface BlogCardProps {
+  article: BlogListItem
 }
 
-function ArticleCard({ article }: ArticleCardProps) {
+function BlogCard({ article }: BlogCardProps) {
   const publishedDate = new Date(article.publishedAt)
 
   // Estimate reading time (roughly 200 words per minute)
@@ -101,7 +101,7 @@ function ArticleCard({ article }: ArticleCardProps) {
   const readingTime = Math.max(1, Math.ceil(wordCount / 200))
 
   return (
-    <Link href={`/articles/${article.slug.current}`}>
+    <Link href={`/blogs/${article.slug.current}`}>
       <article className="group h-full bg-card border border-border rounded-lg p-6 hover:shadow-md hover:border-border transition-all duration-200 cursor-pointer hover:bg-accent/20">
         <div className="flex flex-col space-y-4">
           {/* Category */}

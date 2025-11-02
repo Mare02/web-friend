@@ -1,6 +1,6 @@
 'use client'
 
-import { ArticleDetail } from '@/lib/validators/schema'
+import { BlogDetail } from '@/lib/validators/schema'
 import { Badge } from '@/components/ui/badge'
 import { urlFor } from '@/lib/sanity/client'
 import { format } from 'date-fns'
@@ -10,12 +10,12 @@ import { Button } from '@/components/ui/button'
 import { PortableTextRenderer } from '@/components/portable-text'
 import Image from 'next/image'
 
-interface ArticleDetailClientProps {
-  article: ArticleDetail
+interface BlogDetailClientProps {
+  article: BlogDetail
 }
 
 
-export function ArticleDetailClient({ article }: ArticleDetailClientProps) {
+export function ArticleDetailClient({ article }: BlogDetailClientProps) {
   const publishedDate = new Date(article.publishedAt)
   const readingTime = Math.ceil(article.body.length / 200) // Rough estimate: 200 words per minute
 
@@ -23,10 +23,10 @@ export function ArticleDetailClient({ article }: ArticleDetailClientProps) {
     <article className="container mx-auto px-4 py-8 max-w-4xl">
       {/* Back button */}
       <div className="mb-6">
-        <Link href="/articles">
+        <Link href="/blogs">
           <Button variant="ghost" className="pl-0">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Articles
+            Back to Blogs
           </Button>
         </Link>
       </div>
@@ -35,7 +35,7 @@ export function ArticleDetailClient({ article }: ArticleDetailClientProps) {
       <header className="mb-8">
         <div className="flex flex-wrap gap-2 mb-4">
           {article.categories.map((category) => (
-            <Link key={category._id} href={`/articles?category=${category.slug.current}`}>
+            <Link key={category._id} href={`/blogs?category=${category.slug.current}`}>
               <Badge variant="secondary" className="cursor-pointer hover:bg-secondary/80">
                 {category.title}
               </Badge>
@@ -62,7 +62,7 @@ export function ArticleDetailClient({ article }: ArticleDetailClientProps) {
         {article.tags && article.tags.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-6">
             {article.tags.map((tag) => (
-              <Link key={tag._id} href={`/articles?tag=${tag.slug.current}`}>
+              <Link key={tag._id} href={`/blogs?tag=${tag.slug.current}`}>
                 <Badge variant="outline" className="cursor-pointer hover:bg-muted">
                   #{tag.title}
                 </Badge>

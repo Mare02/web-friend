@@ -483,10 +483,10 @@ export const recentArticlesByCategorySchema = z.object({
 // Export inferred types for TypeScript
 export type Category = z.infer<typeof categorySchema>;
 export type Tag = z.infer<typeof tagSchema>;
-export type Article = z.infer<typeof articleSchema>;
-export type ArticleListItem = z.infer<typeof articleListItemSchema>;
-export type ArticleDetail = z.infer<typeof articleDetailSchema>;
-export type ArticleFilters = z.infer<typeof articleFiltersSchema>;
-export type ArticleListResponse = z.infer<typeof articleListResponseSchema>;
-export type RecentArticlesByCategory = z.infer<typeof recentArticlesByCategorySchema>;
+export type Blog = z.infer<typeof articleSchema>;
+export type BlogListItem = z.infer<typeof articleListItemSchema>;
+export type BlogDetail = z.infer<typeof articleDetailSchema>;
+export type BlogFilters = z.infer<typeof articleFiltersSchema>;
+export type BlogListResponse = z.infer<typeof articleListResponseSchema>;
+export type RecentBlogsByCategory = z.infer<typeof recentArticlesByCategorySchema>;
 

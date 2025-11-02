@@ -8,11 +8,11 @@ import {
   recentArticlesByCategorySchema,
   type Category,
   type Tag,
-  type ArticleListItem,
-  type ArticleDetail,
-  type ArticleFilters,
-  type ArticleListResponse,
-  type RecentArticlesByCategory,
+  type BlogListItem,
+  type BlogDetail,
+  type BlogFilters,
+  type BlogListResponse,
+  type RecentBlogsByCategory,
 } from '@/lib/validators/schema'
 
 const ARTICLES_PER_PAGE = 12
@@ -40,9 +40,9 @@ export async function getTags(): Promise<Tag[]> {
 }
 
 /**
- * Get filtered articles with pagination
+ * Get filtered blogs with pagination
  */
-export async function getArticles(filters: Partial<ArticleFilters> = {}): Promise<ArticleListResponse> {
+export async function getArticles(filters: Partial<BlogFilters> = {}): Promise<BlogListResponse> {
   const { category, tag, page = 1 } = filters
 
   const skip = (page - 1) * ARTICLES_PER_PAGE
@@ -91,13 +91,13 @@ export async function getArticles(filters: Partial<ArticleFilters> = {}): Promis
     currentPage: page,
   }
 
-  return articleListResponseSchema.parse(response)
+  return articleListResponseSchema.parse(response) as BlogListResponse
 }
 
 /**
- * Get single article by slug
+ * Get single blog by slug
  */
-export async function getArticleBySlug(slug: string): Promise<ArticleDetail | null> {
+export async function getArticleBySlug(slug: string): Promise<BlogDetail | null> {
   const query = `*[_type == 'article' && slug.current == $slug][0]{
     ...,
     'categories': categories[]->{_id, title, slug},
@@ -114,12 +114,12 @@ export async function getArticleBySlug(slug: string): Promise<ArticleDetail | nu
 }
 
 /**
- * Get recent articles by category (for homepage)
+ * Get recent blogs by category (for homepage)
  */
 export async function getRecentArticlesByCategory(
   categoryId: string,
   limit = 3
-): Promise<RecentArticlesByCategory | null> {
+): Promise<RecentBlogsByCategory | null> {
   // First get the category
   const categoryQuery = `*[_type == 'category' && _id == $categoryId][0]{_id, _type, title, slug, description}`
   const category = await client.fetch(categoryQuery, { categoryId })
@@ -128,7 +128,7 @@ export async function getRecentArticlesByCategory(
     return null
   }
 
-  // Then get recent articles for that category
+  // Then get recent blogs for that category
   const articlesQuery = `*[_type == 'article' && $categoryId in categories[]->_id]
     | order(publishedAt desc)[0...$limit]
     {
@@ -148,11 +148,28 @@ export async function getRecentArticlesByCategory(
 }
 
 /**
- * Get all categories with their recent articles (for homepage)
+ * Get the most recent blogs across all categories (for homepage)
  */
-export async function getAllCategoriesWithRecentArticles(limit = 3): Promise<RecentArticlesByCategory[]> {
+export async function getRecentArticles(limit = 3): Promise<BlogListItem[]> {
+  const query = `*[_type == 'article']
+    | order(publishedAt desc)[0...$limit]
+    {
+      _id, _type, title, slug, excerpt, publishedAt, coverImage,
+      'categories': categories[]->{_id, title, slug},
+      'tags': coalesce(tags[]->{_id, title, slug}, [])
+    }`
+
+  const articles = await client.fetch(query, { limit })
+
+  return articles.map((article: unknown) => articleListItemSchema.parse(article))
+}
+
+/**
+ * Get all categories with their recent blogs (for homepage)
+ */
+export async function getAllCategoriesWithRecentArticles(limit = 3): Promise<RecentBlogsByCategory[]> {
   const categories = await getCategories()
-  const results: RecentArticlesByCategory[] = []
+  const results: RecentBlogsByCategory[] = []
 
   for (const category of categories) {
     const categoryWithArticles = await getRecentArticlesByCategory(category._id, limit)
@@ -165,9 +182,9 @@ export async function getAllCategoriesWithRecentArticles(limit = 3): Promise<Rec
 }
 
 /**
- * Search articles (basic title/excerpt search)
+ * Search blogs (basic title/excerpt search)
  */
-export async function searchArticles(query: string, filters: Partial<ArticleFilters> = {}): Promise<ArticleListItem[]> {
+export async function searchArticles(query: string, filters: Partial<BlogFilters> = {}): Promise<BlogListItem[]> {
   const { category, tag } = filters
 
   const searchQuery = `*[_type == 'article' &&

@@ -1,4 +1,4 @@
-import article from './article'
+import article from './blog'
 import category from './category'
 import tag from './tag'
 

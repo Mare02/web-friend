@@ -1,30 +1,30 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Category, Tag, ArticleFilters } from '@/lib/validators/schema'
+import { Category, Tag, BlogFilters } from '@/lib/validators/schema'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { X, SlidersHorizontal } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-interface ArticlesFiltersProps {
+interface BlogsFiltersProps {
   categories: Category[]
   tags: Tag[]
-  currentFilters: ArticleFilters
+  currentFilters: BlogFilters
   className?: string
 }
 
-export function ArticlesFilters({
+export function BlogsFilters({
   categories,
   tags,
   currentFilters,
   className,
-}: ArticlesFiltersProps) {
+}: BlogsFiltersProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const updateFilters = (updates: Partial<ArticleFilters>) => {
+  const updateFilters = (updates: Partial<BlogFilters>) => {
     const params = new URLSearchParams(searchParams.toString())
 
     // Update the specific filter
@@ -42,11 +42,11 @@ export function ArticlesFilters({
     }
 
     const newSearch = params.toString()
-    router.push(newSearch ? `/articles?${newSearch}` : '/articles')
+    router.push(newSearch ? `/blogs?${newSearch}` : '/blogs')
   }
 
   const clearFilters = () => {
-    router.push('/articles')
+    router.push('/blogs')
   }
 
   const hasActiveFilters = currentFilters.category || currentFilters.tag

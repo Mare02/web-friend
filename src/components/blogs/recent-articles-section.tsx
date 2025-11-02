@@ -1,22 +1,22 @@
 import Link from 'next/link'
-import { RecentArticlesByCategory } from '@/lib/validators/schema'
+import { RecentBlogsByCategory } from '@/lib/validators/schema'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { urlFor } from '@/lib/sanity/client'
 import { format } from 'date-fns'
 import { ArrowRight, BookOpen, Clock } from 'lucide-react'
 
-interface RecentArticlesSectionProps {
-  categoriesWithArticles: RecentArticlesByCategory[]
+interface RecentBlogsSectionProps {
+  categoriesWithArticles: RecentBlogsByCategory[]
 }
 
-export function RecentArticlesSection({ categoriesWithArticles }: RecentArticlesSectionProps) {
+export function RecentArticlesSection({ categoriesWithArticles }: RecentBlogsSectionProps) {
   return (
     <div className="mb-20">
       <div className="text-center mb-12">
         <h2 className="text-3xl md:text-4xl font-bold mb-4 flex items-center justify-center gap-3">
           <BookOpen className="h-8 w-8 text-primary" />
-          Latest Articles
+          Latest Blogs
         </h2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           Stay updated with our latest insights on web development, best practices, case studies, and trending topics.
@@ -25,7 +25,7 @@ export function RecentArticlesSection({ categoriesWithArticles }: RecentArticles
 
       <div className="space-y-12">
         {categoriesWithArticles.map(({ category, articles }) => (
-          <CategoryArticles
+          <CategoryBlogs
             key={category._id}
             category={category}
             articles={articles}
@@ -33,11 +33,11 @@ export function RecentArticlesSection({ categoriesWithArticles }: RecentArticles
         ))}
       </div>
 
-      {/* View All Articles CTA */}
+      {/* View All Blogs CTA */}
       <div className="text-center mt-12">
-        <Link href="/articles">
+        <Link href="/blogs">
           <Button size="lg" className="gap-2">
-            View All Articles
+            View All Blogs
             <ArrowRight className="w-4 h-4" />
           </Button>
         </Link>
@@ -46,12 +46,12 @@ export function RecentArticlesSection({ categoriesWithArticles }: RecentArticles
   )
 }
 
-interface CategoryArticlesProps {
-  category: RecentArticlesByCategory['category']
-  articles: RecentArticlesByCategory['articles']
+interface CategoryBlogsProps {
+  category: RecentBlogsByCategory['category']
+  articles: RecentBlogsByCategory['articles']
 }
 
-function CategoryArticles({ category, articles }: CategoryArticlesProps) {
+function CategoryBlogs({ category, articles }: CategoryBlogsProps) {
   if (articles.length === 0) {
     return null
   }
@@ -61,9 +61,9 @@ function CategoryArticles({ category, articles }: CategoryArticlesProps) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <h3 className="text-2xl font-bold">{category.title}</h3>
-          <Badge variant="outline">{articles.length} articles</Badge>
+          <Badge variant="outline">{articles.length} blogs</Badge>
         </div>
-        <Link href={`/articles?category=${category.slug.current}`}>
+        <Link href={`/blogs?category=${category.slug.current}`}>
           <Button variant="ghost" className="gap-2">
             View all
             <ArrowRight className="w-4 h-4" />
@@ -73,18 +73,18 @@ function CategoryArticles({ category, articles }: CategoryArticlesProps) {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {articles.map((article) => (
-          <ArticleCard key={article._id} article={article} />
+          <BlogCard key={article._id} article={article} />
         ))}
       </div>
     </div>
   )
 }
 
-interface ArticleCardProps {
-  article: RecentArticlesByCategory['articles'][0]
+interface BlogCardProps {
+  article: RecentBlogsByCategory['articles'][0]
 }
 
-function ArticleCard({ article }: ArticleCardProps) {
+function BlogCard({ article }: BlogCardProps) {
   const publishedDate = new Date(article.publishedAt)
 
   // Estimate reading time (roughly 200 words per minute)
@@ -92,7 +92,7 @@ function ArticleCard({ article }: ArticleCardProps) {
   const readingTime = Math.max(1, Math.ceil(wordCount / 200))
 
   return (
-    <Link href={`/articles/${article.slug.current}`}>
+    <Link href={`/blogs/${article.slug.current}`}>
       <article className="group h-full bg-card border border-border rounded-lg p-6 hover:shadow-md hover:border-border transition-all duration-200 cursor-pointer hover:bg-accent/20">
         <div className="flex flex-col space-y-4">
           {/* Category */}

@@ -1,19 +1,19 @@
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import { getArticleBySlug } from '@/lib/services/article-service'
-import { ArticleDetailClient } from './article-detail-client'
+import { ArticleDetailClient } from './blog-detail-client'
 
-interface ArticlePageProps {
+interface BlogPageProps {
   params: Promise<{ slug: string }>
 }
 
-export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: BlogPageProps): Promise<Metadata> {
   const { slug } = await params
   const article = await getArticleBySlug(slug)
 
   if (!article) {
     return {
-      title: 'Article Not Found | Web Friend',
+      title: 'Blog Not Found | Web Friend',
     }
   }
 
@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   }
 }
 
-export default async function ArticlePage({ params }: ArticlePageProps) {
+export default async function BlogPage({ params }: BlogPageProps) {
   const { slug } = await params
   const article = await getArticleBySlug(slug)
 

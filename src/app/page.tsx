@@ -15,8 +15,8 @@ import {
   Code,
   QrCode
 } from "lucide-react";
-import { getAllCategoriesWithRecentArticles } from "@/lib/services/article-service";
-import { RecentArticlesSection } from "@/components/articles/recent-articles-section";
+import { getRecentArticles } from "@/lib/services/article-service";
+import { RecentArticlesHomeSection } from "@/components/blogs/recent-articles-home-section";
 
 const tools = [
   {
@@ -85,7 +85,7 @@ const features = [
 ];
 
 export default async function Home() {
-  const categoriesWithArticles = await getAllCategoriesWithRecentArticles(3)
+  const recentArticles = await getRecentArticles(3)
 
   return (
     <div className="bg-linear-to-b from-background to-muted/20">
@@ -151,8 +151,15 @@ export default async function Home() {
           })}
         </div>
 
+        {/* Articles Section */}
+        <div className="py-20">
+          {recentArticles.length > 0 && (
+            <RecentArticlesHomeSection articles={recentArticles} />
+          )}
+        </div>
+
         {/* Features Section */}
-        <div className="mb-20">
+        <div className="pb-20">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Why Choose Web Friend?
@@ -179,11 +186,6 @@ export default async function Home() {
             })}
           </div>
         </div>
-
-        {/* Articles Section */}
-        {categoriesWithArticles.length > 0 && (
-          <RecentArticlesSection categoriesWithArticles={categoriesWithArticles} />
-        )}
       </div>
     </div>
   );

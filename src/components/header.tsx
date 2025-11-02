@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Sparkles } from "lucide-react";
+import { Sparkles, BookOpen } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { UserMenu } from "@/components/user-menu";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ToolsNavigation } from "@/components/tools-navigation";
@@ -15,6 +16,12 @@ export function Header() {
           </Link>
           <div className="flex items-center gap-4">
             <ToolsNavigation />
+            <Link href="/blogs">
+              <Button variant="outline" size="sm" className="flex items-center gap-2">
+                <BookOpen className="h-4 w-4" />
+                <span className="hidden sm:inline">Blogs</span>
+              </Button>
+            </Link>
             <UserMenu />
             <ThemeToggle />
           </div>
