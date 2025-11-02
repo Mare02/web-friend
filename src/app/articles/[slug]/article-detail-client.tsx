@@ -1,17 +1,19 @@
 'use client'
 
 import { ArticleDetail } from '@/lib/validators/schema'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { urlFor } from '@/lib/sanity/client'
 import { format } from 'date-fns'
 import { Calendar, Clock, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { PortableTextRenderer } from '@/components/portable-text'
+import Image from 'next/image'
 
 interface ArticleDetailClientProps {
   article: ArticleDetail
 }
+
 
 export function ArticleDetailClient({ article }: ArticleDetailClientProps) {
   const publishedDate = new Date(article.publishedAt)
@@ -73,28 +75,26 @@ export function ArticleDetailClient({ article }: ArticleDetailClientProps) {
       {/* Cover image */}
       {article.coverImage && (
         <div className="mb-8">
-          <img
+          <Image
             src={urlFor(article.coverImage).width(1200).height(600).url()}
             alt={article.title}
+            width={1200}
+            height={600}
             className="w-full h-auto rounded-lg shadow-md"
+            priority
           />
         </div>
       )}
 
       {/* Article content */}
-      <Card>
-        <CardHeader>
-          <p className="text-xl text-muted-foreground leading-relaxed">
-            {article.excerpt}
-          </p>
-        </CardHeader>
-        <CardContent className="prose prose-lg max-w-none dark:prose-invert">
-          {/* TODO: Add Portable Text renderer here */}
-          <div className="text-muted-foreground">
-            Article content will be rendered here with Portable Text
-          </div>
-        </CardContent>
-      </Card>
+      <div>
+        <p className="text-xl text-muted-foreground leading-relaxed">
+          {article.excerpt}
+        </p>
+        <div className="prose prose-lg max-w-none dark:prose-invert">
+          <PortableTextRenderer value={article.body} />
+        </div>
+      </div>
 
       {/* Article footer */}
       <footer className="mt-12 pt-8 border-t">
@@ -102,12 +102,13 @@ export function ArticleDetailClient({ article }: ArticleDetailClientProps) {
           <div className="text-sm text-muted-foreground">
             Published on {format(publishedDate, 'PPP')}
           </div>
-          <div className="flex gap-2">
-            {/* TODO: Add social sharing buttons */}
+
+          {/* TODO: Add social sharing buttons */}
+          {/* <div className="flex gap-2">
             <Button variant="outline" size="sm">
               Share
             </Button>
-          </div>
+          </div> */}
         </div>
       </footer>
     </article>

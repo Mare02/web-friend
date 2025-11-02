@@ -45,7 +45,7 @@ export function ArticlesList({
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 pb-20">
       {/* Results summary */}
       <div className="text-sm text-muted-foreground">
         Showing {articles.length} of {total} articles

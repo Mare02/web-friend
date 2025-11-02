@@ -62,44 +62,40 @@ export function ArticlesFilters({
               <span>Filter by:</span>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-2 flex-1">
+            <div className="flex gap-2 flex-1">
               {/* Category filter */}
-              <div className="flex flex-col gap-1 min-w-0 flex-1 sm:flex-initial">
-                <Select
-                  value={currentFilters.category || undefined}
-                  onValueChange={(value) => updateFilters({ category: value || undefined })}
-                >
-                  <SelectTrigger className="w-full sm:w-[200px]">
-                    <SelectValue placeholder="All categories" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((category) => (
-                      <SelectItem key={category._id} value={category.slug.current}>
-                        {category.title}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              <Select
+                value={currentFilters.category || undefined}
+                onValueChange={(value) => updateFilters({ category: value || undefined })}
+              >
+                <SelectTrigger className="w-max">
+                  <SelectValue placeholder="All categories" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category._id} value={category.slug.current}>
+                      {category.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
               {/* Tag filter */}
-              <div className="flex flex-col gap-1 min-w-0 flex-1 sm:flex-initial">
-                <Select
-                  value={currentFilters.tag || undefined}
-                  onValueChange={(value) => updateFilters({ tag: value || undefined })}
-                >
-                  <SelectTrigger className="w-full sm:w-[200px]">
-                    <SelectValue placeholder="All tags" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {tags.map((tag) => (
-                      <SelectItem key={tag._id} value={tag.slug.current}>
-                        {tag.title}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              <Select
+                value={currentFilters.tag || undefined}
+                onValueChange={(value) => updateFilters({ tag: value || undefined })}
+              >
+                <SelectTrigger className="w-max">
+                  <SelectValue placeholder="All tags" />
+                </SelectTrigger>
+                <SelectContent>
+                  {tags.map((tag) => (
+                    <SelectItem key={tag._id} value={tag.slug.current}>
+                      {tag.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 

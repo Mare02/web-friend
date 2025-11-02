@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { RecentArticlesByCategory } from '@/lib/validators/schema'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { urlFor } from '@/lib/sanity/client'
 import { format } from 'date-fns'
 import { ArrowRight, BookOpen, Clock } from 'lucide-react'
