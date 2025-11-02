@@ -1,5 +1,4 @@
 import { client } from '@/lib/sanity/client'
-import { rateLimitedSanityQuery } from '@/lib/rate-limiter'
 import { logger } from '@/lib/logger'
 import {
   categorySchema,
@@ -24,10 +23,7 @@ const ARTICLES_PER_PAGE = 12
  */
 export async function getCategories(): Promise<Category[]> {
   try {
-    const result = await rateLimitedSanityQuery(
-      () => client.fetch(`*[_type == 'category'] | order(title asc){_id, _type, title, slug, description}`),
-      'blog-categories'
-    )
+    const result = await client.fetch(`*[_type == 'category'] | order(title asc){_id, _type, title, slug, description}`)
 
     // Validate and return
     return result.map((category: unknown) => categorySchema.parse(category))
@@ -80,19 +76,13 @@ export async function getArticles(filters: Partial<BlogFilters> = {}): Promise<B
       'tags': coalesce(tags[]->{_id, title, slug}, [])
     }`
 
-    // Get articles and count in parallel with rate limiting
+    // Get articles and count in parallel
     const [articles, total] = await Promise.all([
-      rateLimitedSanityQuery(
-        () => client.fetch(query, { categorySlug: category || '', tagSlug: tag || '', skip, end }),
-        'blog-articles'
-      ),
-      rateLimitedSanityQuery(
-        () => client.fetch(`count(*[_type == 'article'
-          ${category ? `&& $categorySlug in categories[]->slug.current` : ''}
-          ${tag ? `&& $tagSlug in tags[]->slug.current` : ''}
-        ])`, { categorySlug: category || '', tagSlug: tag || '' }),
-        'blog-articles-count'
-      )
+      client.fetch(query, { categorySlug: category || '', tagSlug: tag || '', skip, end }),
+      client.fetch(`count(*[_type == 'article'
+        ${category ? `&& $categorySlug in categories[]->slug.current` : ''}
+        ${tag ? `&& $tagSlug in tags[]->slug.current` : ''}
+      ])`, { categorySlug: category || '', tagSlug: tag || '' })
     ])
 
     const validatedArticles = articles.map((article: unknown) =>
