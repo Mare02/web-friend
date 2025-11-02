@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArticleListItem, ArticleFilters } from '@/lib/validators/schema'
 import { Button } from '@/components/ui/button'
 import { urlFor } from '@/lib/sanity/client'
@@ -124,17 +125,18 @@ function ArticleCard({ article }: ArticleCardProps) {
 
           {/* Image */}
           {article.coverImage && (
-            <div className="relative aspect-[16/9] overflow-hidden rounded-md bg-muted">
-              <img
+            <div className="relative aspect-video overflow-hidden rounded-md bg-muted">
+              <Image
                 src={urlFor(article.coverImage).width(400).height(225).url()}
                 alt={article.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-300"
               />
             </div>
           )}
 
           {/* Footer */}
-          <div className="flex items-center justify-between pt-2 border-t border-border/40">
+          <div className="flex flex-col gap-4 pt-2 border-t border-border/40">
             <div className="flex items-center gap-3 text-xs text-muted-foreground">
               <time dateTime={article.publishedAt}>
                 {format(publishedDate, 'MMM d, yyyy')}
@@ -149,10 +151,10 @@ function ArticleCard({ article }: ArticleCardProps) {
             {/* Tags */}
             {article.tags && article.tags.length > 0 && (
               <div className="flex gap-2">
-                {article.tags.slice(0, 2).map((tag) => (
+                {article.tags.map((tag) => (
                   <span
                     key={tag._id}
-                    className="text-xs text-muted-foreground hover:text-primary transition-colors"
+                    className="text-xs text-muted-foreground transition-colors"
                   >
                     #{tag.title}
                   </span>

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export default {
+
+const articleSchema = {
   name: 'article',
   type: 'document',
   title: 'Article',
@@ -52,6 +53,7 @@ export default {
       type: 'array',
       title: 'Tags',
       of: [{ type: 'reference', to: [{ type: 'tag' }] }],
+      validation: (Rule: any) => Rule.required().min(1),
     },
     // SEO fields
     {
@@ -114,3 +116,5 @@ export default {
     },
   },
 }
+
+export default articleSchema

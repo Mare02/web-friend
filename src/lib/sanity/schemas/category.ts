@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export default {
+
+const categorySchema = {
   name: 'category',
   type: 'document',
   title: 'Category',
@@ -28,3 +29,5 @@ export default {
     },
   ],
 }
+
+export default categorySchema

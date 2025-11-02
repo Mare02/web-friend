@@ -65,7 +65,8 @@ export function ArticlesFilters({
             <div className="flex gap-2 flex-1">
               {/* Category filter */}
               <Select
-                value={currentFilters.category || undefined}
+                key={`category-${currentFilters.category || 'none'}`}
+                value={currentFilters.category || ''}
                 onValueChange={(value) => updateFilters({ category: value || undefined })}
               >
                 <SelectTrigger className="w-max">
@@ -82,7 +83,8 @@ export function ArticlesFilters({
 
               {/* Tag filter */}
               <Select
-                value={currentFilters.tag || undefined}
+                key={`tag-${currentFilters.tag || 'none'}`}
+                value={currentFilters.tag || ''}
                 onValueChange={(value) => updateFilters({ tag: value || undefined })}
               >
                 <SelectTrigger className="w-max">

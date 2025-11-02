@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export default {
+
+const tagSchema = {
   name: 'tag',
   type: 'document',
   title: 'Tag',
@@ -22,3 +23,5 @@ export default {
     },
   ],
 }
+
+export default tagSchema
