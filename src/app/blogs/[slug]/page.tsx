@@ -203,8 +203,11 @@ function ArticleDetail({ article }: { article: BlogDetail }) {
 }
 
 export default async function BlogPage({ params }: BlogPageProps) {
+  let slug: string = 'unknown'
+
   try {
-    const { slug } = await params
+    const paramsData = await params
+    slug = paramsData.slug
     const article = await getArticleBySlug(slug)
 
     if (!article) {
@@ -228,7 +231,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
   } catch (error) {
     logger.error('Error loading blog post page', error instanceof Error ? error : new Error(String(error)), {
       operation: 'BlogPage',
-      slug: params.slug
+      slug: slug || 'unknown'
     })
 
     // Return a fallback error page

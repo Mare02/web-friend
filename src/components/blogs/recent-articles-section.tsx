@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { RecentBlogsByCategory } from '@/lib/validators/schema'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -117,10 +118,11 @@ function BlogCard({ article }: BlogCardProps) {
           {/* Image */}
           {article.coverImage && (
             <div className="relative aspect-[16/9] overflow-hidden rounded-md bg-muted">
-              <img
+              <Image
                 src={urlFor(article.coverImage).width(400).height(225).url()}
                 alt={article.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-300"
               />
             </div>
           )}
