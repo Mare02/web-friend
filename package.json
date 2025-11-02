@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "seed:sanity": "npx tsx scripts/seed-sanity-categories.ts"
+    "seed:sanity": "npx tsx scripts/seed-sanity-categories.ts",
+    "generate:sitemap": "npx tsx scripts/generate-sitemap-data.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.33.3",
