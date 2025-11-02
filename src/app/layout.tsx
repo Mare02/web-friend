@@ -20,11 +20,6 @@ const structuredData = {
   "url": "https://web-friend.vercel.app",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Web Browser",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
   "featureList": [
     "AI Website Analyzer",
     "Text Analyzer",

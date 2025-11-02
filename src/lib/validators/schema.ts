@@ -368,3 +368,125 @@ export const qrCodeSchema = z.object({
 // Export inferred types for TypeScript
 export type QRCodeOptions = z.infer<typeof qrCodeSchema>;
 
+/**
+ * Schema for Sanity Category
+ */
+export const categorySchema = z.object({
+  _id: z.string(),
+  _type: z.literal('category'),
+  title: z.string(),
+  slug: z.object({
+    _type: z.literal('slug'),
+    current: z.string(),
+  }),
+  description: z.string().optional(),
+});
+
+/**
+ * Schema for Sanity Tag
+ */
+export const tagSchema = z.object({
+  _id: z.string(),
+  _type: z.literal('tag'),
+  title: z.string(),
+  slug: z.object({
+    _type: z.literal('slug'),
+    current: z.string(),
+  }),
+});
+
+/**
+ * Schema for Sanity Article (base fields)
+ */
+export const articleSchema = z.object({
+  _id: z.string(),
+  _type: z.literal('article'),
+  title: z.string(),
+  slug: z.object({
+    _type: z.literal('slug'),
+    current: z.string(),
+  }),
+  excerpt: z.string(),
+  body: z.array(z.any()), // Portable Text blocks
+  publishedAt: z.string(), // ISO datetime string
+  categories: z.array(z.object({
+    _id: z.string(),
+    title: z.string(),
+    slug: z.object({
+      _type: z.literal('slug'),
+      current: z.string(),
+    }),
+  })),
+  tags: z.array(z.object({
+    _id: z.string(),
+    title: z.string(),
+    slug: z.object({
+      _type: z.literal('slug'),
+      current: z.string(),
+    }),
+  })).optional(),
+  // SEO fields
+  metaTitle: z.string().optional(),
+  metaDescription: z.string().optional(),
+  canonicalUrl: z.string().url().optional(),
+  ogTitle: z.string().optional(),
+  ogDescription: z.string().optional(),
+  ogImage: z.any().optional(), // Sanity image object
+  coverImage: z.any(), // Sanity image object
+});
+
+/**
+ * Schema for Article List Item (projection for listings)
+ */
+export const articleListItemSchema = articleSchema.omit({
+  body: true,
+  metaTitle: true,
+  metaDescription: true,
+  canonicalUrl: true,
+  ogTitle: true,
+  ogDescription: true,
+  ogImage: true,
+});
+
+/**
+ * Schema for Article Detail (full projection)
+ */
+export const articleDetailSchema = articleSchema;
+
+/**
+ * Schema for Article Filters
+ */
+export const articleFiltersSchema = z.object({
+  category: z.string().optional(),
+  tag: z.string().optional(),
+  page: z.number().min(1).default(1),
+});
+
+/**
+ * Schema for Article List Response
+ */
+export const articleListResponseSchema = z.object({
+  articles: z.array(articleListItemSchema),
+  total: z.number(),
+  hasNextPage: z.boolean(),
+  currentPage: z.number(),
+});
+
+/**
+ * Schema for Recent Articles by Category
+ */
+export const recentArticlesByCategorySchema = z.object({
+  category: categorySchema,
+  articles: z.array(articleListItemSchema),
+});
+
+// Export inferred types for TypeScript
+export type Category = z.infer<typeof categorySchema>;
+export type Tag = z.infer<typeof tagSchema>;
+export type Article = z.infer<typeof articleSchema>;
+export type ArticleListItem = z.infer<typeof articleListItemSchema>;
+export type ArticleDetail = z.infer<typeof articleDetailSchema>;
+export type ArticleFilters = z.infer<typeof articleFiltersSchema>;
+export type ArticleListResponse = z.infer<typeof articleListResponseSchema>;
+export type RecentArticlesByCategory = z.infer<typeof recentArticlesByCategorySchema>;
+

@@ -15,6 +15,8 @@ import {
   Code,
   QrCode
 } from "lucide-react";
+import { getAllCategoriesWithRecentArticles } from "@/lib/services/article-service";
+import { RecentArticlesSection } from "@/components/articles/recent-articles-section";
 
 const tools = [
   {
@@ -82,7 +84,9 @@ const features = [
   }
 ];
 
-export default function Home() {
+export default async function Home() {
+  const categoriesWithArticles = await getAllCategoriesWithRecentArticles(3)
+
   return (
     <div className="bg-linear-to-b from-background to-muted/20">
 
@@ -175,6 +179,11 @@ export default function Home() {
             })}
           </div>
         </div>
+
+        {/* Articles Section */}
+        {categoriesWithArticles.length > 0 && (
+          <RecentArticlesSection categoriesWithArticles={categoriesWithArticles} />
+        )}
       </div>
     </div>
   );

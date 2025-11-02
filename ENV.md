@@ -28,6 +28,26 @@ CLERK_WEBHOOK_SECRET=whsec_...
   4. Subscribe to `user.created` and `user.updated` events
   5. Copy the webhook signing secret
 
+### Sanity CMS
+```
+NEXT_PUBLIC_SANITY_PROJECT_ID=your_sanity_project_id
+NEXT_PUBLIC_SANITY_DATASET=production
+NEXT_PUBLIC_SANITY_API_VERSION=2025-01-01
+SANITY_USE_CDN=true
+SANITY_API_TOKEN=your_sanity_api_token
+SANITY_AUTH_TOKEN=your_sanity_auth_token
+```
+- **Purpose**: Content management system for articles, categories, and tags
+- **Get it from**: https://sanity.io/manage
+- **Note**: Required for article functionality
+- **Setup**:
+  1. Create a Sanity project at https://sanity.io
+  2. Get your Project ID and Dataset from the project settings
+  3. Create an API token with Editor permissions (for seeding categories and API operations)
+  4. Create an Auth token with **Viewer permissions** (for Studio access) - This is different from the API token
+  5. Run the seed script to create initial categories: `npm run seed:sanity`
+  6. Access Sanity Studio at `/studio` route
+
 ### Cloudflare D1 Database
 ```
 CLOUDFLARE_ACCOUNT_ID=your_cloudflare_account_id
@@ -57,6 +77,14 @@ CLERK_SECRET_KEY=
 NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
 NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
 CLERK_WEBHOOK_SECRET=
+
+# Sanity CMS
+NEXT_PUBLIC_SANITY_PROJECT_ID=
+NEXT_PUBLIC_SANITY_DATASET=production
+NEXT_PUBLIC_SANITY_API_VERSION=2025-01-01
+SANITY_USE_CDN=true
+SANITY_API_TOKEN=
+SANITY_AUTH_TOKEN=
 
 # Cloudflare D1 Database
 CLOUDFLARE_ACCOUNT_ID=
