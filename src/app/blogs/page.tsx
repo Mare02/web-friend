@@ -25,7 +25,7 @@ export async function generateMetadata({ searchParams }: BlogsPageProps): Promis
   }
 
   let title = 'Blogs | Web Friend'
-  let description = 'Explore our collection of blogs on web development, SEO, best practices, and more.'
+  let description = 'Explore our collection of blogs on digital tools, online strategies, SEO, best practices, and more.'
 
   // Customize metadata based on filters
   if (filters.category) {
@@ -33,7 +33,7 @@ export async function generateMetadata({ searchParams }: BlogsPageProps): Promis
     const category = categories.find(c => c.slug.current === filters.category)
     if (category) {
       title = `${category.title} Blogs | Web Friend`
-      description = `Read our blogs about ${category.title.toLowerCase()}. ${category.description || 'Explore web development insights and best practices.'}`
+      description = `Read our blogs about ${category.title.toLowerCase()}. ${category.description || 'Explore digital tools insights and best practices.'}`
     }
   }
 
@@ -42,7 +42,7 @@ export async function generateMetadata({ searchParams }: BlogsPageProps): Promis
     const tag = tags.find(t => t.slug.current === filters.tag)
     if (tag) {
       title = `${tag.title} Blogs | Web Friend`
-      description = `Blogs tagged with ${tag.title}. Explore our collection of web development insights.`
+      description = `Blogs tagged with ${tag.title}. Explore our collection of digital tools and online insights.`
     }
   }
 
@@ -90,7 +90,7 @@ async function BlogsContent({ searchParams }: BlogsPageProps) {
           <div>
             <h1 className="text-3xl font-bold mb-2">Blogs</h1>
             <p className="text-base text-muted-foreground">
-              Explore our collection of blogs on web development, SEO, best practices, and more.
+              Explore our collection of blogs on digital tools, online strategies, SEO, best practices, and more.
             </p>
           </div>
         </div>
@@ -126,7 +126,7 @@ async function BlogsContent({ searchParams }: BlogsPageProps) {
           <div>
             <h1 className="text-3xl font-bold mb-2">Blogs</h1>
             <p className="text-base text-muted-foreground">
-              Explore our collection of blogs on web development, SEO, best practices, and more.
+              Explore our collection of blogs on digital tools, online strategies, SEO, best practices, and more.
             </p>
           </div>
         </div>

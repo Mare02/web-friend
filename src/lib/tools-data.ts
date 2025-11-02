@@ -1,0 +1,62 @@
+import {
+  Search,
+  FileText,
+  Palette,
+  Code,
+  QrCode
+} from "lucide-react";
+
+/**
+ * Collection of available tools with their metadata
+ * This is the single source of truth for tool definitions
+ */
+export const tools = [
+  {
+    title: "AI Website Analyzer",
+    description: "Comprehensive SEO, performance, and accessibility analysis with AI-powered insights",
+    icon: Search,
+    href: "/tools/website-analyzer",
+    badges: ["AI Powered", "Free Tool"],
+    color: "from-blue-500 to-cyan-500",
+    features: ["SEO Analysis", "Performance Metrics", "Accessibility Audit", "AI Recommendations"]
+  },
+  {
+    title: "Text Analyzer",
+    description: "Analyze text readability, SEO keywords, and content quality metrics",
+    icon: FileText,
+    href: "/tools/text-analyzer",
+    badges: ["Free Tool"],
+    color: "from-green-500 to-emerald-500",
+    features: ["Readability Scores", "Keyword Density", "SEO Analysis", "Content Metrics"]
+  },
+  {
+    title: "Color Palette Generator",
+    description: "Generate harmonious color palettes using color theory and design principles",
+    icon: Palette,
+    href: "/tools/color-palette-generator",
+    badges: ["Free Tool"],
+    color: "from-purple-500 to-pink-500",
+    features: ["Color Picker", "Color Harmonies", "CSS Gradients", "Palette Export"]
+  },
+  {
+    title: "API Tester",
+    description: "Test your APIs with ease using a simple and intuitive interface",
+    icon: Code,
+    href: "/tools/api-tester",
+    badges: ["Free Tool"],
+    color: "from-orange-500 to-yellow-500",
+    features: ["API Testing Suite", "Auth Support", "Save & Load Requests"]
+  },
+  {
+    title: "QR Code Generator",
+    description: "Generate custom QR codes for URLs, text, email addresses, phone numbers, and WiFi networks",
+    icon: QrCode,
+    href: "/tools/qr-code-generator",
+    badges: ["Free Tool"],
+    color: "from-red-500 to-pink-500",
+    features: ["Multiple Content Types", "Custom Colors", "Download Options", "Advanced Settings"]
+  }
+] as const;
+
+// Export the type for use in components
+export type Tool = typeof tools[number];

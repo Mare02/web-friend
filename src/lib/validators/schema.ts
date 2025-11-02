@@ -490,3 +490,24 @@ export type BlogFilters = z.infer<typeof articleFiltersSchema>;
 export type BlogListResponse = z.infer<typeof articleListResponseSchema>;
 export type RecentBlogsByCategory = z.infer<typeof recentArticlesByCategorySchema>;
 
+/**
+ * Schema for tool definition
+ */
+export const toolSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  icon: z.any(), // Lucide icon component
+  href: z.string(),
+  badges: z.array(z.string()),
+  color: z.string(),
+  features: z.array(z.string()),
+});
+
+/**
+ * Schema for tool collection
+ */
+export const toolsCollectionSchema = z.array(toolSchema);
+
+// Export inferred types for TypeScript
+export type Tool = z.infer<typeof toolSchema>;
+

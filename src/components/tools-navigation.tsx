@@ -11,53 +11,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import {
-  Wrench,
-  Search,
-  FileText,
-  Palette,
-  Globe,
-  QrCode,
-  ChevronDown
-} from "lucide-react";
+import { Wrench, ChevronDown } from "lucide-react";
+import { tools as allTools } from "@/lib/tools-data";
 
-const tools = [
-  {
-    name: "AI Website Analyzer",
-    description: "SEO, performance, and accessibility analysis",
-    href: "/tools/website-analyzer",
-    icon: Search,
-    badges: ["AI", "Free"],
-  },
-  {
-    name: "Text Analyzer",
-    description: "Readability and SEO content analysis",
-    href: "/tools/text-analyzer",
-    icon: FileText,
-    badges: ["Free"],
-  },
-  {
-    name: "Color Palette Generator",
-    description: "Generate harmonious color palettes",
-    href: "/tools/color-palette-generator",
-    icon: Palette,
-    badges: ["Free"],
-  },
-  {
-    name: "API Tester",
-    description: "Test and debug REST APIs with authentication",
-    href: "/tools/api-tester",
-    icon: Globe,
-    badges: ["Free"],
-  },
-  {
-    name: "QR Code Generator",
-    description: "Generate QR codes for URLs, text, and more",
-    href: "/tools/qr-code-generator",
-    icon: QrCode,
-    badges: ["Free"],
-  },
-];
+// Transform tools data for navigation format
+const tools = allTools.map(tool => ({
+  name: tool.title,
+  description: tool.description.split('. ')[0] + (tool.description.includes('. ') ? '.' : ''), // Shorten description
+  href: tool.href,
+  icon: tool.icon,
+  badges: tool.badges.map(badge =>
+    badge === "AI Powered" ? "AI" : badge.replace(" Tool", "")
+  ),
+}));
 
 export function ToolsNavigation() {
   const pathname = usePathname();
@@ -72,7 +38,7 @@ export function ToolsNavigation() {
           <ChevronDown className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start">
+      <DropdownMenuContent align="start" className="w-full max-w-sm md:max-w-3xl">
         <div className="px-2 py-2">
           <p className="text-sm font-medium text-muted-foreground mb-2">Available Tools</p>
         </div>

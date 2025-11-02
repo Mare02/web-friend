@@ -16,9 +16,9 @@ const structuredData = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "Web Friend",
-  "description": "Comprehensive suite of free web development tools including AI website analyzer, text analyzer, API tester, color palette generator, and QR code generator.",
+  "description": "Free digital tools for everyone: AI website analyzer, text analyzer, API tester, color palette generator, and QR code generator. Perfect for businesses, creators, and anyone working online.",
   "url": "https://web-friend.vercel.app",
-  "applicationCategory": "DeveloperApplication",
+  "applicationCategory": "Utility",
   "operatingSystem": "Web Browser",
   "featureList": [
     "AI Website Analyzer",
@@ -44,23 +44,23 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Web Friend | Free Web Development Tools & Utilities",
-  description: "Comprehensive suite of free web development tools including AI website analyzer, text analyzer, API tester, color palette generator, and QR code generator. Boost your productivity with professional-grade utilities.",
-  keywords: ["web tools", "development tools", "SEO analyzer", "API tester", "color palette generator", "QR code generator", "text analyzer", "website analysis", "free tools"],
+  title: "Web Friend | Free Digital Tools for Everyone",
+  description: "Essential digital tools for businesses, creators, and everyone online. AI website analyzer, text analyzer, API tester, color palettes, QR codes - all free and professional-grade.",
+  keywords: ["digital tools", "website analyzer", "text analyzer", "API tester", "color palette generator", "QR code generator", "SEO tools", "free tools", "online utilities"],
   authors: [{ name: "Web Friend Team" }],
   creator: "Web Friend",
   publisher: "Web Friend",
   robots: "index, follow",
   openGraph: {
-    title: "Web Friend | Free Web Development Tools & Utilities",
-    description: "Comprehensive suite of free web development tools including AI website analyzer, text analyzer, API tester, color palette generator, and QR code generator.",
+    title: "Web Friend | Free Digital Tools for Everyone",
+    description: "Essential digital tools for businesses, creators, and everyone online. AI website analyzer, text analyzer, API tester, color palettes, QR codes - all free and professional-grade.",
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Web Friend | Free Web Development Tools & Utilities",
-    description: "Comprehensive suite of free web development tools including AI website analyzer, text analyzer, API tester, color palette generator, and QR code generator.",
+    title: "Web Friend | Free Digital Tools for Everyone",
+    description: "Essential digital tools for businesses, creators, and everyone online. AI website analyzer, text analyzer, API tester, color palettes, QR codes - all free and professional-grade.",
   },
 };
 

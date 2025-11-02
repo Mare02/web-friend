@@ -23,7 +23,7 @@ export function RecentArticlesHomeSection({ articles }: RecentBlogsHomeSectionPr
           Latest Blogs
         </h2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Stay updated with our latest insights on web development, best practices, case studies, and trending topics.
+          Stay updated with our latest insights on digital tools, online strategies, best practices, and trending topics.
         </p>
       </div>
 
