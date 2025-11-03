@@ -8,7 +8,7 @@ import { MobileMenuSidebar } from "@/components/mobile-menu-sidebar";
 
 export function Header() {
   return (
-    <div className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+    <div className="sticky top-0 z-40 border-b bg-background/60 backdrop-blur-lg supports-backdrop-filter:bg-background/70 shadow-sm shadow-black/5 dark:shadow-black/20">
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer">
