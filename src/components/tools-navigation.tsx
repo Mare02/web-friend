@@ -25,7 +25,11 @@ const tools = allTools.map(tool => ({
   ),
 }));
 
-export function ToolsNavigation() {
+interface ToolsNavigationProps {
+  onItemClick?: () => void;
+}
+
+export function ToolsNavigation({ onItemClick }: ToolsNavigationProps = {}) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -54,7 +58,10 @@ export function ToolsNavigation() {
                   className={`flex items-start gap-3 p-3 rounded-md hover:bg-muted/50 transition-colors cursor-pointer ${
                     isActive ? 'bg-muted' : ''
                   }`}
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    setIsOpen(false);
+                    onItemClick?.();
+                  }}
                 >
                   <div className="shrink-0 mt-0.5">
                     <Icon className="h-5 w-5 text-primary" />

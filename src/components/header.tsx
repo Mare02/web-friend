@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { UserMenu } from "@/components/user-menu";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ToolsNavigation } from "@/components/tools-navigation";
+import { MobileMenuSidebar } from "@/components/mobile-menu-sidebar";
 
 export function Header() {
   return (
@@ -15,15 +16,26 @@ export function Header() {
             <span className="hidden sm:inline font-bold text-lg">Web Friend</span>
           </Link>
           <div className="flex items-center gap-4">
-            <ToolsNavigation />
-            <Link href="/blogs">
-              <Button variant="outline" size="sm" className="flex items-center gap-2">
-                <Newspaper className="h-4 w-4" />
-                <span className="hidden sm:inline">Blogs</span>
-              </Button>
-            </Link>
+            {/* Desktop Navigation - hidden on mobile */}
+            <div className="hidden md:flex items-center gap-4">
+              <ToolsNavigation />
+              <Link href="/blogs">
+                <Button variant="outline" size="sm" className="flex items-center gap-2">
+                  <Newspaper className="h-4 w-4" />
+                  <span className="hidden sm:inline">Blogs</span>
+                </Button>
+              </Link>
+            </div>
+
+            {/* User Menu - always visible */}
             <UserMenu />
-            <ThemeToggle />
+
+            <div className="max-md:hidden">
+              <ThemeToggle />
+            </div>
+
+            {/* Mobile Menu - only visible on mobile/tablet */}
+            <MobileMenuSidebar />
           </div>
         </div>
       </div>
