@@ -15,7 +15,7 @@ import {
 
 export default function TermsPage() {
   return (
-    <div className="bg-linear-to-b from-background to-muted/20">
+    <div>
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-16 md:py-24">
         <div className="text-center mb-16 space-y-6 max-w-4xl mx-auto">

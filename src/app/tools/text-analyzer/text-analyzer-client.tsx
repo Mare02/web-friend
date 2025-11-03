@@ -5,7 +5,7 @@ import { FileText } from "lucide-react";
 
 export default function TextAnalyzerClient() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+    <div className="min-h-screen ">
       {/* Hero Section */}
       <div className="container mx-auto px-4 pt-8 md:pt-16">
         <div className="text-center mb-8">

@@ -44,7 +44,7 @@ export function TextAnalyzer({ onBack }: TextAnalyzerProps) {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pb-20">
       {/* Main Content */}
       <div className="container mx-auto px-4 py-6">
         <div className="max-w-6xl mx-auto space-y-6">

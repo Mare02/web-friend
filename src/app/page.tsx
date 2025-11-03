@@ -34,7 +34,7 @@ export default async function Home() {
   const recentArticles = await getRecentArticles(3)
 
   return (
-    <div className="bg-linear-to-b from-background to-muted/20">
+    <div>
 
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-16 md:py-24">
@@ -44,7 +44,7 @@ export default async function Home() {
           </div>
           <h1 className="text-4xl md:text-7xl font-bold tracking-tight">
             Free Tools for
-            <span className="block text-primary">Everyone Online</span>
+            <span className="block gradient-text">Everyone Online</span>
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Essential digital tools for businesses, creators, and everyone online.
@@ -89,12 +89,17 @@ export default async function Home() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((feature) => {
+            {features.map((feature, index) => {
               const Icon = feature.icon;
+              const floatClasses = [
+                "float-animation",
+                "float-animation-delayed",
+                "float-animation-slow"
+              ];
               return (
                 <div key={feature.title} className="text-center group">
                   <div className="inline-flex items-center justify-center p-4 bg-primary/10 rounded-full mb-4 group-hover:bg-primary/20 transition-colors">
-                    <Icon className="h-6 w-6 text-primary" />
+                    <Icon className={`h-6 w-6 text-primary ${floatClasses[index]}`} />
                   </div>
                   <h3 className="font-semibold mb-2">{feature.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">

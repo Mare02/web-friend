@@ -8,7 +8,7 @@ import { AlertCircle, Home } from "lucide-react";
  */
 export default function AnalysisNotFound() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 flex items-center justify-center p-4">
+    <div className="min-h-screen  flex items-center justify-center p-4">
       <Card className="max-w-md w-full">
         <CardHeader>
           <div className="flex items-center gap-2 text-destructive mb-2">

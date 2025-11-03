@@ -5,7 +5,7 @@ import { Palette } from "lucide-react";
 
 export default function ColorPaletteGeneratorClient() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+    <div className="min-h-screen pb-20">
       {/* Hero Section */}
       <div className="container mx-auto px-4 pt-8 md:pt-16">
         <div className="text-center mb-8">
