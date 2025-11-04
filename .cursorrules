@@ -1,18 +1,26 @@
-# AI Website Analyzer - Cursor Rules
+# Web Friend - Digital Tools Suite - Cursor Rules
 
 ## Project Overview
-This is an AI-powered website analysis tool built with Next.js 15, TypeScript, Tailwind CSS 4, and shadcn/ui. It analyzes websites for SEO, content quality, performance, and accessibility using Groq AI (with extensible provider abstraction).
+A comprehensive suite of free digital tools for businesses, creators, and professionals working online. Features AI-powered website analysis, content optimization, QR code generation, color palette creation, API testing, and indexability validation - all completely free with no ads or subscriptions. Includes a full CMS-powered blog system and user authentication.
 
 ## Tech Stack & Versions
 - **Framework**: Next.js 15.5.5 (App Router with Turbopack)
 - **Language**: TypeScript 5 (strict mode)
-- **Styling**: Tailwind CSS 4 + shadcn/ui components
-- **State Management**: React 19 hooks (useState, useEffect)
+- **Styling**: Tailwind CSS 4 + shadcn/ui + Styled Components
+- **State Management**: React 19 hooks (useState, useEffect) + Context API
 - **Validation**: Zod 4.1.12
-- **AI Provider**: Groq SDK (groq-sdk)
+- **AI Provider**: Groq SDK (groq-sdk) with extensible provider abstraction
+- **Database**: Cloudflare D1 (SQLite) + Sanity CMS
+- **Authentication**: Clerk with webhook integration
 - **HTML Parsing**: Cheerio
+- **Performance Testing**: Lighthouse 12.8.2
+- **QR Code Generation**: qrcode + @types/qrcode
+- **Content Management**: Sanity.io with next-sanity
 - **Icons**: lucide-react
 - **Themes**: next-themes
+- **UI Components**: Radix UI primitives + react-resizable-panels
+- **Markdown**: react-markdown + remark-gfm + @tailwindcss/typography
+- **Webhooks**: Svix
 
 ## Code Style & Conventions
 
@@ -36,18 +44,40 @@ This is an AI-powered website analysis tool built with Next.js 15, TypeScript, T
 ```
 src/
 ├── app/                    # Next.js App Router pages & API routes
-│   ├── api/               # API route handlers (route.ts)
+│   ├── admin/studio/      # Sanity Studio CMS interface
+│   ├── api/               # API route handlers (15+ endpoints)
+│   ├── blogs/             # Blog pages with ISR
+│   ├── tools/             # Individual tool pages (6 tools)
 │   ├── layout.tsx         # Root layout
-│   └── page.tsx           # Pages
-├── components/            # React components
+│   └── page.tsx           # Home page
+├── components/            # React components (50+ components)
 │   ├── ui/               # shadcn/ui components (DO NOT EDIT manually)
-│   └── *.tsx             # Custom components (kebab-case)
+│   ├── blogs/            # Blog-related components
+│   ├── tools/            # Tool-specific components
+│   └── *.tsx             # Feature components (kebab-case)
+├── contexts/             # React context providers
+│   ├── history-context.tsx # User history management
+│   └── loading-context.tsx # Global loading states
 ├── lib/
 │   ├── ai/               # AI provider abstraction
 │   │   ├── index.ts      # Provider factory
 │   │   └── providers/    # Individual providers (implement AIProvider)
-│   ├── services/         # Business logic (pure functions)
-│   └── validators/       # Zod schemas
+│   ├── services/         # Business logic (15+ services)
+│   ├── sanity/           # CMS integration & utilities
+│   ├── validators/       # Zod schemas & type definitions
+│   └── db.ts             # Cloudflare D1 database client
+└── middleware.ts         # Clerk authentication middleware
+```
+
+### Root Level Structure
+```
+docs/                     # Project documentation
+scripts/                  # Database seeding & utility scripts
+temp/                     # Temporary files (gitignored)
+database.db              # Local SQLite database
+schema.sql               # Database schema
+sanity.config.ts         # Sanity CMS configuration
+wrangler.toml           # Cloudflare Workers config
 ```
 
 ### Naming Conventions
@@ -78,15 +108,35 @@ src/
 - All services should:
   - Be exported as named functions
   - Have clear, single responsibilities
-  - Use dependency injection (pass AIProvider as parameter)
+  - Use dependency injection (pass AIProvider/database as parameters)
   - Return typed results using Zod schemas
+
+### Database Integration
+- **Cloudflare D1**: SQLite-compatible database with HTTP API client
+- **Local Development**: Uses HTTP API to connect to remote D1 instances
+- **Production**: Direct binding in Cloudflare Workers environment
+- Schema managed via SQL migration files
+- Database client in `@/lib/db.ts` with prepared statement support
+
+### Authentication & Authorization
+- **Clerk Integration**: JWT-based authentication with middleware protection
+- **Protected Routes**: Workspace features and user history require authentication
+- **Webhook Handling**: Svix integration for real-time auth event processing
+- **User Context**: Automatic user data management across the app
+
+### Content Management System
+- **Sanity.io**: Headless CMS for blog content and articles
+- **Studio Integration**: Admin interface at `/admin/studio`
+- **ISR Support**: Incremental Static Regeneration for blog posts
+- **Rich Content**: Portable Text rendering with custom components
 
 ### AI Provider Pattern
 - All AI providers must implement the `AIProvider` interface from `@/lib/ai/providers/base.ts`
 - Use factory pattern in `@/lib/ai/index.ts` to instantiate providers
 - Keep provider logic isolated - easy to add OpenAI, Claude, etc.
+- Support for multiple AI models and providers
 
-### API Routes
+### API Routes (15+ Endpoints)
 - Use Next.js App Router API routes (`app/api/*/route.ts`)
 - Always validate input with Zod schemas
 - Return consistent response format:
@@ -96,6 +146,7 @@ src/
   ```
 - Handle errors gracefully with try-catch
 - Use proper HTTP status codes
+- Support both authenticated and public endpoints
 
 ### Component Patterns
 - **Server Components by default** - only use "use client" when needed
@@ -103,10 +154,12 @@ src/
 - Extract reusable logic into custom hooks
 - Use composition over prop drilling
 - Prefer controlled components for forms
+- Support resizable panels for complex layouts
 
 ### State Management
 - Use React hooks (useState, useEffect) for local state
-- No external state management library needed yet
+- Context API for global state (loading, history)
+- No external state management library needed
 - Lift state up when needed, but avoid prop drilling
 - Consider URL state for shareable data
 
@@ -159,8 +212,6 @@ src/
 - Use discriminated unions for API responses
 
 ### Comments & Documentation
-- Add JSDoc comments for exported functions/types
-- Explain **why**, not **what** - code should be self-documenting
 - Document complex algorithms or business logic
 - Keep comments up-to-date with code
 
@@ -195,6 +246,15 @@ When working with AI providers:
 
 ## When Adding New Features
 
+### New Tool Addition
+1. Add tool definition to `src/lib/tools-data.ts`
+2. Create tool page in `src/app/tools/[tool-name]/page.tsx`
+3. Create tool component in `src/components/[tool-name].tsx`
+4. Add service logic in `src/lib/services/[tool-name]-service.ts`
+5. Add API endpoint in `src/app/api/[tool-name]/route.ts`
+6. Add validators in `src/lib/validators/[tool-name].ts`
+7. Update navigation and routing
+
 ### New AI Provider
 1. Implement `AIProvider` interface in `src/lib/ai/providers/`
 2. Add provider case to factory in `src/lib/ai/index.ts`
@@ -206,18 +266,31 @@ When working with AI providers:
 3. Add UI section to `analysis-results.tsx`
 4. Include in parallel Promise.all() execution
 
+### New Blog Feature
+1. Update Sanity schema in `src/lib/sanity/schemas/`
+2. Add component in `src/components/blogs/`
+3. Update blog pages in `src/app/blogs/`
+4. Run Sanity content migration if needed
+
 ### New UI Component
 1. Use shadcn/ui components as base when possible
 2. Create in `src/components/` with kebab-case filename
 3. Follow existing component patterns
-4. Support dark mode
-5. Ensure accessibility
+4. Support dark mode and resizable panels
+5. Ensure accessibility (keyboard nav, screen readers)
 
 ### New API Endpoint
 1. Create `route.ts` in `src/app/api/[endpoint]/`
 2. Define request/response schemas in validators
-3. Implement error handling
+3. Implement error handling and authentication if needed
 4. Return consistent response format
+5. Add to middleware protection if user-specific
+
+### Database Schema Changes
+1. Create migration SQL file in `scripts/`
+2. Update `schema.sql` with new tables/indexes
+3. Update service functions in `src/lib/services/`
+4. Add new validators for data types
 
 ## Common Patterns in This Codebase
 
@@ -262,22 +335,30 @@ const [error, setError] = useState<string | null>(null);
 ## Helpful Commands
 - `npm run dev` - Start development server with Turbopack
 - `npm run build` - Build for production
+- `npm run start` - Start production server
 - `npm run lint` - Run ESLint
-- `npm start` - Start production server
+- `npm run seed:sanity` - Seed Sanity CMS with initial categories and tags
+- `npm run generate:sitemap` - Generate sitemap data from Sanity content
 
-## Future Considerations
-- Cloudflare Workers migration planned
-- Database integration (Cloudflare D1)
-- User authentication
-- Analysis history
+### Database Commands
+- `./scripts/clean-db-local.sh` - Clean local database
+- `./scripts/clean-db-prod.sh` - Clean production database (use with caution)
+
+### Development Tools
+- Sanity Studio: Visit `/admin/studio` when running dev server
+- All tools available at `/tools/*` routes
+- Blog content managed through Sanity Studio interface
+
 
 ## Priorities When Editing
-1. **Type safety** - maintain strict TypeScript
-2. **Consistency** - follow existing patterns
-3. **Accessibility** - support keyboard nav, screen readers
-4. **Responsive design** - mobile-first approach
-5. **Dark mode** - test both themes
-6. **Error handling** - graceful failures with user feedback
-7. **Performance** - parallel operations when possible
-8. **Maintainability** - clear, documented code
+1. **Type safety** - maintain strict TypeScript with proper Zod validation
+2. **Consistency** - follow established patterns across all 6 tools
+3. **Accessibility** - support keyboard nav, screen readers, and WCAG compliance
+4. **Responsive design** - mobile-first approach with resizable panels
+5. **Dark mode** - test both themes across all components
+6. **Error handling** - graceful failures with user-friendly error messages
+7. **Performance** - parallel API calls, Lighthouse optimization, efficient rendering
+8. **Maintainability** - clear documentation, modular services, reusable components
+9. **Database integrity** - proper migrations, data validation, backup strategies
+10. **CMS consistency** - maintain content structure across Sanity schemas
 

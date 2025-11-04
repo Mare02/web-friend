@@ -1,25 +1,22 @@
 import { MetadataRoute } from 'next'
-import { client } from '@/lib/sanity/client'
+import { readFileSync } from 'fs'
+import { join } from 'path'
 
 interface SitemapArticle {
-  slug: {
-    current: string
-  }
+  slug: string
   publishedAt: string
 }
 
 /**
- * Fetch all articles for sitemap generation
+ * Read pre-generated sitemap data from JSON file
  */
-async function getAllArticlesForSitemap(): Promise<SitemapArticle[]> {
+async function getSitemapArticles(): Promise<SitemapArticle[]> {
   try {
-    const query = `*[_type == 'article'] | order(publishedAt desc) {
-      slug,
-      publishedAt
-    }`
-    return await client.fetch(query)
+    const filePath = join(process.cwd(), 'public', 'sitemap-data.json')
+    const fileContent = readFileSync(filePath, 'utf-8')
+    return JSON.parse(fileContent)
   } catch (error) {
-    console.error('Failed to fetch articles for sitemap:', error)
+    console.error('Failed to read sitemap data:', error)
     return []
   }
 }
@@ -27,12 +24,12 @@ async function getAllArticlesForSitemap(): Promise<SitemapArticle[]> {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://web-friend.vercel.app'
 
-  // Fetch articles dynamically from Sanity
-  const allArticles = await getAllArticlesForSitemap()
+  // Read pre-generated article data from JSON file
+  const allArticles = await getSitemapArticles()
 
   // Generate sitemap entries for blog posts
   const blogEntries = allArticles.map((article) => ({
-    url: `${baseUrl}/blogs/${article.slug.current}`,
+    url: `${baseUrl}/blogs/${article.slug}`,
     lastModified: new Date(article.publishedAt),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
@@ -86,6 +83,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/tools/indexability-validator`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/tools`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
     },
     ...blogEntries,
   ]
