@@ -3,7 +3,8 @@ import {
   FileText,
   Palette,
   Code,
-  QrCode
+  QrCode,
+  Shield
 } from "lucide-react";
 
 /**
@@ -16,7 +17,7 @@ export const tools = [
     description: "Comprehensive SEO, performance, and accessibility analysis with AI-powered insights",
     icon: Search,
     href: "/tools/website-analyzer",
-    badges: ["AI Powered", "Free Tool"],
+    badges: ["AI Powered", "Free Tool", "SEO"],
     color: "from-blue-500 to-cyan-500",
     features: ["SEO Analysis", "Performance Metrics", "Accessibility Audit", "AI Recommendations"]
   },
@@ -25,7 +26,7 @@ export const tools = [
     description: "Analyze text readability, SEO keywords, and content quality metrics",
     icon: FileText,
     href: "/tools/text-analyzer",
-    badges: ["Free Tool"],
+    badges: ["Free Tool", "SEO"],
     color: "from-green-500 to-emerald-500",
     features: ["Readability Scores", "Keyword Density", "SEO Analysis", "Content Metrics"]
   },
@@ -55,6 +56,15 @@ export const tools = [
     badges: ["Free Tool"],
     color: "from-red-500 to-pink-500",
     features: ["Multiple Content Types", "Custom Colors", "Download Options", "Advanced Settings"]
+  },
+  {
+    title: "Indexability Validator",
+    description: "Analyze robots.txt configuration, check indexability blockers, validate sitemaps, and get SEO recommendations",
+    icon: Shield,
+    href: "/tools/indexability-validator",
+    badges: ["Free Tool", "SEO"],
+    color: "from-blue-500 to-indigo-500",
+    features: ["Robots.txt Analysis", "Indexability Check", "Sitemap Validation", "SEO Recommendations"]
   }
 ] as const;
 

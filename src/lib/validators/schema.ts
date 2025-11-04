@@ -511,3 +511,80 @@ export const toolsCollectionSchema = z.array(toolSchema);
 // Export inferred types for TypeScript
 export type Tool = z.infer<typeof toolSchema>;
 
+/**
+ * Schema for robots.txt validation request
+ */
+export const robotsValidateRequestSchema = z.object({
+  url: z.string().url("Please enter a valid URL"),
+});
+
+/**
+ * Schema for robots.txt validation response
+ */
+export const robotsValidateResponseSchema = z.object({
+  success: z.boolean(),
+  data: z.object({
+    url: z.string(),
+    robotsTxt: z.object({
+      exists: z.boolean(),
+      content: z.string(),
+      isValid: z.boolean(),
+      errors: z.array(z.string()),
+      rules: z.array(z.object({
+        userAgent: z.string(),
+        disallow: z.array(z.string()),
+        allow: z.array(z.string()),
+        crawlDelay: z.number().optional(),
+        sitemap: z.array(z.string()).optional(),
+      })),
+      sitemaps: z.array(z.string()),
+      applicableRules: z.object({
+        userAgent: z.string(),
+        disallow: z.array(z.string()),
+        allow: z.array(z.string()),
+        crawlDelay: z.number().optional(),
+        sitemap: z.array(z.string()).optional(),
+      }),
+    }),
+    indexability: z.object({
+      url: z.string(),
+      isIndexable: z.boolean(),
+      blockingFactors: z.object({
+        robotsTxt: z.boolean(),
+        metaRobots: z.boolean(),
+        canonical: z.boolean(),
+        nofollow: z.boolean(),
+      }),
+      metaRobots: z.object({
+        noindex: z.boolean(),
+        nofollow: z.boolean(),
+        noarchive: z.boolean(),
+        nosnippet: z.boolean(),
+      }),
+      canonicalUrl: z.string().optional(),
+      recommendations: z.array(z.string()),
+    }),
+    sitemaps: z.object({
+      discovered: z.array(z.string()),
+      valid: z.array(z.string()),
+      invalid: z.array(z.string()),
+      urls: z.array(z.object({
+        loc: z.string(),
+        lastmod: z.string().optional(),
+        changefreq: z.string().optional(),
+        priority: z.string().optional(),
+      })),
+      errors: z.array(z.string()),
+    }),
+    overallIndexable: z.boolean(),
+    crawlabilityScore: z.number(),
+    recommendations: z.array(z.string()),
+    analyzedAt: z.number(),
+  }).optional(),
+  error: z.string().optional(),
+});
+
+// Export inferred types for TypeScript
+export type RobotsValidateRequest = z.infer<typeof robotsValidateRequestSchema>;
+export type RobotsValidateResponse = z.infer<typeof robotsValidateResponseSchema>;
+
