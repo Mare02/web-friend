@@ -1,8 +1,7 @@
 "use client";
 
 import { useUser, SignInButton, SignOutButton } from "@clerk/nextjs";
-import Link from "next/link";
-import { User, LogOut, LayoutDashboard } from "lucide-react";
+import { User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
