@@ -2,7 +2,7 @@
 
 A comprehensive suite of free digital tools for businesses, creators, and professionals working online. Features AI-powered website analysis, content optimization, QR code generation, color palette creation, API testing, and indexability validation - all completely free with no ads or subscriptions.
 
-![Next.js](https://img.shields.io/badge/Next.js-15.5-black?style=flat-square)
+![Next.js](https://img.shields.io/badge/Next.js-16.0-black?style=flat-square)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38bdf8?style=flat-square)
 
@@ -30,7 +30,7 @@ A comprehensive suite of free digital tools for businesses, creators, and profes
 
 ## Tech Stack
 
-- **Framework**: Next.js 15.5.5 (App Router + Turbopack)
+- **Framework**: Next.js 16.0 (App Router + Turbopack)
 - **Language**: TypeScript 5 (strict mode)
 - **Styling**: Tailwind CSS 4 + shadcn/ui
 - **AI Provider**: Groq SDK (with extensible provider abstraction)

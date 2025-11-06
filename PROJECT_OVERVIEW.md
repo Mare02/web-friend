@@ -2,7 +2,7 @@
 A comprehensive suite of free digital tools for businesses, creators, and professionals working online. Features AI-powered website analysis, content optimization, QR code generation, color palette creation, API testing, and indexability validation - all completely free with no ads or subscriptions.
 
 ## Tech Stack
-- **Framework**: Next.js 15.5.5 (App Router + Turbopack)
+- **Framework**: Next.js 16.0 (App Router + Turbopack)
 - **Language**: TypeScript 5 (strict mode)
 - **Styling**: Tailwind CSS 4 + shadcn/ui
 - **AI**: Groq SDK with extensible provider abstraction
