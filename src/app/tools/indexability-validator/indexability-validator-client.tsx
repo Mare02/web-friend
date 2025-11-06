@@ -11,11 +11,13 @@ export default function RobotsValidatorClient() {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<RobotsValidateResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [currentUrl, setCurrentUrl] = useState("");
 
   const handleAnalyze = async (url: string) => {
     setIsLoading(true);
     setError(null);
     setResult(null);
+    setCurrentUrl(url); // Store the URL for persistence
 
     try {
       const response = await fetch("/api/robots-validate", {
@@ -53,7 +55,12 @@ export default function RobotsValidatorClient() {
         <>
           {/* Re-analyze Form */}
           <div className="container mx-auto px-4 py-6 flex justify-center" >
-            <RobotsValidatorForm onAnalyze={handleAnalyze} isLoading={isLoading} />
+            <RobotsValidatorForm
+              onAnalyze={handleAnalyze}
+              isLoading={isLoading}
+              url={currentUrl}
+              onUrlChange={setCurrentUrl}
+            />
           </div>
 
           {/* Error State */}
@@ -94,7 +101,12 @@ export default function RobotsValidatorClient() {
 
             {/* Analyzer Form */}
             <div className="flex justify-center mb-12">
-              <RobotsValidatorForm onAnalyze={handleAnalyze} isLoading={isLoading} />
+              <RobotsValidatorForm
+                onAnalyze={handleAnalyze}
+                isLoading={isLoading}
+                url={currentUrl}
+                onUrlChange={setCurrentUrl}
+              />
             </div>
 
             {/* Error State */}

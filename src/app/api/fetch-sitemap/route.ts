@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as cheerio from "cheerio";
 import { z } from "zod";
+import { gunzipSync } from "zlib";
+import { SitemapUrl } from "@/lib/validators/robots-validator";
 
 const fetchSitemapRequestSchema = z.object({
   url: z.string().url(),
@@ -27,17 +29,26 @@ export async function POST(request: NextRequest) {
     }
 
     const contentType = response.headers.get("content-type") || "";
-    if (!contentType.includes("xml") && !contentType.includes("text")) {
+    const isGzip = contentType.includes("gzip") || contentType.includes("application/gzip") || contentType.includes("application/x-gzip");
+
+    if (!contentType.includes("xml") && !contentType.includes("text") && !isGzip) {
       return NextResponse.json(
         { success: false, error: `Invalid content type: ${contentType}` },
         { status: 400 }
       );
     }
 
-    const xml = await response.text();
+    let xml: string;
+    if (isGzip) {
+      // Handle gzipped sitemap
+      const buffer = await response.arrayBuffer();
+      xml = gunzipSync(Buffer.from(buffer)).toString('utf-8');
+    } else {
+      xml = await response.text();
+    }
     const $ = cheerio.load(xml, { xmlMode: true });
 
-    const urls: any[] = [];
+    const urls: SitemapUrl[] = [];
 
     // Check if it's a sitemap index or regular sitemap
     const sitemapIndex = $('sitemapindex').length > 0;

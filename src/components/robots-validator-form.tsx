@@ -10,11 +10,17 @@ interface RobotsValidatorFormProps {
   onAnalyze: (url: string) => Promise<void>;
   isLoading: boolean;
   compact?: boolean;
+  url?: string;
+  onUrlChange?: (url: string) => void;
 }
 
-export function RobotsValidatorForm({ onAnalyze, isLoading, compact = false }: RobotsValidatorFormProps) {
-  const [url, setUrl] = useState("");
+export function RobotsValidatorForm({ onAnalyze, isLoading, compact = false, url: controlledUrl, onUrlChange }: RobotsValidatorFormProps) {
+  const [internalUrl, setInternalUrl] = useState("");
   const [errors, setErrors] = useState<{ url?: string }>({});
+
+  // Use controlled URL if provided, otherwise use internal state
+  const url = controlledUrl !== undefined ? controlledUrl : internalUrl;
+  const setUrl = onUrlChange || setInternalUrl;
 
   const validateForm = () => {
     const newErrors: { url?: string } = {};

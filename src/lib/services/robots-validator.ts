@@ -1,4 +1,5 @@
 import * as cheerio from "cheerio";
+import { gunzipSync } from "zlib";
 import {
   RobotsTxtAnalysis,
   IndexabilityResult,
@@ -324,7 +325,7 @@ function matchesRobotsPattern(pattern: string, path: string): boolean {
 /**
  * Processes a single sitemap and extracts its URLs
  */
-async function processSitemap(sitemapUrl: string, processedSitemaps: Set<string> = new Set()): Promise<{ detail: SitemapDetail; additionalValidSitemaps: string[]; allDetails: SitemapDetail[] }> {
+async function processSitemap(sitemapUrl: string, processedSitemaps: Set<string> = new Set(), depth: number = 0): Promise<{ detail: SitemapDetail; additionalValidSitemaps: string[]; allDetails: SitemapDetail[] }> {
   const urls: SitemapUrl[] = [];
   let isSitemapIndex = false;
 
@@ -343,13 +344,30 @@ async function processSitemap(sitemapUrl: string, processedSitemaps: Set<string>
         allDetails: []
       };
     }
+
+    // Limit recursion depth to prevent stack overflow
+    const MAX_DEPTH = 10;
+    if (depth > MAX_DEPTH) {
+      return {
+        detail: {
+          url: sitemapUrl,
+          isValid: false,
+          isSitemapIndex: false,
+          urls: [],
+          error: `Maximum sitemap recursion depth (${MAX_DEPTH}) exceeded`
+        },
+        additionalValidSitemaps: [],
+        allDetails: []
+      };
+    }
+
     processedSitemaps.add(sitemapUrl);
 
     const response = await fetch(sitemapUrl, {
       headers: {
         "User-Agent": "Mozilla/5.0 (compatible; RobotsValidator/1.0; +https://example.com/bot)",
       },
-      signal: AbortSignal.timeout(5000),
+      signal: AbortSignal.timeout(10000), // Increased timeout for large sitemaps
     });
 
     if (!response.ok) {
@@ -367,7 +385,9 @@ async function processSitemap(sitemapUrl: string, processedSitemaps: Set<string>
     }
 
     const contentType = response.headers.get("content-type") || "";
-    if (!contentType.includes("xml") && !contentType.includes("text")) {
+    const isGzip = contentType.includes("gzip") || contentType.includes("application/gzip") || contentType.includes("application/x-gzip");
+
+    if (!contentType.includes("xml") && !contentType.includes("text") && !isGzip) {
       return {
         detail: {
           url: sitemapUrl,
@@ -381,8 +401,45 @@ async function processSitemap(sitemapUrl: string, processedSitemaps: Set<string>
       };
     }
 
-    const xml = await response.text();
-    const $ = cheerio.load(xml, { xmlMode: true });
+    let xml: string;
+    try {
+      if (isGzip) {
+        // Handle gzipped sitemap
+        const buffer = await response.arrayBuffer();
+        xml = gunzipSync(Buffer.from(buffer)).toString('utf-8');
+      } else {
+        xml = await response.text();
+      }
+    } catch (error) {
+      return {
+        detail: {
+          url: sitemapUrl,
+          isValid: false,
+          isSitemapIndex: false,
+          urls: [],
+          error: `Failed to decode sitemap content: ${error instanceof Error ? error.message : 'Unknown error'}`
+        },
+        additionalValidSitemaps: [],
+        allDetails: []
+      };
+    }
+
+    let $: cheerio.CheerioAPI;
+    try {
+      $ = cheerio.load(xml, { xmlMode: true });
+    } catch (error) {
+      return {
+        detail: {
+          url: sitemapUrl,
+          isValid: false,
+          isSitemapIndex: false,
+          urls: [],
+          error: `Failed to parse XML: ${error instanceof Error ? error.message : 'Unknown error'}`
+        },
+        additionalValidSitemaps: [],
+        allDetails: []
+      };
+    }
 
     // Check if it's a sitemap index or regular sitemap
     isSitemapIndex = $('sitemapindex').length > 0;
@@ -405,7 +462,14 @@ async function processSitemap(sitemapUrl: string, processedSitemaps: Set<string>
     // Extract URLs
     if (urlset) {
       // Regular sitemap with page URLs
+      const MAX_URLS_PER_SITEMAP = 100000; // Higher limit since UI supports progressive loading
+      let urlCount = 0;
+
       $('url').each((_, element) => {
+        if (urlCount >= MAX_URLS_PER_SITEMAP) {
+          return false; // Break out of each loop
+        }
+
         const loc = $(element).find('loc').text().trim();
         const lastmod = $(element).find('lastmod').text().trim();
         const changefreq = $(element).find('changefreq').text().trim();
@@ -420,8 +484,23 @@ async function processSitemap(sitemapUrl: string, processedSitemaps: Set<string>
             isSitemap: false,
             sitemapSource: sitemapUrl,
           });
+          urlCount++;
         }
       });
+
+      if (urlCount >= MAX_URLS_PER_SITEMAP) {
+        return {
+          detail: {
+            url: sitemapUrl,
+            isValid: true,
+            isSitemapIndex: false,
+            urls,
+            error: `Sitemap contains more than ${MAX_URLS_PER_SITEMAP} URLs, truncated for performance`
+          },
+          additionalValidSitemaps: [],
+          allDetails: []
+        };
+      }
     } else if (isSitemapIndex) {
       // Sitemap index - extract child sitemap URLs
       const childSitemaps: string[] = [];
@@ -449,7 +528,7 @@ async function processSitemap(sitemapUrl: string, processedSitemaps: Set<string>
       const allChildDetails: SitemapDetail[] = [];
       for (const childSitemapUrl of childSitemaps) {
         try {
-          const childResult = await processSitemap(childSitemapUrl, processedSitemaps);
+          const childResult = await processSitemap(childSitemapUrl, processedSitemaps, depth + 1);
 
           // Add all URLs from child sitemaps to our collection
           urls.push(...childResult.detail.urls);
@@ -518,6 +597,8 @@ export async function analyzeSitemaps(baseUrl: string): Promise<SitemapAnalysis>
   const sitemaps: SitemapDetail[] = [];
   const errors: string[] = [];
 
+  const MAX_TOTAL_URLS = 500000; // Higher limit since UI supports progressive loading
+
   try {
     // Only check sitemaps declared in robots.txt
     const robotsData = await fetchRobotsTxt(baseUrl);
@@ -551,7 +632,18 @@ export async function analyzeSitemaps(baseUrl: string): Promise<SitemapAnalysis>
         // Add all additional valid sitemaps found during processing
         valid.push(...sitemapResult.additionalValidSitemaps);
         // Add all URLs from this sitemap (including recursively processed ones) to the global list
-        allUrls.push(...sitemapResult.detail.urls);
+        // But limit total URLs to prevent memory issues
+        const remainingCapacity = MAX_TOTAL_URLS - allUrls.length;
+        if (remainingCapacity > 0) {
+          const urlsToAdd = sitemapResult.detail.urls.slice(0, remainingCapacity);
+          allUrls.push(...urlsToAdd);
+
+          if (sitemapResult.detail.urls.length > urlsToAdd.length) {
+            errors.push(`${sitemapUrl}: Too many URLs (${sitemapResult.detail.urls.length}), truncated to ${urlsToAdd.length}`);
+          }
+        } else if (allUrls.length >= MAX_TOTAL_URLS) {
+          errors.push(`${sitemapUrl}: Skipped due to URL limit (${MAX_TOTAL_URLS}) reached`);
+        }
       } else {
         invalid.push(sitemapUrl);
         if (sitemapResult.detail.error) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -39,6 +39,13 @@ export function RobotsValidatorResults({ result }: RobotsValidatorResultsProps) 
     urls: SitemapUrl[];
     isSitemapIndex: boolean;
   } | null>(null);
+
+  const [displayedUrlCount, setDisplayedUrlCount] = useState(100);
+
+  // Reset displayed URL count when new results are loaded
+  useEffect(() => {
+    setDisplayedUrlCount(100);
+  }, [result]);
 
   if (!result.success || !result.data) {
     return null;
@@ -475,10 +482,10 @@ export function RobotsValidatorResults({ result }: RobotsValidatorResultsProps) 
 
                 return hasSingleNonIndexSitemap && sitemaps.urls.length > 0 ? (
                   <div className="mb-4">
-                    <h4 className="font-semibold mb-2">URLs in Sitemap:</h4>
+                    <h4 className="font-semibold mb-2">URLs in Sitemap ({sitemaps.urls.length} total):</h4>
                     <div className="max-h-60 overflow-y-auto border rounded p-3">
                       <div className="space-y-2">
-                        {sitemaps.urls.slice(0, 20).map((url, index) => (
+                        {sitemaps.urls.slice(0, displayedUrlCount).map((url, index) => (
                           <div key={index} className="text-sm">
                             <a
                               href={url.loc}
@@ -495,9 +502,16 @@ export function RobotsValidatorResults({ result }: RobotsValidatorResultsProps) 
                             )}
                           </div>
                         ))}
-                        {sitemaps.urls.length > 20 && (
-                          <div className="text-sm text-gray-600 dark:text-muted-foreground">
-                            ... and {sitemaps.urls.length - 20} more URLs
+                        {displayedUrlCount < sitemaps.urls.length && (
+                          <div className="pt-2 border-t">
+                            <Button
+                              onClick={() => setDisplayedUrlCount(prev => prev + 100)}
+                              variant="outline"
+                              size="sm"
+                              className="w-full"
+                            >
+                              Load More ({Math.min(100, sitemaps.urls.length - displayedUrlCount)} more URLs)
+                            </Button>
                           </div>
                         )}
                       </div>

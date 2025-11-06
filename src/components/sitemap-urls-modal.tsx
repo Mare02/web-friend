@@ -28,6 +28,8 @@ export function SitemapUrlsModal({
   const [fetchedIsSitemapIndex, setFetchedIsSitemapIndex] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentSitemapUrl, setCurrentSitemapUrl] = useState(sitemapUrl);
+  const [originalSitemapUrl, setOriginalSitemapUrl] = useState(sitemapUrl);
 
   // Function to fetch sitemap URLs via API
   const fetchSitemapUrls = async (url: string): Promise<{ urls: SitemapUrl[]; isSitemapIndex: boolean }> => {
@@ -48,6 +50,23 @@ export function SitemapUrlsModal({
     return data.data;
   };
 
+  // Function to handle opening a referenced sitemap
+  const handleOpenSitemap = async (url: string) => {
+    setLoading(true);
+    setError(null);
+    setCurrentSitemapUrl(url);
+
+    try {
+      const { urls, isSitemapIndex } = await fetchSitemapUrls(url);
+      setFetchedUrls(urls);
+      setFetchedIsSitemapIndex(isSitemapIndex);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load sitemap');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Fetch sitemap URLs when modal opens
   useEffect(() => {
     if (isOpen && sitemapUrl) {
@@ -55,6 +74,8 @@ export function SitemapUrlsModal({
       setError(null);
       setFetchedUrls([]);
       setFetchedIsSitemapIndex(null);
+      setCurrentSitemapUrl(sitemapUrl);
+      setOriginalSitemapUrl(sitemapUrl);
 
       fetchSitemapUrls(sitemapUrl)
         .then(({ urls, isSitemapIndex }) => {
@@ -88,16 +109,28 @@ export function SitemapUrlsModal({
             <Map className="h-5 w-5" />
             Sitemap URLs
           </DialogTitle>
-          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-muted-foreground">
-            <ExternalLink className="h-4 w-4" />
-            <a
-              href={sitemapUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:underline break-all"
-            >
-              {sitemapUrl}
-            </a>
+          <div className="flex flex-col gap-2">
+            {currentSitemapUrl !== originalSitemapUrl && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleOpenSitemap(originalSitemapUrl)}
+                className="text-xs"
+              >
+                ← Back to Main Sitemap
+              </Button>
+            )}
+            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-muted-foreground">
+              <ExternalLink className="h-4 w-4" />
+              <a
+                href={currentSitemapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline break-all"
+              >
+                {currentSitemapUrl}
+              </a>
+            </div>
           </div>
           {displayIsSitemapIndex && (
             <Badge variant="secondary" className="w-fit">
@@ -152,14 +185,13 @@ export function SitemapUrlsModal({
                       <div key={index} className="flex items-center gap-3 p-3 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50">
                         <FileText className="h-4 w-4 text-blue-500 shrink-0" />
                         <div className="flex-1 min-w-0">
-                          <a
-                            href={url.loc}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hover:underline break-all text-sm"
+                          <Button
+                            variant="link"
+                            className="h-auto p-0 text-left justify-start text-sm hover:underline"
+                            onClick={() => handleOpenSitemap(url.loc)}
                           >
                             {url.loc}
-                          </a>
+                          </Button>
                           {url.lastmod && (
                             <div className="text-xs text-gray-600 dark:text-muted-foreground mt-1">
                               Last modified: {new Date(url.lastmod).toLocaleDateString()}
