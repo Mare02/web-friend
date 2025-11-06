@@ -68,6 +68,19 @@ export const sitemapUrlSchema = z.object({
   lastmod: z.string().optional(),
   changefreq: z.string().optional(),
   priority: z.string().optional(),
+  isSitemap: z.boolean().optional(), // Whether this is a sitemap reference (for sitemap indexes)
+  sitemapSource: z.string().optional(), // The sitemap URL that contains this entry
+});
+
+/**
+ * Schema for detailed sitemap information
+ */
+export const sitemapDetailSchema = z.object({
+  url: z.string(),
+  isValid: z.boolean(),
+  isSitemapIndex: z.boolean(),
+  urls: z.array(sitemapUrlSchema), // URLs contained in this specific sitemap
+  error: z.string().optional(),
 });
 
 /**
@@ -77,7 +90,8 @@ export const sitemapAnalysisSchema = z.object({
   discovered: z.array(z.string()),
   valid: z.array(z.string()),
   invalid: z.array(z.string()),
-  urls: z.array(sitemapUrlSchema),
+  urls: z.array(sitemapUrlSchema), // All URLs from all sitemaps (for backward compatibility)
+  sitemaps: z.array(sitemapDetailSchema), // Detailed information about each sitemap
   errors: z.array(z.string()),
 });
 
@@ -120,6 +134,7 @@ export type BlockingFactors = z.infer<typeof blockingFactorsSchema>;
 export type MetaRobots = z.infer<typeof metaRobotsSchema>;
 export type IndexabilityResult = z.infer<typeof indexabilityResultSchema>;
 export type SitemapUrl = z.infer<typeof sitemapUrlSchema>;
+export type SitemapDetail = z.infer<typeof sitemapDetailSchema>;
 export type SitemapAnalysis = z.infer<typeof sitemapAnalysisSchema>;
 export type RobotsAnalysisResult = z.infer<typeof robotsAnalysisResultSchema>;
 export type RobotsValidateRequest = z.infer<typeof robotsValidateRequestSchema>;

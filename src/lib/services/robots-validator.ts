@@ -3,6 +3,8 @@ import {
   RobotsTxtAnalysis,
   IndexabilityResult,
   SitemapAnalysis,
+  SitemapDetail,
+  SitemapUrl,
   RobotsAnalysisResult
 } from "../validators/robots-validator";
 
@@ -320,6 +322,192 @@ function matchesRobotsPattern(pattern: string, path: string): boolean {
 }
 
 /**
+ * Processes a single sitemap and extracts its URLs
+ */
+async function processSitemap(sitemapUrl: string, processedSitemaps: Set<string> = new Set()): Promise<{ detail: SitemapDetail; additionalValidSitemaps: string[]; allDetails: SitemapDetail[] }> {
+  const urls: SitemapUrl[] = [];
+  let isSitemapIndex = false;
+
+  try {
+    // Prevent infinite loops in case of circular references
+    if (processedSitemaps.has(sitemapUrl)) {
+      return {
+        detail: {
+          url: sitemapUrl,
+          isValid: false,
+          isSitemapIndex: false,
+          urls: [],
+          error: "Circular sitemap reference detected"
+        },
+        additionalValidSitemaps: [],
+        allDetails: []
+      };
+    }
+    processedSitemaps.add(sitemapUrl);
+
+    const response = await fetch(sitemapUrl, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (compatible; RobotsValidator/1.0; +https://example.com/bot)",
+      },
+      signal: AbortSignal.timeout(5000),
+    });
+
+    if (!response.ok) {
+      return {
+        detail: {
+          url: sitemapUrl,
+          isValid: false,
+          isSitemapIndex: false,
+          urls: [],
+          error: `HTTP ${response.status}`
+        },
+        additionalValidSitemaps: [],
+        allDetails: []
+      };
+    }
+
+    const contentType = response.headers.get("content-type") || "";
+    if (!contentType.includes("xml") && !contentType.includes("text")) {
+      return {
+        detail: {
+          url: sitemapUrl,
+          isValid: false,
+          isSitemapIndex: false,
+          urls: [],
+          error: `Invalid content type: ${contentType}`
+        },
+        additionalValidSitemaps: [],
+        allDetails: []
+      };
+    }
+
+    const xml = await response.text();
+    const $ = cheerio.load(xml, { xmlMode: true });
+
+    // Check if it's a sitemap index or regular sitemap
+    isSitemapIndex = $('sitemapindex').length > 0;
+    const urlset = $('urlset').length > 0;
+
+    if (!isSitemapIndex && !urlset) {
+      return {
+        detail: {
+          url: sitemapUrl,
+          isValid: false,
+          isSitemapIndex: false,
+          urls: [],
+          error: "Not a valid sitemap format"
+        },
+        additionalValidSitemaps: [],
+        allDetails: []
+      };
+    }
+
+    // Extract URLs
+    if (urlset) {
+      // Regular sitemap with page URLs
+      $('url').each((_, element) => {
+        const loc = $(element).find('loc').text().trim();
+        const lastmod = $(element).find('lastmod').text().trim();
+        const changefreq = $(element).find('changefreq').text().trim();
+        const priority = $(element).find('priority').text().trim();
+
+        if (loc) {
+          urls.push({
+            loc,
+            lastmod: lastmod || undefined,
+            changefreq: changefreq || undefined,
+            priority: priority || undefined,
+            isSitemap: false,
+            sitemapSource: sitemapUrl,
+          });
+        }
+      });
+    } else if (isSitemapIndex) {
+      // Sitemap index - extract child sitemap URLs
+      const childSitemaps: string[] = [];
+      const additionalValidSitemaps: string[] = [];
+
+      $('sitemap').each((_, element) => {
+        const loc = $(element).find('loc').text().trim();
+        if (loc) {
+          childSitemaps.push(loc);
+          urls.push({
+            loc,
+            lastmod: $(element).find('lastmod').text().trim() || undefined,
+            changefreq: undefined,
+            priority: undefined,
+            isSitemap: true,
+            sitemapSource: sitemapUrl,
+          });
+        }
+      });
+
+      // Add all child sitemap URLs to additionalValidSitemaps since they are listed in the index
+      additionalValidSitemaps.push(...childSitemaps);
+
+      // Recursively process child sitemaps
+      const allChildDetails: SitemapDetail[] = [];
+      for (const childSitemapUrl of childSitemaps) {
+        try {
+          const childResult = await processSitemap(childSitemapUrl, processedSitemaps);
+
+          // Add all URLs from child sitemaps to our collection
+          urls.push(...childResult.detail.urls);
+          // Also add any additional valid sitemaps found by the child
+          additionalValidSitemaps.push(...childResult.additionalValidSitemaps);
+          // Collect all child details
+          allChildDetails.push(childResult.detail, ...childResult.allDetails);
+        } catch (error) {
+          // If processing fails, create a basic detail for it
+          allChildDetails.push({
+            url: childSitemapUrl,
+            isValid: false,
+            isSitemapIndex: false,
+            urls: [],
+            error: `Failed to process: ${error instanceof Error ? error.message : 'Unknown error'}`
+          });
+        }
+      }
+
+      return {
+        detail: {
+          url: sitemapUrl,
+          isValid: true,
+          isSitemapIndex,
+          urls,
+        },
+        additionalValidSitemaps,
+        allDetails: allChildDetails
+      };
+    }
+
+    return {
+      detail: {
+        url: sitemapUrl,
+        isValid: true,
+        isSitemapIndex,
+        urls,
+      },
+      additionalValidSitemaps: [],
+      allDetails: []
+    };
+
+  } catch (error) {
+    return {
+      detail: {
+        url: sitemapUrl,
+        isValid: false,
+        isSitemapIndex,
+        urls: [],
+        error: error instanceof Error ? error.message : 'Unknown error'
+      },
+      additionalValidSitemaps: [],
+      allDetails: []
+    };
+  }
+}
+
+/**
  * Analyzes XML sitemaps from a website
  */
 export async function analyzeSitemaps(baseUrl: string): Promise<SitemapAnalysis> {
@@ -327,6 +515,7 @@ export async function analyzeSitemaps(baseUrl: string): Promise<SitemapAnalysis>
   const valid: string[] = [];
   const invalid: string[] = [];
   const allUrls: SitemapAnalysis['urls'] = [];
+  const sitemaps: SitemapDetail[] = [];
   const errors: string[] = [];
 
   try {
@@ -344,84 +533,30 @@ export async function analyzeSitemaps(baseUrl: string): Promise<SitemapAnalysis>
         valid: [],
         invalid: [],
         urls: [],
+        sitemaps: [],
         errors: [],
       };
     }
 
-    // Analyze each declared sitemap
+    // Process each declared sitemap recursively
     for (const sitemapUrl of discovered) {
-      try {
-        const response = await fetch(sitemapUrl, {
-          headers: {
-            "User-Agent": "Mozilla/5.0 (compatible; RobotsValidator/1.0; +https://example.com/bot)",
-          },
-          signal: AbortSignal.timeout(5000),
-        });
+      const sitemapResult = await processSitemap(sitemapUrl);
 
-        if (!response.ok) {
-          invalid.push(sitemapUrl);
-          errors.push(`${sitemapUrl}: HTTP ${response.status}`);
-          continue;
-        }
+      sitemaps.push(sitemapResult.detail);
+      // Add all child sitemap details that were processed
+      sitemaps.push(...sitemapResult.allDetails);
 
-        const contentType = response.headers.get("content-type") || "";
-        if (!contentType.includes("xml") && !contentType.includes("text")) {
-          invalid.push(sitemapUrl);
-          errors.push(`${sitemapUrl}: Invalid content type: ${contentType}`);
-          continue;
-        }
-
-        const xml = await response.text();
-        const $ = cheerio.load(xml, { xmlMode: true });
-
-        // Check if it's a sitemap index or regular sitemap
-        const sitemapIndex = $('sitemapindex').length > 0;
-        const urlset = $('urlset').length > 0;
-
-        if (!sitemapIndex && !urlset) {
-          invalid.push(sitemapUrl);
-          errors.push(`${sitemapUrl}: Not a valid sitemap format`);
-          continue;
-        }
-
+      if (sitemapResult.detail.isValid) {
         valid.push(sitemapUrl);
-
-        // Extract URLs
-        if (urlset) {
-          // Regular sitemap with URLs
-          $('url').each((_, element) => {
-            const loc = $(element).find('loc').text().trim();
-            const lastmod = $(element).find('lastmod').text().trim();
-            const changefreq = $(element).find('changefreq').text().trim();
-            const priority = $(element).find('priority').text().trim();
-
-            if (loc) {
-              allUrls.push({
-                loc,
-                lastmod: lastmod || undefined,
-                changefreq: changefreq || undefined,
-                priority: priority || undefined,
-              });
-            }
-          });
-        } else if (sitemapIndex) {
-          // Sitemap index - extract child sitemap URLs (but don't recursively process them)
-          $('sitemap').each((_, element) => {
-            const loc = $(element).find('loc').text().trim();
-            if (loc) {
-              allUrls.push({
-                loc,
-                lastmod: $(element).find('lastmod').text().trim() || undefined,
-                changefreq: undefined,
-                priority: undefined,
-              });
-            }
-          });
-        }
-
-      } catch (error) {
+        // Add all additional valid sitemaps found during processing
+        valid.push(...sitemapResult.additionalValidSitemaps);
+        // Add all URLs from this sitemap (including recursively processed ones) to the global list
+        allUrls.push(...sitemapResult.detail.urls);
+      } else {
         invalid.push(sitemapUrl);
-        errors.push(`${sitemapUrl}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        if (sitemapResult.detail.error) {
+          errors.push(`${sitemapUrl}: ${sitemapResult.detail.error}`);
+        }
       }
     }
 
@@ -429,11 +564,15 @@ export async function analyzeSitemaps(baseUrl: string): Promise<SitemapAnalysis>
     errors.push(`Failed to analyze sitemaps: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 
+  // Remove duplicates from valid sitemaps
+  const uniqueValid = [...new Set(valid)];
+
   return {
     discovered,
-    valid,
+    valid: uniqueValid,
     invalid,
     urls: allUrls,
+    sitemaps,
     errors,
   };
 }

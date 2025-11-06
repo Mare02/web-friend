@@ -1,11 +1,20 @@
 "use client";
 
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 import { RobotsValidateResponse } from "@/lib/validators/schema";
+import { SitemapUrl, SitemapDetail, SitemapAnalysis } from "@/lib/validators/robots-validator";
+
+// Extended type for backward compatibility
+type ExtendedSitemapAnalysis = SitemapAnalysis & {
+  sitemaps?: SitemapDetail[];
+};
+import { SitemapUrlsModal } from "@/components/sitemap-urls-modal";
 import {
   Shield,
   FileText,
@@ -25,6 +34,12 @@ interface RobotsValidatorResultsProps {
 }
 
 export function RobotsValidatorResults({ result }: RobotsValidatorResultsProps) {
+  const [selectedSitemap, setSelectedSitemap] = useState<{
+    url: string;
+    urls: SitemapUrl[];
+    isSitemapIndex: boolean;
+  } | null>(null);
+
   if (!result.success || !result.data) {
     return null;
   }
@@ -407,19 +422,30 @@ export function RobotsValidatorResults({ result }: RobotsValidatorResultsProps) 
                 <div className="mb-4">
                   <h4 className="font-semibold mb-2 text-green-600">Valid Sitemaps:</h4>
                   <div className="space-y-2">
-                    {sitemaps.valid.map((url, index) => (
-                      <div key={index} className="flex items-center gap-2 text-sm">
-                        <CheckCircle2 className="h-4 w-4 text-green-500" />
-                        <a
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:underline"
-                        >
-                          {url}
-                        </a>
-                      </div>
-                    ))}
+                    {sitemaps.valid.map((url, index) => {
+                      const sitemapDetail = (sitemaps as ExtendedSitemapAnalysis).sitemaps?.find((s: SitemapDetail) => s.url === url);
+                      return (
+                        <div key={index} className="flex items-center gap-2 text-sm">
+                          <CheckCircle2 className="h-4 w-4 text-green-500" />
+                          <Button
+                            variant="link"
+                            className="h-auto p-0 text-sm justify-start"
+                            onClick={() => setSelectedSitemap({
+                              url,
+                              urls: [], // Will be fetched fresh in modal
+                              isSitemapIndex: sitemapDetail?.isSitemapIndex || false
+                            })}
+                          >
+                            {url}
+                          </Button>
+                          {sitemapDetail?.isSitemapIndex && (
+                            <Badge variant="outline" className="text-xs">
+                              Index
+                            </Badge>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -439,38 +465,46 @@ export function RobotsValidatorResults({ result }: RobotsValidatorResultsProps) 
                 </div>
               )}
 
-              {/* Sitemap URLs */}
-              {sitemaps.urls.length > 0 && (
-                <div className="mb-4">
-                  <h4 className="font-semibold mb-2">URLs in Sitemaps:</h4>
-                  <div className="max-h-60 overflow-y-auto border rounded p-3">
-                    <div className="space-y-2">
-                      {sitemaps.urls.slice(0, 20).map((url, index) => (
-                        <div key={index} className="text-sm">
-                          <a
-                            href={url.loc}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hover:underline break-all"
-                          >
-                            {url.loc}
-                          </a>
-                          {url.lastmod && (
-                            <span className="text-gray-600 dark:text-muted-foreground ml-2">
-                              (Modified: {new Date(url.lastmod).toLocaleDateString()})
-                            </span>
-                          )}
-                        </div>
-                      ))}
-                      {sitemaps.urls.length > 20 && (
-                        <div className="text-sm text-gray-600 dark:text-muted-foreground">
-                          ... and {sitemaps.urls.length - 20} more URLs
-                        </div>
-                      )}
+              {/* Sitemap URLs - Only show for single non-index sitemaps */}
+              {(() => {
+                // Only show URLs section if there's exactly one discovered sitemap and it's not an index
+                const hasSingleNonIndexSitemap = sitemaps.discovered.length === 1 &&
+                  (sitemaps as ExtendedSitemapAnalysis).sitemaps?.some(s =>
+                    s.url === sitemaps.discovered[0] && !s.isSitemapIndex
+                  );
+
+                return hasSingleNonIndexSitemap && sitemaps.urls.length > 0 ? (
+                  <div className="mb-4">
+                    <h4 className="font-semibold mb-2">URLs in Sitemap:</h4>
+                    <div className="max-h-60 overflow-y-auto border rounded p-3">
+                      <div className="space-y-2">
+                        {sitemaps.urls.slice(0, 20).map((url, index) => (
+                          <div key={index} className="text-sm">
+                            <a
+                              href={url.loc}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="hover:underline break-all"
+                            >
+                              {url.loc}
+                            </a>
+                            {url.lastmod && (
+                              <span className="text-gray-600 dark:text-muted-foreground ml-2">
+                                (Modified: {new Date(url.lastmod).toLocaleDateString()})
+                              </span>
+                            )}
+                          </div>
+                        ))}
+                        {sitemaps.urls.length > 20 && (
+                          <div className="text-sm text-gray-600 dark:text-muted-foreground">
+                            ... and {sitemaps.urls.length - 20} more URLs
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                ) : null;
+              })()}
 
               {/* Sitemap Errors */}
               {sitemaps.errors.length > 0 && (
@@ -564,6 +598,17 @@ export function RobotsValidatorResults({ result }: RobotsValidatorResultsProps) 
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Sitemap URLs Modal */}
+      {selectedSitemap && (
+        <SitemapUrlsModal
+          isOpen={!!selectedSitemap}
+          onClose={() => setSelectedSitemap(null)}
+          sitemapUrl={selectedSitemap.url}
+          urls={selectedSitemap.urls}
+          isSitemapIndex={selectedSitemap.isSitemapIndex}
+        />
+      )}
     </div>
   );
 }
