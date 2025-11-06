@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
+import { tools } from "@/lib/tools-data";
 
 export function Footer() {
   return (
@@ -12,38 +13,19 @@ export function Footer() {
               <span className="font-bold text-xl">Web Friend</span>
             </Link>
             <p className="text-muted-foreground max-w-md">
-              Professional web analysis tools powered by AI and advanced algorithms.
-              Optimize your website&apos;s SEO, performance, accessibility, and content quality.
+              Free digital tools for online professionals: AI analysis, content optimization, design tools, and developer utilities.
             </p>
           </div>
           <div>
             <h4 className="font-semibold mb-4">Tools</h4>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link href="/tools/website-analyzer" className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
-                  AI Website Analyzer
-                </Link>
-              </li>
-              <li>
-                <Link href="/tools/text-analyzer" className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
-                  Text Analyzer
-                </Link>
-              </li>
-              <li>
-                <Link href="/tools/api-tester" className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
-                  API Tester
-                </Link>
-              </li>
-              <li>
-                <Link href="/tools/color-palette-generator" className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
-                  Color Palette Generator
-                </Link>
-              </li>
-              <li>
-                <Link href="/tools/qr-code-generator" className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
-                  QR Code Generator
-                </Link>
-              </li>
+            <ul className="space-y-2 text-sm grid grid-cols-2 md:grid-cols-1">
+              {tools.map((tool) => (
+                <li key={tool.href}>
+                  <Link href={tool.href} className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+                    {tool.title}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
           <div>

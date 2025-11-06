@@ -46,7 +46,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Web Friend | Free Digital Tools for Everyone",
-  description: "Essential digital tools for businesses, creators, and everyone online. AI website analyzer, text analyzer, API tester, color palettes, QR codes - all free and professional-grade.",
+  description: "Free digital tools for online professionals: AI analysis, content optimization, design tools, and developer utilities. Professional-grade, completely free.",
   keywords: ["digital tools", "website analyzer", "text analyzer", "API tester", "color palette generator", "QR code generator", "SEO tools", "free tools", "online utilities"],
   authors: [{ name: "Web Friend Team" }],
   creator: "Web Friend",
@@ -54,14 +54,14 @@ export const metadata: Metadata = {
   robots: "index, follow",
   openGraph: {
     title: "Web Friend | Free Digital Tools for Everyone",
-    description: "Essential digital tools for businesses, creators, and everyone online. AI website analyzer, text analyzer, API tester, color palettes, QR codes - all free and professional-grade.",
+    description: "Free digital tools for online professionals: AI analysis, content optimization, design tools, and developer utilities. Professional-grade, completely free.",
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
     title: "Web Friend | Free Digital Tools for Everyone",
-    description: "Essential digital tools for businesses, creators, and everyone online. AI website analyzer, text analyzer, API tester, color palettes, QR codes - all free and professional-grade.",
+    description: "Free digital tools for online professionals: AI analysis, content optimization, design tools, and developer utilities. Professional-grade, completely free.",
   },
 };
 

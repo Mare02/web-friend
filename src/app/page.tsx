@@ -13,10 +13,11 @@ import { RecentArticlesHomeSection } from "@/components/blogs/recent-articles-ho
 import { ToolCard } from "@/components/tool-card";
 import { tools } from "@/lib/tools-data";
 import { getCanonicalUrl } from "@/lib/config";
+import { AnimatedText } from "@/components/animated-text";
 
 export const metadata: Metadata = {
   title: "Web Friend | Free Digital Tools for Everyone",
-  description: "Essential digital tools for businesses, creators, and everyone online. AI website analyzer, text analyzer, API tester, color palettes, QR codes - all free and professional-grade.",
+  description: "Free digital tools for online professionals: AI analysis, content optimization, design tools, and developer utilities. Professional-grade, completely free.",
   keywords: ["digital tools", "website analyzer", "text analyzer", "API tester", "color palette generator", "QR code generator", "SEO tools", "free tools", "online utilities"],
   authors: [{ name: "Web Friend Team" }],
   creator: "Web Friend",
@@ -27,14 +28,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Web Friend | Free Digital Tools for Everyone",
-    description: "Essential digital tools for businesses, creators, and everyone online. AI website analyzer, text analyzer, API tester, color palettes, QR codes - all free and professional-grade.",
+    description: "Free digital tools for online professionals: AI analysis, content optimization, design tools, and developer utilities. Professional-grade, completely free.",
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
     title: "Web Friend | Free Digital Tools for Everyone",
-    description: "Essential digital tools for businesses, creators, and everyone online. AI website analyzer, text analyzer, API tester, color palettes, QR codes - all free and professional-grade.",
+    description: "Free digital tools for online professionals: AI analysis, content optimization, design tools, and developer utilities. Professional-grade, completely free.",
   },
 };
 
@@ -69,12 +70,11 @@ export default async function Home() {
             <Globe className="h-10 w-10 text-primary" />
           </div>
           <h1 className="text-4xl md:text-7xl font-bold tracking-tight">
-            Free Tools for
-            <span className="block gradient-text">Everyone Online</span>
+            Professional Web Tools
+            <AnimatedText words={["For Everyone", "For Creators", "For Designers", "For Developers", "For SEO Specialists"]} />
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Essential digital tools for businesses, creators, and everyone online.
-            Analyze websites, generate QR codes, create color palettes, test APIs, and optimize content - completely free.
+            Free digital tools for online professionals: AI analysis, content optimization, design tools, and developer utilities.
           </p>
         </div>
 
