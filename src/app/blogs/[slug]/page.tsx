@@ -12,6 +12,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { PortableTextRenderer } from '@/components/portable-text'
 import Image from 'next/image'
+import { getBaseUrl } from '@/lib/config'
 
 interface BlogPageProps {
   params: Promise<{ slug: string }>
@@ -204,7 +205,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
       notFound()
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://web-friend.vercel.app'
+    const baseUrl = getBaseUrl()
     const structuredData = generateArticleStructuredData(article, baseUrl)
 
     return (

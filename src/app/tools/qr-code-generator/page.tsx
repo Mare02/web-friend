@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
 import QRCodeGeneratorClient from "./qr-code-generator-client";
+import { getCanonicalUrl } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: "QR Code Generator | Create Custom QR Codes Online Free",
   description: "Free QR code generator for URLs, text, email, phone numbers, and WiFi networks. Create custom QR codes with colors, logos, and advanced settings. Download in PNG, SVG formats.",
   keywords: ["QR code generator", "free QR code", "custom QR code", "QR code maker", "URL to QR", "text to QR", "WiFi QR code", "contact QR code", "download QR code"],
+  robots: "index, follow",
+  alternates: {
+    canonical: getCanonicalUrl("/tools/qr-code-generator"),
+  },
   openGraph: {
     title: "QR Code Generator | Create Custom QR Codes Online Free",
     description: "Free QR code generator for URLs, text, email, phone numbers, and WiFi networks. Create custom QR codes with colors, logos, and advanced settings.",

@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
 import TextAnalyzerClient from "./text-analyzer-client";
+import { getCanonicalUrl } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: "Text Analyzer | Readability, SEO & Content Quality Analysis Tool",
   description: "Free text analyzer tool for writers, marketers, and content creators. Check readability scores, SEO keywords, content metrics, and grammar analysis. Improve your writing quality instantly.",
   keywords: ["text analyzer", "readability checker", "SEO content analysis", "content quality", "grammar checker", "writing tool", "keyword density", "text metrics", "free writing tool"],
+  robots: "index, follow",
+  alternates: {
+    canonical: getCanonicalUrl("/tools/text-analyzer"),
+  },
   openGraph: {
     title: "Text Analyzer | Readability, SEO & Content Quality Analysis Tool",
     description: "Free text analyzer tool for writers, marketers, and content creators. Check readability scores, SEO keywords, content metrics, and grammar analysis.",

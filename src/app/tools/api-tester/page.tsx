@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
 import ApiTesterClient from "./api-tester-client";
+import { getCanonicalUrl } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: "API Tester | REST API Testing Tool with Authentication Support",
   description: "Free API testing tool for developers. Test REST APIs with GET, POST, PUT, DELETE methods. Support for authentication, headers, query parameters, and request body. Save and organize your API calls.",
   keywords: ["API tester", "REST API testing", "API debugging", "HTTP client", "API development tool", "REST client", "API authentication", "developer tools", "free API tester"],
+  robots: "index, follow",
+  alternates: {
+    canonical: getCanonicalUrl("/tools/api-tester"),
+  },
   openGraph: {
     title: "API Tester | REST API Testing Tool with Authentication Support",
     description: "Free API testing tool for developers. Test REST APIs with GET, POST, PUT, DELETE methods. Support for authentication, headers, query parameters, and request body.",

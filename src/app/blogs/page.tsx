@@ -6,6 +6,7 @@ import { BlogsFilters } from '@/components/blogs/blogs-filters'
 import { BlogFilters } from '@/lib/validators/schema'
 import { Skeleton } from '@/components/ui/skeleton'
 import { logger } from '@/lib/logger'
+import { getCanonicalUrl } from '@/lib/config'
 
 interface BlogsPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
@@ -50,9 +51,21 @@ export async function generateMetadata({ searchParams }: BlogsPageProps): Promis
     title = `${title} - Page ${filters.page}`
   }
 
+  // Build canonical URL with filters
+  let canonicalPath = '/blogs'
+  const queryParams = []
+  if (filters.category) queryParams.push(`category=${filters.category}`)
+  if (filters.tag) queryParams.push(`tag=${filters.tag}`)
+  if (filters.page && filters.page > 1) queryParams.push(`page=${filters.page}`)
+  if (queryParams.length > 0) canonicalPath += `?${queryParams.join('&')}`
+
   return {
     title,
     description,
+    robots: 'index, follow',
+    alternates: {
+      canonical: getCanonicalUrl(canonicalPath),
+    },
     openGraph: {
       title,
       description,

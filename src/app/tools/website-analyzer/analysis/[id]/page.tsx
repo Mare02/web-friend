@@ -1,11 +1,54 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { getAnalysis } from "@/lib/services/analysis-db";
 import { AnalysisPageLayout } from "@/components/analysis-page-layout";
 import { AnalysisPageClient } from "./analysis-page-client";
+import { getCanonicalUrl } from "@/lib/config";
 
 interface AnalysisPageProps {
   params: Promise<{ id: string }>;
   searchParams: Promise<{ tab?: string }>;
+}
+
+export async function generateMetadata({ params }: AnalysisPageProps): Promise<Metadata> {
+  const { id } = await params;
+
+  let analysis;
+  try {
+    analysis = await getAnalysis(id);
+  } catch {
+    return {
+      title: 'Analysis Not Found | Web Friend',
+    };
+  }
+
+  if (!analysis) {
+    return {
+      title: 'Analysis Not Found | Web Friend',
+    };
+  }
+
+  const title = `Website Analysis: ${new URL(analysis.url).hostname} | Web Friend`;
+  const description = `AI-powered website analysis for ${analysis.url}. Get SEO, performance, accessibility, and content quality insights.`;
+
+  return {
+    title,
+    description,
+    robots: "index, follow",
+    alternates: {
+      canonical: getCanonicalUrl(`/tools/website-analyzer/analysis/${id}`),
+    },
+    openGraph: {
+      title,
+      description,
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+  };
 }
 
 /**

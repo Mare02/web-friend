@@ -10,6 +10,7 @@ import { GlobalLoadingBar } from "@/components/global-loading-bar";
 import { NavigationLoading } from "@/components/navigation-loading";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { getBaseUrl } from "@/lib/config";
 
 // Structured data for SEO
 const structuredData = {
@@ -17,7 +18,7 @@ const structuredData = {
   "@type": "WebApplication",
   "name": "Web Friend",
   "description": "Free digital tools for everyone: AI website analyzer, text analyzer, API tester, color palette generator, and QR code generator. Perfect for businesses, creators, and anyone working online.",
-  "url": "https://web-friend.vercel.app",
+  "url": getBaseUrl(),
   "applicationCategory": "Utility",
   "operatingSystem": "Web Browser",
   "featureList": [

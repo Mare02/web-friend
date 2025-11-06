@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next'
 import { readFileSync } from 'fs'
 import { join } from 'path'
+import { getBaseUrl } from '@/lib/config'
 
 interface SitemapArticle {
   slug: string
@@ -22,7 +23,7 @@ async function getSitemapArticles(): Promise<SitemapArticle[]> {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://web-friend.vercel.app'
+  const baseUrl = getBaseUrl()
 
   // Read pre-generated article data from JSON file
   const allArticles = await getSitemapArticles()

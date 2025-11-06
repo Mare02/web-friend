@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import type { Metadata } from "next";
 import {
   Sparkles,
   BarChart3,
@@ -11,6 +12,31 @@ import { getRecentArticles } from "@/lib/services/article-service";
 import { RecentArticlesHomeSection } from "@/components/blogs/recent-articles-home-section";
 import { ToolCard } from "@/components/tool-card";
 import { tools } from "@/lib/tools-data";
+import { getCanonicalUrl } from "@/lib/config";
+
+export const metadata: Metadata = {
+  title: "Web Friend | Free Digital Tools for Everyone",
+  description: "Essential digital tools for businesses, creators, and everyone online. AI website analyzer, text analyzer, API tester, color palettes, QR codes - all free and professional-grade.",
+  keywords: ["digital tools", "website analyzer", "text analyzer", "API tester", "color palette generator", "QR code generator", "SEO tools", "free tools", "online utilities"],
+  authors: [{ name: "Web Friend Team" }],
+  creator: "Web Friend",
+  publisher: "Web Friend",
+  robots: "index, follow",
+  alternates: {
+    canonical: getCanonicalUrl("/"),
+  },
+  openGraph: {
+    title: "Web Friend | Free Digital Tools for Everyone",
+    description: "Essential digital tools for businesses, creators, and everyone online. AI website analyzer, text analyzer, API tester, color palettes, QR codes - all free and professional-grade.",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Web Friend | Free Digital Tools for Everyone",
+    description: "Essential digital tools for businesses, creators, and everyone online. AI website analyzer, text analyzer, API tester, color palettes, QR codes - all free and professional-grade.",
+  },
+};
 
 const features = [
   {

@@ -1,6 +1,28 @@
 import { Wrench } from "lucide-react";
+import type { Metadata } from "next";
 import { ToolCard } from "@/components/tool-card";
 import { tools } from "@/lib/tools-data";
+import { getCanonicalUrl } from "@/lib/config";
+
+export const metadata: Metadata = {
+  title: "Digital Tools | Web Friend",
+  description: "Essential tools for everyone working with digital content and online projects. Professional quality, completely free, no limits.",
+  keywords: ["digital tools", "online tools", "free tools", "website tools", "developer tools", "content tools"],
+  robots: "index, follow",
+  alternates: {
+    canonical: getCanonicalUrl("/tools"),
+  },
+  openGraph: {
+    title: "Digital Tools | Web Friend",
+    description: "Essential tools for everyone working with digital content and online projects. Professional quality, completely free, no limits.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Digital Tools | Web Friend",
+    description: "Essential tools for everyone working with digital content and online projects. Professional quality, completely free, no limits.",
+  },
+};
 
 export default function ToolsPage() {
   return (
