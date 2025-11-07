@@ -50,33 +50,15 @@ export function MobileMenuSidebar() {
           {/* Navigation */}
           <div className="flex-1 px-4 py-6 space-y-6">
             {/* Tools Section */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 px-2">
-                <Wrench className="h-4 w-4 text-muted-foreground" />
-                <h3 className="text-sm font-semibold">Tools</h3>
-              </div>
-              <div className="pl-6">
-                <ToolsNavigation onItemClick={() => setOpen(false)} />
-              </div>
-            </div>
-
-            <div className="border-t border-border" />
+            <ToolsNavigation onItemClick={() => setOpen(false)} />
 
             {/* Content Section */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 px-2">
-                <Newspaper className="h-4 w-4 text-muted-foreground" />
-                <h3 className="text-sm font-semibold">Content</h3>
-              </div>
-              <div className="pl-6">
-                <Link href="/blogs" onClick={() => setOpen(false)}>
-                  <Button variant="ghost" className="w-full justify-start gap-3 h-11">
-                    <Newspaper className="h-4 w-4" />
-                    <span>Blogs</span>
-                  </Button>
-                </Link>
-              </div>
-            </div>
+            <Link href="/blogs" onClick={() => setOpen(false)}>
+              <Button variant="ghost" className="w-full justify-start gap-3 h-11">
+                <Newspaper className="h-4 w-4" />
+                <span>Blogs</span>
+              </Button>
+            </Link>
 
             <div className="border-t border-border" />
 

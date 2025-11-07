@@ -38,7 +38,7 @@ export function ToolsNavigation({ onItemClick }: ToolsNavigationProps = {}) {
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="flex items-center gap-2">
           <Wrench className="h-4 w-4" />
-          <span className="hidden sm:inline">Tools</span>
+          <span>Tools</span>
           <ChevronDown className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
