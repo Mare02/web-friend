@@ -1,56 +1,15 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { BlogListItem } from '@/lib/validators/schema'
-import { Button } from '@/components/ui/button'
 import { urlFor } from '@/lib/sanity/client'
 import { format } from 'date-fns'
-import { ArrowRight, Newspaper, Clock } from 'lucide-react'
+import { Clock } from 'lucide-react'
 
-interface RecentArticlesHomeSectionProps {
-  articles: BlogListItem[]
-}
-
-export function RecentArticlesHomeSection({ articles }: RecentArticlesHomeSectionProps) {
-  if (articles.length === 0) {
-    return null
-  }
-
-  return (
-    <div className="mb-20">
-      <div className="text-center mb-12">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 flex items-center justify-center gap-3">
-          <Newspaper className="h-8 w-8 text-primary" />
-          Latest Articles
-        </h2>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Stay updated with our latest insights on digital tools, online strategies, best practices, and trending topics.
-        </p>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {articles.map((article) => (
-          <ArticleCard key={article._id} article={article} />
-        ))}
-      </div>
-
-      {/* See More Articles CTA */}
-      <div className="text-center mt-12">
-        <Link href="/articles">
-          <Button size="lg" className="gap-2">
-            See More Articles
-            <ArrowRight className="w-4 h-4" />
-          </Button>
-        </Link>
-      </div>
-    </div>
-  )
-}
-
-interface ArticleCardProps {
+interface BlogCardProps {
   article: BlogListItem
 }
 
-function ArticleCard({ article }: ArticleCardProps) {
+export function BlogCard({ article }: BlogCardProps) {
   const publishedDate = new Date(article.publishedAt)
 
   // Estimate reading time (roughly 200 words per minute)
@@ -58,8 +17,8 @@ function ArticleCard({ article }: ArticleCardProps) {
   const readingTime = Math.max(1, Math.ceil(wordCount / 200))
 
   return (
-    <Link href={`/articles/${article.slug.current}`}>
-      <article className="group h-full bg-card border border-border rounded-lg p-6 hover:shadow-md hover:border-border transition-all duration-200 cursor-pointer hover:bg-accent/20">
+    <Link href={`/blogs/${article.slug.current}`}>
+      <article className="group h-full bg-card border-2 border-border rounded-lg p-6 hover:shadow-md hover:border-border transition-all duration-200 cursor-pointer hover:bg-accent/20">
         <div className="flex flex-col space-y-4">
           {/* Category */}
           {article.categories.length > 0 && (
@@ -82,9 +41,9 @@ function ArticleCard({ article }: ArticleCardProps) {
 
           {/* Image */}
           {article.coverImage && (
-            <div className="relative aspect-[16/9] overflow-hidden rounded-md bg-muted">
+            <div className="relative aspect-video overflow-hidden rounded-md bg-muted">
               <Image
-                src={urlFor(article.coverImage).url()}
+                src={urlFor(article.coverImage).width(400).height(225).url()}
                 alt={article.title}
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-300"
