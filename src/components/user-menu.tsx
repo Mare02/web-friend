@@ -73,8 +73,8 @@ export function UserMenu() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <div className="w-full">
-            <SignOutButton>
+          <div className="flex">
+            <SignOutButton redirectUrl="/">
               <button className="flex w-full items-center gap-2">
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Sign Out</span>

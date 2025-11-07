@@ -7,7 +7,7 @@
  * Uses environment variable with fallback to production URL
  */
 export function getBaseUrl(): string {
-  return process.env.NEXT_PUBLIC_BASE_URL || 'https://web-friend.vercel.app'
+  return process.env.NEXT_PUBLIC_APP_URL || 'https://web-friend.vercel.app'
 }
 
 /**

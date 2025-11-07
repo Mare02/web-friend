@@ -10,6 +10,9 @@ export function ClerkThemeProvider({ children }: { children: ReactNode }) {
 
   return (
     <ClerkProvider
+      signInUrl="/sign-in"
+      signUpUrl="/sign-up"
+      afterSignOutUrl="/"
       appearance={{
         baseTheme: resolvedTheme === "dark" ? dark : undefined,
         elements: {
