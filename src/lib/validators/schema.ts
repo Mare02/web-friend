@@ -559,6 +559,7 @@ export const robotsValidateResponseSchema = z.object({
         noarchive: z.boolean(),
         nosnippet: z.boolean(),
       }),
+      canonicalUrl: z.string().optional(),
       recommendations: z.array(z.string()),
     }),
     sitemaps: z.object({
