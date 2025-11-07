@@ -101,7 +101,7 @@ export function RobotsValidatorResults({ result }: RobotsValidatorResultsProps) 
               <h3 className="font-semibold text-lg">
                 {overallIndexable ? "Indexable" : "Not Indexable"}
               </h3>
-              <p className="text-sm text-gray-600 dark:text-muted-foreground">
+              <p className="text-sm text-gray-700 dark:text-muted-foreground">
                 {overallIndexable
                   ? "Website can be indexed by search engines"
                   : "Website has blocking factors preventing indexing"
@@ -115,7 +115,7 @@ export function RobotsValidatorResults({ result }: RobotsValidatorResultsProps) 
                 <Target className="h-8 w-8 text-blue-500" />
               </div>
               <h3 className="font-semibold text-lg">{crawlabilityScore}/100</h3>
-              <p className="text-sm text-gray-600 dark:text-muted-foreground">Crawlability Score</p>
+              <p className="text-sm text-gray-700 dark:text-muted-foreground">Crawlability Score</p>
               <Progress value={crawlabilityScore} className="mt-2" />
             </div>
 
@@ -127,7 +127,7 @@ export function RobotsValidatorResults({ result }: RobotsValidatorResultsProps) 
               <h3 className="font-semibold text-lg">
                 {sitemaps.discovered.length === 0 ? "None" : `${sitemaps.valid.length}/${sitemaps.discovered.length}`}
               </h3>
-              <p className="text-sm text-gray-600 dark:text-muted-foreground">
+              <p className="text-sm text-gray-700 dark:text-muted-foreground">
                 {sitemaps.discovered.length === 0 ? "No Sitemaps" : "Valid Sitemaps"}
               </p>
             </div>
@@ -401,15 +401,15 @@ export function RobotsValidatorResults({ result }: RobotsValidatorResultsProps) 
                 <div className="grid grid-cols-3 gap-4 text-center">
                   <div className="p-3 border rounded">
                     <div className="text-2xl font-bold text-blue-600">{sitemaps.discovered.length}</div>
-                    <div className="text-sm text-gray-600 dark:text-muted-foreground">Discovered</div>
+                    <div className="text-sm text-gray-700 dark:text-muted-foreground">Discovered</div>
                   </div>
                   <div className="p-3 border rounded">
                     <div className="text-2xl font-bold text-green-600">{sitemaps.valid.length}</div>
-                    <div className="text-sm text-gray-600 dark:text-muted-foreground">Valid</div>
+                    <div className="text-sm text-gray-700 dark:text-muted-foreground">Valid</div>
                   </div>
                   <div className="p-3 border rounded">
                     <div className="text-2xl font-bold text-red-600">{sitemaps.invalid.length}</div>
-                    <div className="text-sm text-gray-600 dark:text-muted-foreground">Invalid</div>
+                    <div className="text-sm text-gray-700 dark:text-muted-foreground">Invalid</div>
                   </div>
                 </div>
               </div>
@@ -496,7 +496,7 @@ export function RobotsValidatorResults({ result }: RobotsValidatorResultsProps) 
                               {url.loc}
                             </a>
                             {url.lastmod && (
-                              <span className="text-gray-600 dark:text-muted-foreground ml-2">
+                              <span className="text-gray-700 dark:text-muted-foreground ml-2">
                                 (Modified: {new Date(url.lastmod).toLocaleDateString()})
                               </span>
                             )}
@@ -552,10 +552,10 @@ export function RobotsValidatorResults({ result }: RobotsValidatorResultsProps) 
                 {/* Analysis Timestamp */}
                 <div>
                   <h4 className="font-semibold mb-2">Analysis Information:</h4>
-                  <div className="text-sm text-gray-600 dark:text-muted-foreground">
+                  <div className="text-sm text-gray-700 dark:text-muted-foreground">
                     Analyzed on: {new Date(data.analyzedAt).toLocaleString()}
                   </div>
-                  <div className="text-sm text-gray-600 dark:text-muted-foreground">
+                  <div className="text-sm text-gray-700 dark:text-muted-foreground">
                     URL: {data.url}
                   </div>
                 </div>

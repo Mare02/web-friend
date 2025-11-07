@@ -120,7 +120,7 @@ export function SitemapUrlsModal({
                 ← Back to Main Sitemap
               </Button>
             )}
-            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-muted-foreground">
+            <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-muted-foreground">
               <ExternalLink className="h-4 w-4" />
               <a
                 href={currentSitemapUrl}
@@ -153,7 +153,7 @@ export function SitemapUrlsModal({
             <div className="flex flex-col items-center justify-center py-8 text-center">
               <AlertCircle className="h-12 w-12 text-red-500 mb-4" />
               <h3 className="text-lg font-semibold mb-2">Failed to load sitemap</h3>
-              <p className="text-gray-600 dark:text-muted-foreground mb-4">{error}</p>
+              <p className="text-gray-700 dark:text-muted-foreground mb-4">{error}</p>
               <Button
                 onClick={() => {
                   setLoading(true);
@@ -193,7 +193,7 @@ export function SitemapUrlsModal({
                             {url.loc}
                           </Button>
                           {url.lastmod && (
-                            <div className="text-xs text-gray-600 dark:text-muted-foreground mt-1">
+                            <div className="text-xs text-gray-700 dark:text-muted-foreground mt-1">
                               Last modified: {new Date(url.lastmod).toLocaleDateString()}
                             </div>
                           )}
@@ -213,7 +213,7 @@ export function SitemapUrlsModal({
                 </h3>
 
                 {pageUrls.length === 0 ? (
-                  <div className="text-center py-8 text-gray-500 dark:text-muted-foreground">
+                  <div className="text-center py-8 text-gray-600 dark:text-muted-foreground">
                     No page URLs found in this sitemap
                   </div>
                 ) : (
@@ -232,7 +232,7 @@ export function SitemapUrlsModal({
                           </a>
                           <div className="flex items-center gap-2 mt-1">
                             {url.lastmod && (
-                              <span className="text-xs text-gray-600 dark:text-muted-foreground">
+                              <span className="text-xs text-gray-700 dark:text-muted-foreground">
                                 Modified: {new Date(url.lastmod).toLocaleDateString()}
                               </span>
                             )}

@@ -93,7 +93,7 @@ export default function RobotsValidatorClient() {
               <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
                 Indexability Validator
               </h1>
-              <p className="text-xl text-gray-600 dark:text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-xl text-gray-700 dark:text-muted-foreground max-w-2xl mx-auto">
                 Analyze your website&apos;s crawling configuration, check for indexability blockers,
                 validate sitemaps, and get actionable SEO recommendations.
               </p>
