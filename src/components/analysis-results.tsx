@@ -16,8 +16,25 @@ import {
   Info,
   ExternalLink,
 } from "lucide-react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import dynamic from "next/dynamic";
+
+// Dynamically import ReactMarkdown to reduce bundle size
+const ReactMarkdown = dynamic(
+  async () => {
+    const [markdown, gfm] = await Promise.all([
+      import("react-markdown"),
+      import("remark-gfm")
+    ]);
+    return function MarkdownWrapper(props: { children: string; className?: string }) {
+      const Component = markdown.default;
+      return <Component remarkPlugins={[gfm.default]} {...props} />;
+    };
+  },
+  {
+    loading: () => <div className="animate-pulse bg-muted h-4 rounded"></div>,
+    ssr: false // Disable SSR for this component to reduce initial bundle
+  }
+);
 
 interface AnalysisResultsProps {
   result: AnalyzeResponse;
@@ -161,7 +178,7 @@ export function AnalysisResults({ result, showHeader = false, showGenerateTasksB
             </CardHeader>
             <CardContent className="flex-1 overflow-auto">
               <div className="prose prose-sm max-w-none dark:prose-invert">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{analysis.content || "Analysis content not available."}</ReactMarkdown>
+                <ReactMarkdown>{analysis.content || "Analysis content not available."}</ReactMarkdown>
               </div>
             </CardContent>
           </Card>
@@ -178,7 +195,7 @@ export function AnalysisResults({ result, showHeader = false, showGenerateTasksB
             </CardHeader>
             <CardContent className="flex-1 overflow-auto">
               <div className="prose prose-sm max-w-none dark:prose-invert">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{analysis.seo || "SEO analysis not available."}</ReactMarkdown>
+                <ReactMarkdown>{analysis.seo || "SEO analysis not available."}</ReactMarkdown>
               </div>
             </CardContent>
           </Card>
@@ -195,7 +212,7 @@ export function AnalysisResults({ result, showHeader = false, showGenerateTasksB
             </CardHeader>
             <CardContent className="flex-1 overflow-auto">
               <div className="prose prose-sm max-w-none dark:prose-invert">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{analysis.performance || "Performance analysis not available."}</ReactMarkdown>
+                <ReactMarkdown>{analysis.performance || "Performance analysis not available."}</ReactMarkdown>
               </div>
             </CardContent>
           </Card>
@@ -212,7 +229,7 @@ export function AnalysisResults({ result, showHeader = false, showGenerateTasksB
             </CardHeader>
             <CardContent className="flex-1 overflow-auto">
               <div className="prose prose-sm max-w-none dark:prose-invert">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{analysis.accessibility || "Accessibility analysis not available."}</ReactMarkdown>
+                <ReactMarkdown>{analysis.accessibility || "Accessibility analysis not available."}</ReactMarkdown>
               </div>
             </CardContent>
           </Card>
