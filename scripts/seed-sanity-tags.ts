@@ -38,6 +38,11 @@ const tags = [
   },
   {
     _type: 'tag',
+    title: 'Vue',
+    slug: { _type: 'slug', current: 'vue' },
+  },
+  {
+    _type: 'tag',
     title: 'TypeScript',
     slug: { _type: 'slug', current: 'typescript' },
   },
@@ -60,11 +65,6 @@ const tags = [
     _type: 'tag',
     title: 'Analytics',
     slug: { _type: 'slug', current: 'analytics' },
-  },
-  {
-    _type: 'tag',
-    title: 'Web Development',
-    slug: { _type: 'slug', current: 'web-development' },
   },
   {
     _type: 'tag',
@@ -98,11 +98,6 @@ const tags = [
   },
   {
     _type: 'tag',
-    title: 'DevOps',
-    slug: { _type: 'slug', current: 'devops' },
-  },
-  {
-    _type: 'tag',
     title: 'UX/UI',
     slug: { _type: 'slug', current: 'ux-ui' },
   },
@@ -110,6 +105,99 @@ const tags = [
     _type: 'tag',
     title: 'Mobile',
     slug: { _type: 'slug', current: 'mobile' },
+  },
+  // AI & Tech Tags
+  {
+    _type: 'tag',
+    title: 'AI',
+    slug: { _type: 'slug', current: 'ai' },
+  },
+  {
+    _type: 'tag',
+    title: 'ChatGPT',
+    slug: { _type: 'slug', current: 'chatgpt' },
+  },
+  {
+    _type: 'tag',
+    title: 'Machine Learning',
+    slug: { _type: 'slug', current: 'machine-learning' },
+  },
+  {
+    _type: 'tag',
+    title: 'Automation',
+    slug: { _type: 'slug', current: 'automation' },
+  },
+  {
+    _type: 'tag',
+    title: 'Tools',
+    slug: { _type: 'slug', current: 'tools' },
+  },
+  {
+    _type: 'tag',
+    title: 'Productivity',
+    slug: { _type: 'slug', current: 'productivity' },
+  },
+  // Marketing & Business Tags
+  {
+    _type: 'tag',
+    title: 'Content Marketing',
+    slug: { _type: 'slug', current: 'content-marketing' },
+  },
+  {
+    _type: 'tag',
+    title: 'Social Media',
+    slug: { _type: 'slug', current: 'social-media' },
+  },
+  {
+    _type: 'tag',
+    title: 'Branding',
+    slug: { _type: 'slug', current: 'branding' },
+  },
+  {
+    _type: 'tag',
+    title: 'Growth Hacking',
+    slug: { _type: 'slug', current: 'growth-hacking' },
+  },
+  {
+    _type: 'tag',
+    title: 'Startups',
+    slug: { _type: 'slug', current: 'startups' },
+  },
+  {
+    _type: 'tag',
+    title: 'E-commerce',
+    slug: { _type: 'slug', current: 'ecommerce' },
+  },
+  // General Tech Tags
+  {
+    _type: 'tag',
+    title: 'Cloud Computing',
+    slug: { _type: 'slug', current: 'cloud-computing' },
+  },
+  {
+    _type: 'tag',
+    title: 'No-Code',
+    slug: { _type: 'slug', current: 'no-code' },
+  },
+  {
+    _type: 'tag',
+    title: 'SaaS',
+    slug: { _type: 'slug', current: 'saas' },
+  },
+  {
+    _type: 'tag',
+    title: 'Remote Work',
+    slug: { _type: 'slug', current: 'remote-work' },
+  },
+  {
+    _type: 'tag',
+    title: 'Data Privacy',
+    slug: { _type: 'slug', current: 'data-privacy' },
+  },
+  {
+    _type: 'tag',
+    title: 'Web3',
+    slug: { _type: 'slug', current: 'web3' },
   },
 ]
 

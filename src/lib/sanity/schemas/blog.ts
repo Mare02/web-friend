@@ -70,12 +70,6 @@ const articleSchema = {
       description: 'Description for SEO (recommended 150-160 characters)',
     },
     {
-      name: 'canonicalUrl',
-      type: 'url',
-      title: 'Canonical URL',
-      description: 'Canonical URL for this article',
-    },
-    {
       name: 'ogTitle',
       type: 'string',
       title: 'Open Graph Title',

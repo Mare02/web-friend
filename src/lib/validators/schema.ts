@@ -428,7 +428,6 @@ export const articleSchema = z.object({
   // SEO fields
   metaTitle: z.string().optional(),
   metaDescription: z.string().optional(),
-  canonicalUrl: z.string().url().optional(),
   ogTitle: z.string().optional(),
   ogDescription: z.string().optional(),
   ogImage: z.any().optional(), // Sanity image object
@@ -442,7 +441,6 @@ export const articleListItemSchema = articleSchema.omit({
   body: true,
   metaTitle: true,
   metaDescription: true,
-  canonicalUrl: true,
   ogTitle: true,
   ogDescription: true,
   ogImage: true,
@@ -561,7 +559,6 @@ export const robotsValidateResponseSchema = z.object({
         noarchive: z.boolean(),
         nosnippet: z.boolean(),
       }),
-      canonicalUrl: z.string().optional(),
       recommendations: z.array(z.string()),
     }),
     sitemaps: z.object({

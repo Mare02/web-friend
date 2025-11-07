@@ -41,6 +41,72 @@ const categories = [
     slug: { _type: 'slug', current: 'tutorials' },
     description: 'Step-by-step guides and tutorials',
   },
+  {
+    _type: 'category',
+    title: 'AI & Machine Learning',
+    slug: { _type: 'slug', current: 'ai-machine-learning' },
+    description: 'Artificial intelligence, machine learning, and emerging AI technologies',
+  },
+  {
+    _type: 'category',
+    title: 'Industry News',
+    slug: { _type: 'slug', current: 'industry-news' },
+    description: 'Latest news and updates from the tech industry',
+  },
+  {
+    _type: 'category',
+    title: 'Product Updates',
+    slug: { _type: 'slug', current: 'product-updates' },
+    description: 'New features, tools, and product announcements',
+  },
+  {
+    _type: 'category',
+    title: 'Business & Strategy',
+    slug: { _type: 'slug', current: 'business-strategy' },
+    description: 'Business insights, growth strategies, and entrepreneurship',
+  },
+  {
+    _type: 'category',
+    title: 'Digital Marketing',
+    slug: { _type: 'slug', current: 'digital-marketing' },
+    description: 'Marketing strategies, content creation, and online growth',
+  },
+  {
+    _type: 'category',
+    title: 'Software Development',
+    slug: { _type: 'slug', current: 'software-dev' },
+    description: 'General software development practices, methodologies, and processes',
+  },
+  {
+    _type: 'category',
+    title: 'Backend Development',
+    slug: { _type: 'slug', current: 'backend-dev' },
+    description: 'Server-side development, APIs, databases, and infrastructure',
+  },
+  {
+    _type: 'category',
+    title: 'Frontend Development',
+    slug: { _type: 'slug', current: 'frontend-dev' },
+    description: 'Client-side development, UI/UX, and user-facing technologies',
+  },
+  {
+    _type: 'category',
+    title: 'DevOps',
+    slug: { _type: 'slug', current: 'devops-cat' },
+    description: 'Development operations, CI/CD, deployment, and automation',
+  },
+  {
+    _type: 'category',
+    title: 'Software Architecture',
+    slug: { _type: 'slug', current: 'architecture' },
+    description: 'System design, architectural patterns, and scalable solutions',
+  },
+  {
+    _type: 'category',
+    title: 'Code Quality',
+    slug: { _type: 'slug', current: 'code-quality-cat' },
+    description: 'Testing, refactoring, performance optimization, and best practices',
+  },
 ]
 
 async function seedCategories() {

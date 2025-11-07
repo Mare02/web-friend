@@ -38,7 +38,7 @@ export async function generateStaticParams() {
 
 // Generate structured data for Article/BlogPosting
 function generateArticleStructuredData(article: BlogDetail, baseUrl: string) {
-  const canonicalUrl = article.canonicalUrl || `${baseUrl}/blogs/${article.slug.current}`
+  const canonicalUrl = `${baseUrl}/blogs/${article.slug.current}`
 
   return {
     "@context": "https://schema.org",
@@ -81,6 +81,8 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
 
   const title = article.metaTitle || article.title
   const description = article.metaDescription || article.excerpt
+  const baseUrl = getBaseUrl()
+  const canonicalUrl = `${baseUrl}/blogs/${article.slug.current}`
 
   return {
     title: `${title} | Web Friend`,
@@ -88,17 +90,17 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
     openGraph: {
       title: article.ogTitle || title,
       description: article.ogDescription || description,
-      images: article.ogImage ? [{ url: article.ogImage }] : [],
+      images: article.ogImage ? [{ url: urlFor(article.ogImage).url() }] : [],
       type: 'article',
     },
     twitter: {
       card: 'summary_large_image',
       title: article.ogTitle || title,
       description: article.ogDescription || description,
-      images: article.ogImage ? [article.ogImage] : [],
+      images: article.ogImage ? [urlFor(article.ogImage).url()] : [],
     },
     alternates: {
-      canonical: article.canonicalUrl,
+      canonical: canonicalUrl,
     },
   }
 }
@@ -166,7 +168,7 @@ function ArticleDetail({ article }: { article: BlogDetail }) {
 
       {/* Article content */}
       <div>
-        <p className="text-xl text-muted-foreground leading-relaxed">
+        <p className="text-muted-foreground leading-relaxed mb-4">
           {article.excerpt}
         </p>
         <div className="prose prose-lg max-w-none dark:prose-invert">
@@ -182,11 +184,6 @@ function ArticleDetail({ article }: { article: BlogDetail }) {
           </div>
 
           {/* TODO: Add social sharing buttons */}
-          {/* <div className="flex gap-2">
-            <Button variant="outline" size="sm">
-              Share
-            </Button>
-          </div> */}
         </div>
       </footer>
     </article>
