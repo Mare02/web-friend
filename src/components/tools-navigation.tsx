@@ -20,9 +20,7 @@ const tools = allTools.map(tool => ({
   description: tool.description.split('. ')[0] + (tool.description.includes('. ') ? '.' : ''), // Shorten description
   href: tool.href,
   icon: tool.icon,
-  badges: tool.badges.map(badge =>
-    badge === "AI Powered" ? "AI" : badge.replace(" Tool", "")
-  ),
+  badges: tool.badges.map(badge => badge.replace(" Tool", "")),
 }));
 
 interface ToolsNavigationProps {

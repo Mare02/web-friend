@@ -1,6 +1,6 @@
 # Web Friend
 
-A comprehensive suite of free digital tools for businesses, creators, and professionals working online. Features AI-powered website analysis, content optimization, QR code generation, color palette creation, API testing, and indexability validation - all completely free with no ads or subscriptions.
+A comprehensive suite of free digital tools for businesses, creators, and professionals working online. Features content optimization, QR code generation, color palette creation, API testing, and indexability validation - all completely free with no ads or subscriptions.
 
 ![Next.js](https://img.shields.io/badge/Next.js-16.0-black?style=flat-square)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square)
@@ -8,9 +8,8 @@ A comprehensive suite of free digital tools for businesses, creators, and profes
 
 ## Features
 
-### Core Tools Suite (6 Tools)
+### Core Tools Suite (5 Tools)
 
-- **AI Website Analyzer** - Comprehensive SEO, performance, and accessibility analysis with AI-powered insights and actionable recommendations
 - **Text Analyzer** - Analyze text readability, SEO keywords, content quality metrics, and optimization suggestions
 - **Color Palette Generator** - Generate harmonious color palettes using color theory and design principles with CSS export
 - **API Tester** - Test REST APIs with authentication support, request history, and detailed response analysis
@@ -23,10 +22,8 @@ A comprehensive suite of free digital tools for businesses, creators, and profes
 - **Dynamic Content** - ISR-enabled blog pages with filtering, search, and recent articles display
 
 ### Advanced Features
-- **Action Plans** - Generate prioritized, actionable task lists from website analysis with progress tracking
-- **Task Management** - Track task status, add notes, and monitor completion with reanalysis verification
-- **Data Persistence** - Save analyses, tasks, and user data to Cloudflare D1 database
-- **User Authentication** - Optional Clerk authentication for personalized experience and data persistence
+- **User Authentication** - Optional Clerk authentication for personalized experience
+- **Content Management** - Full-featured blog platform with Sanity CMS integration
 
 ## Tech Stack
 
@@ -50,12 +47,7 @@ This application is built with scalability and maintainability in mind:
 ```
 src/
 ├── app/                    # Next.js App Router
-│   ├── api/               # API routes (15+ endpoints)
-│   │   ├── analyze/       # Website analysis
-│   │   ├── generate-plan/ # Action plan generation
-│   │   ├── analyses/      # Analysis history & retrieval
-│   │   ├── tasks/         # Task management
-│   │   ├── lighthouse/    # Performance analysis
+│   ├── api/               # API routes
 │   │   ├── robots-validate/ # Indexability validation
 │   │   └── webhooks/      # Clerk authentication
 │   ├── admin/studio/      # Sanity Studio integration
@@ -63,15 +55,7 @@ src/
 │   ├── tools/             # Individual tool pages
 │   └── page.tsx           # Homepage with tool showcase
 ├── lib/
-│   ├── ai/                # AI provider abstraction layer
-│   │   ├── providers/     # Individual AI implementations
-│   │   │   ├── base.ts    # Provider interface
-│   │   │   └── groq.ts    # Groq implementation
-│   │   └── index.ts       # Provider factory
-│   ├── services/          # Business logic (15+ services)
-│   │   ├── analyzer.ts        # Analysis orchestration
-│   │   ├── action-planner.ts  # Action plan generation
-│   │   ├── lighthouse-service.ts # Performance analysis
+│   ├── services/          # Business logic
 │   │   ├── robots-validator.ts   # Indexability validation
 │   │   ├── text-analyzer.ts     # Text analysis
 │   │   ├── color-palette-service.ts # Color palette generation
@@ -81,9 +65,8 @@ src/
 │   │   ├── client.ts      # Sanity client
 │   │   ├── schemas/       # Content schemas
 │   │   └── utils.ts       # Helper functions
-│   ├── db.ts              # D1 database client
 │   └── validators/        # Zod schemas
-└── components/            # React components (50+ components)
+└── components/            # React components
     ├── ui/                # shadcn/ui components
     ├── blogs/             # Blog-related components
     ├── tools/             # Tool-specific components
@@ -136,8 +119,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### Usage
 
-1. **Choose Your Tool** - Select from 6 professional digital tools:
-   - **Website Analyzer**: SEO, performance, and accessibility analysis
+1. **Choose Your Tool** - Select from 5 professional digital tools:
    - **Text Analyzer**: Content optimization and readability scoring
    - **Color Palette Generator**: Design harmonious color schemes
    - **API Tester**: Test and debug REST API endpoints
@@ -152,78 +134,17 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 3. **Explore Content** - Browse our blog for digital tools insights and best practices
 
 4. **Advanced Features** (with account):
-   - Save analyses and track progress with action plans
-   - Manage tasks and verify completion through reanalysis
-   - Access your personal dashboard and usage history
+   - Access personalized features and user preferences
+   - Browse our blog content and resources
 
 All tools are **completely free** with no ads, subscriptions, or limitations.
 
 ## API Endpoints
 
-### Analysis & Tools
+The application provides RESTful API endpoints for tool functionality:
 
-#### POST /api/analyze
-Analyzes a website URL and returns comprehensive SEO, performance, and accessibility insights.
-
-**Request:** `{ "url": "https://example.com" }`
-**Response:** Website data + AI-powered analysis results
-
-#### POST /api/generate-plan
-Generates an actionable improvement plan from analysis results.
-
-**Request:** `{ "analysis": {...}, "websiteData": {...} }`
-**Response:** Prioritized action plan with tasks
-
-#### POST /api/lighthouse
-Runs Lighthouse performance analysis on a website.
-
-**Request:** `{ "url": "https://example.com" }`
-**Response:** Performance metrics and recommendations
-
-#### POST /api/robots-validate
-Validates robots.txt configuration and checks indexability.
-
-**Request:** `{ "url": "https://example.com" }`
-**Response:** Robots.txt analysis and SEO recommendations
-
-### Data Management
-
-#### GET /api/analyses?userId=xxx&limit=10
-Returns user's analysis history with pagination.
-
-#### GET /api/analyses/[id]
-Retrieves a single analysis with full details.
-
-#### GET /api/tasks?userId=xxx&status=pending
-Lists user's tasks with optional status filtering.
-
-#### PATCH /api/tasks/[id]
-Updates task status, notes, or completion status.
-
-**Request:** `{ "status": "completed", "notes": "...", "completed": true }`
-
-#### POST /api/tasks/[id]/reanalyze
-Reanalyzes a website to verify task completion.
-
-**Request:** `{ "url": "https://example.com" }`
-**Response:** Updated task status based on reanalysis
-
-### System & Auth
-
-#### POST /api/webhooks/clerk
-Handles Clerk authentication events for user management.
-
-#### GET /api/history?userId=xxx
-Returns user's activity history and usage statistics.
-
-#### POST /api/cleanup
-Administrative endpoint for data cleanup operations.
-
-### Tool Endpoints (Frontend-Only)
-- `/api/text-analyzer` - Text analysis and optimization
-- `/api/color-palette` - Color palette generation
-- `/api/qr-code` - QR code generation
-- `/api/api-tester` - API testing utilities
+- **POST /api/robots-validate** - Validates robots.txt and indexability
+- **POST /api/webhooks/clerk** - Handles authentication events
 
 All endpoints return consistent response format:
 ```typescript
@@ -237,7 +158,7 @@ All endpoints return consistent response format:
 This project uses **dual database architecture** for optimal performance and flexibility:
 
 ### Cloudflare D1 (SQLite)
-Used for user data, analyses, tasks, and application state. See [DATABASE_SETUP.md](DATABASE_SETUP.md) for detailed setup.
+Used for user data and application state. See [DATABASE_SETUP.md](DATABASE_SETUP.md) for detailed setup.
 
 **Quick Setup:**
 ```bash
@@ -273,24 +194,14 @@ See [CLERK_SETUP.md](CLERK_SETUP.md) for authentication configuration.
 ## Current Status & Roadmap
 
 ### ✅ Implemented Features
-- [x] Complete tool suite (6 professional digital tools)
-- [x] AI-powered website analysis with Groq integration
+- [x] Complete tool suite (5 professional digital tools)
 - [x] User authentication via Clerk
-- [x] Analysis history and data persistence (Cloudflare D1)
-- [x] Action plan generation and task management
-- [x] Task reanalysis and completion verification
-- [x] Lighthouse performance analysis integration
 - [x] Blog platform with Sanity CMS
 - [x] Admin studio for content management
 - [x] Responsive design with dark/light themes
 
 ### 🚧 Future Enhancements
-- [ ] Add OpenAI and Claude AI providers
 - [ ] Cloudflare Workers migration for edge deployment
-- [ ] PDF report generation for analyses
-- [ ] Scheduled monitoring and automated alerts
-- [ ] Task reordering and custom task creation
-- [ ] Analysis comparison and trending tools
 - [ ] API rate limiting and usage analytics
 - [ ] Multi-language support and internationalization
 - [ ] Advanced user dashboard with analytics

@@ -4,7 +4,6 @@ import { Suspense } from "react";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ClerkThemeProvider } from "@/components/clerk-theme-provider";
-import { HistoryProvider } from "@/contexts/history-context";
 import { LoadingProvider } from "@/contexts/loading-context";
 import { GlobalLoadingBar } from "@/components/global-loading-bar";
 import { NavigationLoading } from "@/components/navigation-loading";
@@ -17,16 +16,16 @@ const structuredData = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "Web Friend",
-  "description": "Free digital tools for everyone: AI website analyzer, text analyzer, API tester, color palette generator, and QR code generator. Perfect for businesses, creators, and anyone working online.",
+  "description": "Free digital tools for everyone: text analyzer, API tester, color palette generator, QR code generator, and indexability validator. Perfect for businesses, creators, and anyone working online.",
   "url": getBaseUrl(),
   "applicationCategory": "Utility",
   "operatingSystem": "Web Browser",
   "featureList": [
-    "AI Website Analyzer",
     "Text Analyzer",
     "API Tester",
     "Color Palette Generator",
-    "QR Code Generator"
+    "QR Code Generator",
+    "Indexability Validator"
   ],
   "publisher": {
     "@type": "Organization",
@@ -46,22 +45,22 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Web Friend | Free Digital Tools for Everyone",
-  description: "Free digital tools for online professionals: AI analysis, content optimization, design tools, and developer utilities. Professional-grade, completely free.",
-  keywords: ["digital tools", "website analyzer", "text analyzer", "API tester", "color palette generator", "QR code generator", "SEO tools", "free tools", "online utilities"],
+  description: "Free digital tools for online professionals: content optimization, design tools, developer utilities, and SEO validation. Professional-grade, completely free.",
+  keywords: ["digital tools", "text analyzer", "API tester", "color palette generator", "QR code generator", "SEO tools", "free tools", "online utilities"],
   authors: [{ name: "Web Friend Team" }],
   creator: "Web Friend",
   publisher: "Web Friend",
   robots: "index, follow",
   openGraph: {
     title: "Web Friend | Free Digital Tools for Everyone",
-    description: "Free digital tools for online professionals: AI analysis, content optimization, design tools, and developer utilities. Professional-grade, completely free.",
+    description: "Free digital tools for online professionals: content optimization, design tools, developer utilities, and SEO validation. Professional-grade, completely free.",
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
     title: "Web Friend | Free Digital Tools for Everyone",
-    description: "Free digital tools for online professionals: AI analysis, content optimization, design tools, and developer utilities. Professional-grade, completely free.",
+    description: "Free digital tools for online professionals: content optimization, design tools, developer utilities, and SEO validation. Professional-grade, completely free.",
   },
 };
 
@@ -91,17 +90,15 @@ export default function RootLayout({
         >
           <ClerkThemeProvider>
             <LoadingProvider>
-              <HistoryProvider>
-                <GlobalLoadingBar />
-                <Suspense fallback={null}>
-                  <NavigationLoading />
-                </Suspense>
-                <Header />
-                <main className="flex-1">
-                  {children}
-                </main>
-                <Footer />
-              </HistoryProvider>
+              <GlobalLoadingBar />
+              <Suspense fallback={null}>
+                <NavigationLoading />
+              </Suspense>
+              <Header />
+              <main className="flex-1">
+                {children}
+              </main>
+              <Footer />
             </LoadingProvider>
           </ClerkThemeProvider>
         </ThemeProvider>

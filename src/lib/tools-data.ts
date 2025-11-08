@@ -1,5 +1,4 @@
 import {
-  Search,
   FileText,
   Palette,
   Code,
@@ -13,15 +12,6 @@ import {
  * This is the single source of truth for tool definitions
  */
 export const tools = [
-  {
-    title: "AI Website Analyzer",
-    description: "Comprehensive SEO, performance, and accessibility analysis with AI-powered insights",
-    icon: Search,
-    href: "/tools/website-analyzer",
-    badges: ["AI Powered", "Free Tool", "SEO"],
-    color: "from-blue-500 to-cyan-500",
-    features: ["SEO Analysis", "Performance Metrics", "Accessibility Audit", "AI Recommendations"]
-  },
   {
     title: "Text Analyzer",
     description: "Analyze text readability, SEO keywords, and content quality metrics",

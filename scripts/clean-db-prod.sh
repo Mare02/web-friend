@@ -10,8 +10,6 @@ echo ""
 echo "⚠️  ⚠️  ⚠️  DANGER WARNING ⚠️  ⚠️  ⚠️"
 echo ""
 echo "This will delete ALL data from your PRODUCTION database!"
-echo "   - All analyses"
-echo "   - All tasks"
 echo "   - All user profiles"
 echo ""
 echo "This action CANNOT be undone!"
@@ -34,14 +32,6 @@ fi
 echo ""
 echo "🗑️  Deleting all production data..."
 
-# Delete all tasks first (due to foreign key constraints)
-npx wrangler d1 execute web-friend-db --remote --command "DELETE FROM tasks;"
-echo "✅ Deleted all tasks"
-
-# Delete all analyses
-npx wrangler d1 execute web-friend-db --remote --command "DELETE FROM analyses;"
-echo "✅ Deleted all analyses"
-
 # Delete all user profiles
 npx wrangler d1 execute web-friend-db --remote --command "DELETE FROM user_profiles;"
 echo "✅ Deleted all user profiles"
@@ -50,7 +40,5 @@ echo ""
 echo "✨ Production database cleaned successfully!"
 echo ""
 echo "📊 Verifying cleanup..."
-npx wrangler d1 execute web-friend-db --remote --command "SELECT COUNT(*) as task_count FROM tasks;"
-npx wrangler d1 execute web-friend-db --remote --command "SELECT COUNT(*) as analysis_count FROM analyses;"
 npx wrangler d1 execute web-friend-db --remote --command "SELECT COUNT(*) as user_count FROM user_profiles;"
 

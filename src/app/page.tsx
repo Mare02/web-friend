@@ -17,8 +17,8 @@ import { AnimatedText } from "@/components/animated-text";
 
 export const metadata: Metadata = {
   title: "Web Friend | Free Digital Tools for Everyone",
-  description: "Free digital tools for online professionals: AI analysis, content optimization, design tools, and developer utilities. Professional-grade, completely free.",
-  keywords: ["digital tools", "website analyzer", "text analyzer", "API tester", "color palette generator", "QR code generator", "SEO tools", "free tools", "online utilities"],
+  description: "Free digital tools for online professionals: content optimization, design tools, developer utilities, and SEO validation. Professional-grade, completely free.",
+  keywords: ["digital tools", "text analyzer", "API tester", "color palette generator", "QR code generator", "SEO tools", "free tools", "online utilities"],
   authors: [{ name: "Web Friend Team" }],
   creator: "Web Friend",
   publisher: "Web Friend",
@@ -28,14 +28,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Web Friend | Free Digital Tools for Everyone",
-    description: "Free digital tools for online professionals: AI analysis, content optimization, design tools, and developer utilities. Professional-grade, completely free.",
+    description: "Free digital tools for online professionals: content optimization, design tools, developer utilities, and SEO validation. Professional-grade, completely free.",
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
     title: "Web Friend | Free Digital Tools for Everyone",
-    description: "Free digital tools for online professionals: AI analysis, content optimization, design tools, and developer utilities. Professional-grade, completely free.",
+    description: "Free digital tools for online professionals: content optimization, design tools, developer utilities, and SEO validation. Professional-grade, completely free.",
   },
 };
 
@@ -74,7 +74,7 @@ export default async function Home() {
             <AnimatedText words={["For Everyone", "For Creators", "For Designers", "For Developers", "For Professionals"]} />
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Free digital tools for everyone: AI analysis, content optimization, design tools, and developer utilities.
+            Free digital tools for everyone: content optimization, design tools, developer utilities, and SEO validation.
           </p>
         </div>
 
