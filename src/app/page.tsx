@@ -70,11 +70,11 @@ export default async function Home() {
             <Globe className="h-10 w-10 text-primary" />
           </div>
           <h1 className="text-4xl md:text-7xl font-bold tracking-tight">
-            Professional Web Tools
-            <AnimatedText words={["For Everyone", "For Creators", "For Designers", "For Developers", "For SEO Specialists"]} />
+            Powerful Web Tools
+            <AnimatedText words={["For Everyone", "For Creators", "For Designers", "For Developers", "For Professionals"]} />
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Free digital tools for online professionals: AI analysis, content optimization, design tools, and developer utilities.
+            Free digital tools for everyone: AI analysis, content optimization, design tools, and developer utilities.
           </p>
         </div>
 
