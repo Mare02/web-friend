@@ -4,7 +4,8 @@ import {
   Palette,
   Code,
   QrCode,
-  Shield
+  Shield,
+  FileCode
 } from "lucide-react";
 
 /**
@@ -65,6 +66,15 @@ export const tools = [
     badges: ["Free Tool", "SEO"],
     color: "from-blue-500 to-indigo-500",
     features: ["Robots.txt Analysis", "Indexability Check", "Sitemap Validation", "SEO Recommendations"]
+  },
+  {
+    title: "XML/JSON Converter",
+    description: "Convert between XML and JSON formats with real-time validation and formatting",
+    icon: FileCode,
+    href: "/tools/xml-json-converter",
+    badges: ["Free Tool"],
+    color: "from-teal-500 to-cyan-500",
+    features: ["XML to JSON", "JSON to XML", "Format Validation", "Pretty Print"]
   }
 ] as const;
 
