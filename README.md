@@ -1,6 +1,6 @@
 # Web Friend
 
-A comprehensive suite of free digital tools for businesses, creators, and professionals working online. Features content optimization, QR code generation, color palette creation, API testing, and indexability validation - all completely free with no ads or subscriptions.
+A comprehensive suite of free digital tools for businesses, creators, and professionals working online. Includes a CMS-powered blog system.
 
 ![Next.js](https://img.shields.io/badge/Next.js-16.0-black?style=flat-square)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square)
@@ -56,11 +56,6 @@ src/
 │   └── page.tsx           # Homepage with tool showcase
 ├── lib/
 │   ├── services/          # Business logic
-│   │   ├── robots-validator.ts   # Indexability validation
-│   │   ├── text-analyzer.ts     # Text analysis
-│   │   ├── color-palette-service.ts # Color palette generation
-│   │   ├── qr-code-service.ts   # QR code generation
-│   │   └── article-service.ts   # Blog/CMS integration
 │   ├── sanity/            # CMS integration
 │   │   ├── client.ts      # Sanity client
 │   │   ├── schemas/       # Content schemas
@@ -117,45 +112,8 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### Usage
-
-1. **Choose Your Tool** - Select from 5 professional digital tools:
-   - **Text Analyzer**: Content optimization and readability scoring
-   - **Color Palette Generator**: Design harmonious color schemes
-   - **API Tester**: Test and debug REST API endpoints
-   - **QR Code Generator**: Create custom QR codes for various content types
-   - **Indexability Validator**: Check robots.txt and sitemap configurations
-
-2. **Use the Tools** - Each tool provides professional-grade features:
-   - Enter your input (URL, text, colors, API endpoints, etc.)
-   - Get instant results with detailed analysis and recommendations
-   - Export results, copy codes, or download generated content
-
-3. **Explore Content** - Browse our blog for digital tools insights and best practices
-
-4. **Advanced Features** (with account):
-   - Access personalized features and user preferences
-   - Browse our blog content and resources
-
-All tools are **completely free** with no ads, subscriptions, or limitations.
-
-## API Endpoints
-
-The application provides RESTful API endpoints for tool functionality:
-
-- **POST /api/robots-validate** - Validates robots.txt and indexability
-- **POST /api/webhooks/clerk** - Handles authentication events
-
-All endpoints return consistent response format:
-```typescript
-{ success: true, data: {...} }
-// or
-{ success: false, error: "message" }
-```
 
 ## Database Setup
-
-This project uses **dual database architecture** for optimal performance and flexibility:
 
 ### Cloudflare D1 (SQLite)
 Used for user data and application state. See [DATABASE_SETUP.md](DATABASE_SETUP.md) for detailed setup.
@@ -191,21 +149,6 @@ sanity init
 
 See [CLERK_SETUP.md](CLERK_SETUP.md) for authentication configuration.
 
-## Current Status & Roadmap
-
-### ✅ Implemented Features
-- [x] Complete tool suite (5 professional digital tools)
-- [x] User authentication via Clerk
-- [x] Blog platform with Sanity CMS
-- [x] Admin studio for content management
-- [x] Responsive design with dark/light themes
-
-### 🚧 Future Enhancements
-- [ ] Cloudflare Workers migration for edge deployment
-- [ ] API rate limiting and usage analytics
-- [ ] Multi-language support and internationalization
-- [ ] Advanced user dashboard with analytics
-- [ ] Integration with popular CMS platforms
 
 ## Development
 
@@ -222,11 +165,3 @@ npm start
 # Lint code
 npm run lint
 ```
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-MIT License - feel free to use this project for personal or commercial purposes.
