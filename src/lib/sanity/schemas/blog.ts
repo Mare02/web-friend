@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { Rule } from "sanity"
 
 const articleSchema = {
   name: 'article',
@@ -9,7 +9,7 @@ const articleSchema = {
       name: 'title',
       type: 'string',
       title: 'Title',
-      validation: (Rule: { required: () => any; min?: (n: number) => any }) => Rule.required(),
+      validation: (rule: Rule) => rule.required(),
     },
     {
       name: 'slug',
@@ -19,41 +19,41 @@ const articleSchema = {
         source: 'title',
         maxLength: 96,
       },
-      validation: (Rule: { required: () => any; min?: (n: number) => any }) => Rule.required(),
+      validation: (rule: Rule) => rule.required(),
     },
     {
       name: 'excerpt',
       type: 'text',
       title: 'Excerpt',
       rows: 3,
-      validation: (Rule: { required: () => any; min?: (n: number) => any }) => Rule.required(),
+      validation: (rule: Rule) => rule.required(),
     },
     {
       name: 'body',
       type: 'array',
       title: 'Body',
       of: [{ type: 'block' }],
-      validation: (Rule: { required: () => any; min?: (n: number) => any }) => Rule.required(),
+      validation: (rule: Rule) => rule.required(),
     },
     {
       name: 'publishedAt',
       type: 'datetime',
       title: 'Published At',
-      validation: (Rule: { required: () => any; min?: (n: number) => any }) => Rule.required(),
+      validation: (rule: Rule) => rule.required(),
     },
     {
       name: 'categories',
       type: 'array',
       title: 'Categories',
       of: [{ type: 'reference', to: [{ type: 'category' }] }],
-      validation: (Rule: any) => Rule.required().min(1),
+      validation: (rule: Rule) => rule.required().min(1),
     },
     {
       name: 'tags',
       type: 'array',
       title: 'Tags',
       of: [{ type: 'reference', to: [{ type: 'tag' }] }],
-      validation: (Rule: any) => Rule.required().min(1),
+      validation: (rule: Rule) => rule.required().min(1),
     },
     // SEO fields
     {
@@ -99,7 +99,7 @@ const articleSchema = {
       options: {
         hotspot: true,
       },
-      validation: (Rule: { required: () => any; min?: (n: number) => any }) => Rule.required(),
+      validation: (rule: Rule) => rule.required(),
     },
   ],
   preview: {

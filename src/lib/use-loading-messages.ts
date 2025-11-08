@@ -23,8 +23,8 @@ export function useLoadingMessages(isLoading: boolean) {
 
   useEffect(() => {
     if (!isLoading) {
-      setCurrentMessageIndex(0);
-      return;
+      const frameId = requestAnimationFrame(() => setCurrentMessageIndex(0));
+      return () => cancelAnimationFrame(frameId);
     }
 
     const interval = setInterval(() => {

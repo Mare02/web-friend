@@ -191,38 +191,29 @@ function ArticleDetail({ article }: { article: BlogDetail }) {
 }
 
 export default async function BlogPage({ params }: BlogPageProps) {
-  let slug: string = 'unknown'
+  const fallbackSlug = 'unknown'
+  const paramsData = await params
+  const slug = paramsData.slug ?? fallbackSlug
+
+  let article: BlogDetail | null = null
+  let loadError: unknown = null
 
   try {
-    const paramsData = await params
-    slug = paramsData.slug
-    const article = await getArticleBySlug(slug)
-
-    if (!article) {
-      notFound()
-    }
-
-    const baseUrl = getBaseUrl()
-    const structuredData = generateArticleStructuredData(article, baseUrl)
-
-    return (
-      <>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredData),
-          }}
-        />
-        <ArticleDetail article={article} />
-      </>
-    )
+    article = await getArticleBySlug(slug)
   } catch (error) {
-    logger.error('Error loading blog post page', error instanceof Error ? error : new Error(String(error)), {
-      operation: 'BlogPage',
-      slug: slug || 'unknown'
-    })
+    loadError = error
+  }
 
-    // Return a fallback error page
+  if (loadError) {
+    logger.error(
+      'Error loading blog post page',
+      loadError instanceof Error ? loadError : new Error(String(loadError)),
+      {
+        operation: 'BlogPage',
+        slug: slug || fallbackSlug
+      }
+    )
+
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="text-center">
@@ -240,4 +231,23 @@ export default async function BlogPage({ params }: BlogPageProps) {
       </div>
     )
   }
+
+  if (!article) {
+    notFound()
+  }
+
+  const baseUrl = getBaseUrl()
+  const structuredData = generateArticleStructuredData(article, baseUrl)
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData),
+        }}
+      />
+      <ArticleDetail article={article} />
+    </>
+  )
 }

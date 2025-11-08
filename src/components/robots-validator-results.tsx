@@ -44,7 +44,8 @@ export function RobotsValidatorResults({ result }: RobotsValidatorResultsProps) 
 
   // Reset displayed URL count when new results are loaded
   useEffect(() => {
-    setDisplayedUrlCount(100);
+    const frameId = requestAnimationFrame(() => setDisplayedUrlCount(100));
+    return () => cancelAnimationFrame(frameId);
   }, [result]);
 
   if (!result.success || !result.data) {

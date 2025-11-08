@@ -80,59 +80,50 @@ export async function generateMetadata({ searchParams }: BlogsPageProps): Promis
 }
 
 async function BlogsContent({ searchParams }: BlogsPageProps) {
+  const params = await searchParams
+
+  // Parse filters from search params
+  const filters: BlogFilters = {
+    category: typeof params.category === 'string' ? params.category : undefined,
+    tag: typeof params.tag === 'string' ? params.tag : undefined,
+    page: typeof params.page === 'string' ? parseInt(params.page, 10) || 1 : 1,
+  }
+
+  type ArticlesResponse = Awaited<ReturnType<typeof getArticles>>
+  type CategoriesResponse = Awaited<ReturnType<typeof getCategories>>
+  type TagsResponse = Awaited<ReturnType<typeof getTags>>
+
+  let articlesResponse: ArticlesResponse | null = null
+  let categories: CategoriesResponse = []
+  let tags: TagsResponse = []
+  let loadError: unknown = null
+
   try {
-    const params = await searchParams
-
-    // Parse filters from search params
-    const filters: BlogFilters = {
-      category: typeof params.category === 'string' ? params.category : undefined,
-      tag: typeof params.tag === 'string' ? params.tag : undefined,
-      page: typeof params.page === 'string' ? parseInt(params.page, 10) || 1 : 1,
-    }
-
-    // Fetch data in parallel
-    const [articlesResponse, categories, tags] = await Promise.all([
+    const [articlesResult, categoriesResult, tagsResult] = await Promise.all([
       getArticles(filters),
       getCategories(),
       getTags(),
     ])
 
-    return (
-      <div>
-        <div className="container mx-auto px-4 py-4">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Blogs</h1>
-            <p className="text-base text-muted-foreground">
-              Explore our collection of blogs on digital tools, online strategies, SEO, best practices, and more.
-            </p>
-          </div>
-        </div>
-
-        <BlogsFilters
-          categories={categories}
-          tags={tags}
-          currentFilters={filters}
-        />
-
-        <div className="container mx-auto px-4 py-6">
-          <BlogsList
-            articles={articlesResponse.articles}
-            total={articlesResponse.total}
-            currentPage={articlesResponse.currentPage}
-            hasNextPage={articlesResponse.hasNextPage}
-            basePath="/blogs"
-            filters={filters}
-          />
-        </div>
-      </div>
-    )
+    articlesResponse = articlesResult
+    categories = categoriesResult
+    tags = tagsResult
   } catch (error) {
-    logger.error('Error loading blogs listing page', error instanceof Error ? error : new Error(String(error)), {
-      operation: 'BlogsPage',
-      searchParams
-    })
+    loadError = error
+  }
 
-    // Return error state
+  if (loadError || !articlesResponse) {
+    if (loadError) {
+      logger.error(
+        'Error loading blogs listing page',
+        loadError instanceof Error ? loadError : new Error(String(loadError)),
+        {
+          operation: 'BlogsPage',
+          searchParams: params,
+        }
+      )
+    }
+
     return (
       <div>
         <div className="container mx-auto px-4 py-4">
@@ -155,6 +146,36 @@ async function BlogsContent({ searchParams }: BlogsPageProps) {
       </div>
     )
   }
+
+  return (
+    <div>
+      <div className="container mx-auto px-4 py-4">
+        <div>
+          <h1 className="text-3xl font-bold mb-2">Blogs</h1>
+          <p className="text-base text-muted-foreground">
+            Explore our collection of blogs on digital tools, online strategies, SEO, best practices, and more.
+          </p>
+        </div>
+      </div>
+
+      <BlogsFilters
+        categories={categories}
+        tags={tags}
+        currentFilters={filters}
+      />
+
+      <div className="container mx-auto px-4 py-6">
+        <BlogsList
+          articles={articlesResponse.articles}
+          total={articlesResponse.total}
+          currentPage={articlesResponse.currentPage}
+          hasNextPage={articlesResponse.hasNextPage}
+          basePath="/blogs"
+          filters={filters}
+        />
+      </div>
+    </div>
+  )
 }
 
 function BlogsSkeleton() {

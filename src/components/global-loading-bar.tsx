@@ -11,29 +11,34 @@ export function GlobalLoadingBar() {
 
   useEffect(() => {
     if (isLoading) {
-      setIsVisible(true);
-      setProgress(0);
-
+      const frameId = requestAnimationFrame(() => {
+        setIsVisible(true);
+        setProgress(0);
+      });
       // Simulate progress
       const timer1 = setTimeout(() => setProgress(30), 100);
       const timer2 = setTimeout(() => setProgress(60), 300);
       const timer3 = setTimeout(() => setProgress(80), 600);
 
       return () => {
+        cancelAnimationFrame(frameId);
         clearTimeout(timer1);
         clearTimeout(timer2);
         clearTimeout(timer3);
       };
     } else {
       // Complete the progress bar
-      setProgress(100);
+      const completeFrame = requestAnimationFrame(() => setProgress(100));
 
       // Hide after animation completes
       const hideTimer = setTimeout(() => {
         setIsVisible(false);
       }, 400);
 
-      return () => clearTimeout(hideTimer);
+      return () => {
+        cancelAnimationFrame(completeFrame);
+        clearTimeout(hideTimer);
+      };
     }
   }, [isLoading]);
 

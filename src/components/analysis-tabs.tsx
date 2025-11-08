@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AnalysisResults } from "@/components/analysis-results";
 import { ActionPlanInteractive } from "@/components/action-plan-interactive";
@@ -32,24 +32,49 @@ export function AnalysisTabs({
   onDeleteAnalysis,
 }: AnalysisTabsProps) {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const tabParam = searchParams?.get("tab") || null;
-  const [activeTab, setActiveTab] = useState<"analysis" | "tasks">(defaultTab);
+  const derivedTab = useMemo(() => (tabParam === "tasks" || tabParam === "analysis" ? tabParam : null), [tabParam]);
+  const [localTab, setLocalTab] = useState<"analysis" | "tasks">(derivedTab ?? defaultTab);
+  const activeTab = derivedTab ?? localTab;
+  const searchParamsString = searchParams?.toString() ?? "";
 
-  useEffect(() => {
-    if (tabParam === "tasks" || tabParam === "analysis") {
-      setActiveTab(tabParam);
-    }
-  }, [tabParam]);
+  const handleTabChange = useCallback(
+    (value: string) => {
+      if (value !== "analysis" && value !== "tasks") {
+        return;
+      }
+
+      setLocalTab(value);
+
+      if (!pathname) {
+        return;
+      }
+
+      const params = new URLSearchParams(searchParamsString);
+
+      if (value === defaultTab) {
+        params.delete("tab");
+      } else {
+        params.set("tab", value);
+      }
+
+      const queryString = params.toString();
+      router.replace(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
+    },
+    [defaultTab, pathname, router, searchParamsString]
+  );
 
   // Listen for manual events (e.g., after generating tasks) to switch tabs
   useEffect(() => {
-    const handler = () => setActiveTab("tasks");
+    const handler = () => handleTabChange("tasks");
     window.addEventListener("tasks-generated", handler as EventListener);
     return () => window.removeEventListener("tasks-generated", handler as EventListener);
-  }, []);
+  }, [handleTabChange]);
 
   return (
-    <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "analysis" | "tasks") } className="w-full flex flex-col h-full">
+    <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full flex flex-col h-full">
       <div className="sticky top-0 z-10 bg-background border-b px-6 py-4">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="analysis">Analysis</TabsTrigger>

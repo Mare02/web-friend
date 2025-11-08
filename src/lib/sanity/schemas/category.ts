@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { Rule } from "sanity"
 
 const categorySchema = {
   name: 'category',
@@ -9,7 +9,7 @@ const categorySchema = {
       name: 'title',
       type: 'string',
       title: 'Title',
-      validation: (Rule: { required: () => any }) => Rule.required(),
+      validation: (rule: Rule) => rule.required(),
     },
     {
       name: 'slug',
@@ -19,7 +19,7 @@ const categorySchema = {
         source: 'title',
         maxLength: 96,
       },
-      validation: (Rule: { required: () => any }) => Rule.required(),
+      validation: (rule: Rule) => rule.required(),
     },
     {
       name: 'description',
