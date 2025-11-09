@@ -9,7 +9,7 @@ import {
   Target
 } from "lucide-react";
 import { getRecentArticles } from "@/lib/services/article-service";
-import { RecentArticlesHomeSection } from "@/components/blogs/recent-articles-home-section";
+import { RecentArticlesSection } from "@/components/blogs/recent-articles-section";
 import { ToolCard } from "@/components/tool-card";
 import { tools } from "@/lib/tools-data";
 import { getCanonicalUrl } from "@/lib/config";
@@ -84,14 +84,16 @@ export default async function Home() {
             Powerful Web Tools
             <AnimatedText words={["For Everyone", "For Creators", "For Designers", "For Developers", "For Professionals"]} />
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed">
             Free digital tools for everyone: content optimization, design tools, developer utilities, and SEO validation.
           </p>
         </div>
 
         {/* Featured Tools Section */}
-        <div className="pb-20" id="tools">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <div className="pb-20 relative" id="tools">
+          <div className="absolute left-1/4 right-0 top-0 w-1/2 h-1/2 bg-purple-200 dark:bg-purple-900 blur-3xl rounded-full opacity-60 z-0 pointer-events-none"></div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 relative z-10">
             {tools.slice(0, 3).map((tool) => (
               <ToolCard key={tool.title} tool={tool} variant="compact" />
             ))}
@@ -110,7 +112,7 @@ export default async function Home() {
         {/* Articles Section */}
         <div className="py-20">
           {recentArticles.length > 0 && (
-            <RecentArticlesHomeSection articles={recentArticles} />
+            <RecentArticlesSection articles={recentArticles} />
           )}
         </div>
 

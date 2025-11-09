@@ -16,7 +16,10 @@ export function ToolCard({ tool, variant = "default" }: ToolCardProps) {
 
   return (
     <Link href={tool.href}>
-      <Card className="group hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1 transition-all duration-300 border-2 hover:border-primary/20 backdrop-blur-sm bg-card/95 hover:bg-card/98 cursor-pointer">
+      <Card className="
+        group hover:shadow-xl hover:shadow-primary/5 hover:scale-[1.02] transition-all duration-300 border-2
+        hover:border-primary/20 backdrop-blur-sm bg-card/95 hover:bg-card cursor-pointer bg-card dark:bg-black/50 backdrop-blur-lg
+      ">
         <CardHeader className="pb-4">
           <div className="flex items-start justify-between mb-4">
             <div className={`p-3 rounded-xl bg-linear-to-r ${tool.color} text-white`}>

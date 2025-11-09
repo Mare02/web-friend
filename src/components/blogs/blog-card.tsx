@@ -18,7 +18,10 @@ export function BlogCard({ article }: BlogCardProps) {
 
   return (
     <Link href={`/blogs/${article.slug.current}`}>
-      <article className="group h-full bg-card border-2 border-border rounded-lg p-6 hover:shadow-md hover:border-border transition-all duration-200 cursor-pointer hover:bg-accent/20">
+      <article className="
+        group hover:shadow-xl hover:shadow-primary/5 hover:scale-[1.02] transition-all duration-300 border-2 p-6 rounded-lg
+        hover:border-primary/20 backdrop-blur-sm bg-card/95 hover:bg-card cursor-pointer bg-card dark:bg-black/50 backdrop-blur-lg
+      ">
         <div className="flex flex-col space-y-4">
           {/* Category */}
           {article.categories.length > 0 && (
