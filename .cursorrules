@@ -10,7 +10,7 @@ Tech Stack
 - Styling: Tailwind CSS 4 + shadcn/ui
 - AI: Groq SDK
 - Database: Cloudflare D1 (SQLite) + Sanity CMS
-- Auth: Clerk (optional)
+- Auth: Clerk
 - Validation: Zod 4.1.12
 - HTML Parsing: Cheerio
 - Content Management: Sanity.io
@@ -54,8 +54,6 @@ Code Style and Structure
   - Prefer iteration and modularization over code duplication.
   - Use descriptive variable names with auxiliary verbs (e.g., isLoading, hasError).
   - Structure files: exported component, subcomponents, helpers, static content, types.
-  - "Always use semicolons at the end of every statement in all JavaScript and TypeScript code."
-  - "Never omit semicolons, even in single-line or concise syntax."
 
 Naming Conventions
   - Use lowercase with dashes for directories (e.g., components/auth-wizard).
@@ -70,6 +68,8 @@ Syntax and Formatting
   - Use the "function" keyword for pure functions.
   - Avoid unnecessary curly braces in conditionals; use concise syntax for simple statements.
   - Use declarative JSX.
+  - Always use semicolons at the end of every statement in all JavaScript and TypeScript code.
+  - Never omit semicolons, even in single-line or concise syntax.
 
 UI and Styling
   - Use Shadcn UI and Tailwind for components and styling.
@@ -88,7 +88,7 @@ Key Conventions
     - Favor server components and Next.js SSR.
     - Use only for Web API access in small components.
     - Avoid for data fetching or state management.
-  - use pnpm instead of npm
   - always use web search for latest information on packages and implementations
+  - always use pnpm instead of npm
 
 Follow latest Next.js docs for Data Fetching, Rendering, and Routing.

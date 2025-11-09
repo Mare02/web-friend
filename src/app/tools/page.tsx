@@ -4,25 +4,30 @@ import { ToolCard } from "@/components/tool-card";
 import { tools } from "@/lib/tools-data";
 import { getCanonicalUrl } from "@/lib/config";
 
-export const metadata: Metadata = {
-  title: "Digital Tools | Web Friend",
-  description: "Essential tools for everyone working with digital content and online projects. Professional quality, completely free, no limits.",
-  keywords: ["digital tools", "online tools", "free tools", "website tools", "developer tools", "content tools"],
-  robots: "index, follow",
-  alternates: {
-    canonical: getCanonicalUrl("/tools"),
-  },
-  openGraph: {
-    title: "Digital Tools | Web Friend",
-    description: "Essential tools for everyone working with digital content and online projects. Professional quality, completely free, no limits.",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Digital Tools | Web Friend",
-    description: "Essential tools for everyone working with digital content and online projects. Professional quality, completely free, no limits.",
-  },
-};
+const pageTitle = "Digital Tools | Web Friend";
+const pageDescription = "Essential tools for everyone working with digital content and online projects. Professional quality, completely free, no limits.";
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: pageTitle,
+    description: pageDescription,
+    keywords: ["digital tools", "online tools", "free tools", "website tools", "developer tools", "content tools"],
+    robots: "index, follow",
+    alternates: {
+      canonical: getCanonicalUrl("/tools"),
+    },
+    openGraph: {
+      title: pageTitle,
+      description: pageDescription,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: pageTitle,
+      description: pageDescription,
+    },
+  };
+}
 
 export default function ToolsPage() {
   return (
