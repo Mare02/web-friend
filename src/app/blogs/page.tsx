@@ -12,28 +12,29 @@ interface BlogsPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
-// Dynamic page - content depends on search parameters
-export const dynamic = 'force-dynamic'
-
 export async function generateMetadata(): Promise<Metadata> {
+  const pageTitle = 'Blogs | Web Friend';
+  const pageDescription =
+    'Explore our collection of blogs on digital tools, online strategies, SEO, best practices, and more.';
+
   return {
-    title: 'Blogs | Web Friend',
-    description: 'Explore our collection of blogs on digital tools, online strategies, SEO, best practices, and more.',
+    title: pageTitle,
+    description: pageDescription,
     robots: 'index, follow',
     alternates: {
       canonical: getCanonicalUrl('/blogs'),
     },
     openGraph: {
-      title: 'Blogs | Web Friend',
-      description: 'Explore our collection of blogs on digital tools, online strategies, SEO, best practices, and more.',
+      title: pageTitle,
+      description: pageDescription,
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Blogs | Web Friend',
-      description: 'Explore our collection of blogs on digital tools, online strategies, SEO, best practices, and more.',
+      title: pageTitle,
+      description: pageDescription,
     },
-  }
+  };
 }
 
 async function BlogsContent({ searchParams }: BlogsPageProps) {

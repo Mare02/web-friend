@@ -3,11 +3,8 @@ import QRCodeGeneratorClient from './qr-code-generator-client';
 import { getCanonicalUrl } from '@/lib/config';
 
 const toolTitle = 'QR Code Generator | Create Custom QR Codes Online Free';
-const toolDescription =
-	'Free QR code generator for URLs, text, email, phone numbers, and WiFi networks. Create custom QR codes with colors, logos, and advanced settings. Download in PNG, SVG formats.';
-const toolDescriptionShort =
-	'Free QR code generator for URLs, text, email, phone numbers, and WiFi networks. Create custom QR codes with colors, logos, and advanced settings.';
-
+const toolDescription = 'Free QR code generator for URLs, text, email, phone numbers, and WiFi networks. Create custom QR codes with colors, logos, and advanced settings. Download in PNG, SVG formats.';
+const toolDescriptionShort = 'Free QR code generator for URLs, text, email, phone numbers, and WiFi networks. Create custom QR codes with colors, logos, and advanced settings.';
 export async function generateMetadata(): Promise<Metadata> {
 	return {
 		title: toolTitle,

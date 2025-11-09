@@ -141,7 +141,7 @@ export default async function Home() {
                     <Icon className={`h-6 w-6 text-primary ${floatClasses[index]}`} />
                   </div>
                   <h3 className="font-semibold mb-2">{feature.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+                  <p className="text-sm dark:text-muted-foreground leading-relaxed">
                     {feature.description}
                   </p>
                 </div>

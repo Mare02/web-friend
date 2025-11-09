@@ -57,7 +57,7 @@ export function BlogsFilters({
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 py-3">
           {/* Filters section */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 flex-1">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2 text-sm">
               <SlidersHorizontal className="w-4 h-4" />
               <span>Filter by:</span>
             </div>
@@ -107,7 +107,7 @@ export function BlogsFilters({
               variant="ghost"
               size="sm"
               onClick={clearFilters}
-              className="text-muted-foreground hover:text-foreground shrink-0"
+              className="hover:text-foreground shrink-0"
             >
               Clear all
             </Button>

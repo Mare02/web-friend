@@ -46,11 +46,6 @@ export function BlogsList({
 
   return (
     <div className="space-y-8 pb-20">
-      {/* Results summary */}
-      <div className="text-sm text-muted-foreground">
-        Showing {articles.length} of {total} blogs
-      </div>
-
       {/* Articles grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {articles.map((article) => (

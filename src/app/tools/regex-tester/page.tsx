@@ -2,13 +2,9 @@ import type { Metadata } from 'next';
 import RegexTesterClient from './regex-tester-client';
 import { getCanonicalUrl } from '@/lib/config';
 
-const toolTitle =
-	'Regex Tester | Test Regular Expressions Online - Pattern Matching Tool';
-const toolDescription =
-	'Free online regex tester for developers and data analysts. Test regular expressions with real-time matching, find & replace, pattern validation, and comprehensive regex pattern library. Supports all major regex flags.';
-const toolDescriptionShort =
-	'Free online regex tester with real-time matching, pattern validation, and comprehensive regex pattern library. Perfect for developers and data analysts.';
-
+const toolTitle = 'Regex Tester | Test Regular Expressions Online - Pattern Matching Tool';
+const toolDescription = 'Free online regex tester for developers and data analysts. Test regular expressions with real-time matching, find & replace, pattern validation, and comprehensive regex pattern library. Supports all major regex flags.';
+const toolDescriptionShort = 'Free online regex tester with real-time matching, pattern validation, and comprehensive regex pattern library. Perfect for developers and data analysts.';
 export async function generateMetadata(): Promise<Metadata> {
 	return {
 		title: toolTitle,

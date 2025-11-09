@@ -4,7 +4,6 @@ import { useState, useMemo } from "react";
 import {
   testRegex,
   replaceWithRegex,
-  getCommonRegexPatterns,
   getPatternCategories,
   getPatternsByCategory,
   highlightMatches,
@@ -33,18 +32,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Regex,
   Play,
   RotateCcw,
   Copy,
-  Download,
   BookOpen,
   AlertTriangle,
   CheckCircle,
   XCircle,
-  Clock,
   Target,
   FileText,
   Settings,
