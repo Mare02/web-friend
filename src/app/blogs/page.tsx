@@ -12,69 +12,26 @@ interface BlogsPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
-// Enable Incremental Static Regeneration
-export const revalidate = 3600 // Revalidate every hour
+// Dynamic page - content depends on search parameters
+export const dynamic = 'force-dynamic'
 
-export async function generateMetadata({ searchParams }: BlogsPageProps): Promise<Metadata> {
-  const params = await searchParams
-
-  // Parse filters from search params
-  const filters: BlogFilters = {
-    category: typeof params.category === 'string' ? params.category : undefined,
-    tag: typeof params.tag === 'string' ? params.tag : undefined,
-    page: typeof params.page === 'string' ? parseInt(params.page, 10) || 1 : 1,
-  }
-
-  let title = 'Blogs | Web Friend'
-  let description = 'Explore our collection of blogs on digital tools, online strategies, SEO, best practices, and more.'
-
-  // Customize metadata based on filters
-  if (filters.category) {
-    const categories = await getCategories()
-    const category = categories.find(c => c.slug.current === filters.category)
-    if (category) {
-      title = `${category.title} Blogs | Web Friend`
-      description = `Read our blogs about ${category.title.toLowerCase()}. ${category.description || 'Explore digital tools insights and best practices.'}`
-    }
-  }
-
-  if (filters.tag) {
-    const tags = await getTags()
-    const tag = tags.find(t => t.slug.current === filters.tag)
-    if (tag) {
-      title = `${tag.title} Blogs | Web Friend`
-      description = `Blogs tagged with ${tag.title}. Explore our collection of digital tools and online insights.`
-    }
-  }
-
-  if (filters.page && filters.page > 1) {
-    title = `${title} - Page ${filters.page}`
-  }
-
-  // Build canonical URL with filters
-  let canonicalPath = '/blogs'
-  const queryParams = []
-  if (filters.category) queryParams.push(`category=${filters.category}`)
-  if (filters.tag) queryParams.push(`tag=${filters.tag}`)
-  if (filters.page && filters.page > 1) queryParams.push(`page=${filters.page}`)
-  if (queryParams.length > 0) canonicalPath += `?${queryParams.join('&')}`
-
+export async function generateMetadata(): Promise<Metadata> {
   return {
-    title,
-    description,
+    title: 'Blogs | Web Friend',
+    description: 'Explore our collection of blogs on digital tools, online strategies, SEO, best practices, and more.',
     robots: 'index, follow',
     alternates: {
-      canonical: getCanonicalUrl(canonicalPath),
+      canonical: getCanonicalUrl('/blogs'),
     },
     openGraph: {
-      title,
-      description,
+      title: 'Blogs | Web Friend',
+      description: 'Explore our collection of blogs on digital tools, online strategies, SEO, best practices, and more.',
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
-      title,
-      description,
+      title: 'Blogs | Web Friend',
+      description: 'Explore our collection of blogs on digital tools, online strategies, SEO, best practices, and more.',
     },
   }
 }
