@@ -15,22 +15,31 @@ import {
 } from "lucide-react";
 import { getCanonicalUrl } from "@/lib/config";
 
+const termsTitle = "Terms of Service | Web Friend";
+const termsDescription = "Read our terms of service and conditions for using Web Friend's digital tools. Understand your rights and responsibilities when using our free online utilities.";
 export const metadata: Metadata = {
-  title: "Terms of Service | Web Friend",
-  description: "Read our terms of service and conditions for using Web Friend's digital tools. Understand your rights and responsibilities when using our free online utilities.",
-  keywords: ["terms of service", "terms and conditions", "legal", "user agreement", "website terms", "service terms"],
+  title: termsTitle,
+  description: termsDescription,
+  keywords: [
+    "terms of service",
+    "terms and conditions",
+    "legal",
+    "user agreement",
+    "website terms",
+    "service terms"
+  ],
   robots: "index, follow",
   alternates: {
     canonical: getCanonicalUrl("/terms"),
   },
   openGraph: {
-    title: "Terms of Service | Web Friend",
+    title: termsTitle,
     description: "Read our terms of service and conditions for using Web Friend's digital tools.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Terms of Service | Web Friend",
+    title: termsTitle,
     description: "Read our terms of service and conditions for using Web Friend's digital tools.",
   },
 };
