@@ -15,10 +15,21 @@ import { tools } from "@/lib/tools-data";
 import { getCanonicalUrl } from "@/lib/config";
 import { AnimatedText } from "@/components/animated-text";
 
+const homepageTitle = "Web Friend | Free Digital Tools for Everyone";
+const homepageDescription = "Free digital tools for online professionals: content optimization, design tools, developer utilities, and SEO validation. Professional-grade, completely free.";
 export const metadata: Metadata = {
-  title: "Web Friend | Free Digital Tools for Everyone",
-  description: "Free digital tools for online professionals: content optimization, design tools, developer utilities, and SEO validation. Professional-grade, completely free.",
-  keywords: ["digital tools", "text analyzer", "API tester", "color palette generator", "QR code generator", "SEO tools", "free tools", "online utilities"],
+  title: homepageTitle,
+  description: homepageDescription,
+  keywords: [
+    "digital tools",
+    "text analyzer",
+    "API tester",
+    "color palette generator",
+    "QR code generator",
+    "SEO tools",
+    "free tools",
+    "online utilities"
+  ],
   authors: [{ name: "Web Friend Team" }],
   creator: "Web Friend",
   publisher: "Web Friend",
@@ -27,15 +38,15 @@ export const metadata: Metadata = {
     canonical: getCanonicalUrl("/"),
   },
   openGraph: {
-    title: "Web Friend | Free Digital Tools for Everyone",
-    description: "Free digital tools for online professionals: content optimization, design tools, developer utilities, and SEO validation. Professional-grade, completely free.",
+    title: homepageTitle,
+    description: homepageDescription,
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Web Friend | Free Digital Tools for Everyone",
-    description: "Free digital tools for online professionals: content optimization, design tools, developer utilities, and SEO validation. Professional-grade, completely free.",
+    title: homepageTitle,
+    description: homepageDescription,
   },
 };
 

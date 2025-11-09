@@ -54,6 +54,8 @@ Code Style and Structure
   - Prefer iteration and modularization over code duplication.
   - Use descriptive variable names with auxiliary verbs (e.g., isLoading, hasError).
   - Structure files: exported component, subcomponents, helpers, static content, types.
+  - "Always use semicolons at the end of every statement in all JavaScript and TypeScript code."
+  - "Never omit semicolons, even in single-line or concise syntax."
 
 Naming Conventions
   - Use lowercase with dashes for directories (e.g., components/auth-wizard).
