@@ -84,7 +84,7 @@ export default async function Home() {
             Powerful Web Tools
             <AnimatedText words={["For Everyone", "For Creators", "For Designers", "For Developers", "For Professionals"]} />
           </h1>
-          <p className="text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed text-muted-foreground">
             Free digital tools for everyone: content optimization, design tools, developer utilities, and SEO validation.
           </p>
         </div>
