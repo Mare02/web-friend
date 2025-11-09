@@ -5,7 +5,8 @@ import {
   QrCode,
   Shield,
   FileCode,
-  Eye
+  Eye,
+  Regex
 } from "lucide-react";
 
 /**
@@ -21,6 +22,15 @@ export const tools = [
     badges: ["Free Tool", "SEO"],
     color: "from-green-500 to-emerald-500",
     features: ["Readability Scores", "Keyword Density", "SEO Analysis", "Content Metrics"]
+  },
+  {
+    title: "Regex Tester",
+    description: "Test and debug regular expressions with real-time matching, replacement, and comprehensive pattern library",
+    icon: Regex,
+    href: "/tools/regex-tester",
+    badges: ["Free Tool"],
+    color: "from-cyan-500 to-blue-500",
+    features: ["Pattern Testing", "Find & Replace", "Pattern Library", "Real-time Validation"]
   },
   {
     title: "Color Palette Generator",
