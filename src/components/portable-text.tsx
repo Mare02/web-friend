@@ -16,6 +16,7 @@ const portableTextComponents: PortableTextComponents = {
             src={urlFor(value).width(800).height(500).url()}
             alt={value.alt || 'Article image'}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
             className="object-cover"
           />
         </div>

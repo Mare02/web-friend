@@ -4,7 +4,8 @@ import {
   Code,
   QrCode,
   Shield,
-  FileCode
+  FileCode,
+  Eye
 } from "lucide-react";
 
 /**
@@ -65,6 +66,15 @@ export const tools = [
     badges: ["Free Tool"],
     color: "from-teal-500 to-cyan-500",
     features: ["XML to JSON", "JSON to XML", "Format Validation", "Pretty Print"]
+  },
+  {
+    title: "Markdown Preview",
+    description: "Live markdown editor with instant preview, syntax highlighting, and export options",
+    icon: Eye,
+    href: "/tools/markdown-preview",
+    badges: ["Free Tool"],
+    color: "from-indigo-500 to-purple-500",
+    features: ["Live Preview", "Syntax Highlighting", "Export Options", "GitHub Flavored Markdown"]
   }
 ] as const;
 
