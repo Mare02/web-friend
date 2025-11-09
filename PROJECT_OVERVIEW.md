@@ -7,7 +7,7 @@ A comprehensive suite of free digital tools for businesses, creators, and profes
 - **Styling**: Tailwind CSS 4 + shadcn/ui
 - **AI**: Groq SDK with extensible provider abstraction
 - **Database**: Cloudflare D1 (SQLite) + Sanity CMS
-- **Auth**: Clerk (optional)
+- **Auth**: Clerk
 - **Validation**: Zod 4.1.12
 - **HTML Parsing**: Cheerio
 - **Content Management**: Sanity.io

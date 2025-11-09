@@ -6,16 +6,6 @@ A comprehensive suite of free digital tools for businesses, creators, and profes
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38bdf8?style=flat-square)
 
-## Features
-
-### Core Tools Suite (5 Tools)
-
-- **Text Analyzer** - Analyze text readability, SEO keywords, content quality metrics, and optimization suggestions
-- **Color Palette Generator** - Generate harmonious color palettes using color theory and design principles with CSS export
-- **API Tester** - Test REST APIs with authentication support, request history, and detailed response analysis
-- **QR Code Generator** - Generate custom QR codes for URLs, text, email addresses, phone numbers, and WiFi networks
-- **Indexability Validator** - Analyze robots.txt configuration, check indexability blockers, validate sitemaps, and get SEO recommendations
-
 ### Content Management System
 - **Blog Platform** - Full-featured blog with Sanity CMS integration, categories, tags, and SEO optimization
 - **Admin Studio** - Integrated Sanity Studio for content management and article publishing
@@ -32,7 +22,7 @@ A comprehensive suite of free digital tools for businesses, creators, and profes
 - **Styling**: Tailwind CSS 4 + shadcn/ui
 - **AI Provider**: Groq SDK (with extensible provider abstraction)
 - **Database**: Cloudflare D1 (SQLite) + Sanity CMS
-- **Authentication**: Clerk (optional)
+- **Authentication**: Clerk
 - **Validation**: Zod 4.1.12
 - **HTML Parsing**: Cheerio
 - **Content Management**: Sanity.io + Portable Text
