@@ -6,7 +6,8 @@ import {
   Shield,
   FileCode,
   Eye,
-  Regex
+  Regex,
+  Braces
 } from "lucide-react";
 
 /**
@@ -85,6 +86,15 @@ export const tools = [
     badges: ["Free Tool"],
     color: "from-indigo-500 to-purple-500",
     features: ["Live Preview", "Syntax Highlighting", "Export Options", "GitHub Flavored Markdown"]
+  },
+  {
+    title: "JSON Formatter",
+    description: "Format, validate, and beautify JSON data with syntax highlighting and error detection",
+    icon: Braces,
+    href: "/tools/json-formatter",
+    badges: ["Free Tool"],
+    color: "from-green-500 to-teal-500",
+    features: ["JSON Validation", "Pretty Print", "Minify", "Syntax Highlighting", "Error Detection"]
   }
 ] as const;
 
