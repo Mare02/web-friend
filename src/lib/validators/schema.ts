@@ -213,6 +213,22 @@ export const toolsCollectionSchema = z.array(toolSchema);
 export type Tool = z.infer<typeof toolSchema>;
 
 /**
+ * Schema for user profile
+ */
+export const userProfileSchema = z.object({
+  user_id: z.string(),
+  email: z.string().email().nullable(),
+  first_name: z.string().nullable(),
+  last_name: z.string().nullable(),
+  profile_image_url: z.string().url().nullable(),
+  created_at: z.number(),
+  updated_at: z.number(),
+});
+
+// Export inferred types for TypeScript
+export type UserProfile = z.infer<typeof userProfileSchema>;
+
+/**
  * Schema for robots.txt validation request
  */
 export const robotsValidateRequestSchema = z.object({

@@ -4,16 +4,7 @@
  */
 
 import { createD1Client } from "@/lib/db";
-
-export interface UserProfile {
-  user_id: string;
-  email: string | null;
-  first_name: string | null;
-  last_name: string | null;
-  profile_image_url: string | null;
-  created_at: number;
-  updated_at: number;
-}
+import { UserProfile } from "@/lib/validators/schema";
 
 /**
  * Syncs user data from Clerk to D1 database
