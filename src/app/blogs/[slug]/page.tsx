@@ -110,7 +110,7 @@ function ArticleDetail({ article }: { article: BlogDetail }) {
   const readingTime = Math.ceil(article.body.length / 200) // Rough estimate: 200 words per minute
 
   return (
-    <article className="container mx-auto px-4 py-8 max-w-4xl">
+    <article className="container mx-auto px-4 py-8 max-w-4xl pb-40">
       {/* Article header */}
       <header className="mb-8">
         <div className="flex flex-wrap gap-2 mb-4">
