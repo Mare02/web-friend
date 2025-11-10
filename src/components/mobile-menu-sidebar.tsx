@@ -32,10 +32,6 @@ export function MobileMenuSidebar() {
               <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10">
                 <Sparkles className="h-5 w-5 text-primary" />
               </div>
-              <div>
-                <h2 className="font-semibold text-lg">Web Friend</h2>
-                <p className="text-sm text-muted-foreground">AI-powered web tools</p>
-              </div>
             </div>
             <SheetClose asChild>
               <Button variant="ghost" size="icon" className="h-10 w-10">
