@@ -6,7 +6,7 @@ export function Footer() {
   return (
     <footer className="border-t bg-muted/30">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid md:grid-cols-4 gap-8 mb-8">
+        <div className="grid md:grid-cols-3 gap-8 mb-8">
           <div className="md:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-4 hover:opacity-80 transition-opacity cursor-pointer">
               <Sparkles className="h-6 w-6 text-primary" />
@@ -18,7 +18,7 @@ export function Footer() {
           </div>
           <div>
             <h4 className="font-semibold mb-4">Tools</h4>
-            <ul className="space-y-2 text-sm grid grid-cols-2 md:grid-cols-1">
+            <ul className="space-y-2 md:space-x-4 text-sm grid grid-cols-2">
               {tools.map((tool) => (
                 <li key={tool.href}>
                   <Link href={tool.href} className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
