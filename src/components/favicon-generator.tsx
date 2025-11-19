@@ -108,7 +108,13 @@ export function FaviconGenerator() {
         throw new Error(data.error || 'Failed to generate favicons');
       }
 
-      setResult(data.data);
+      // Convert generatedAt string back to Date object
+      const result = data.data;
+      if (result && result.generatedAt) {
+        result.generatedAt = new Date(result.generatedAt);
+      }
+
+      setResult(result);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to generate favicons");
     } finally {

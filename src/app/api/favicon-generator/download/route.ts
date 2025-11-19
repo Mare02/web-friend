@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { faviconGeneratorRequestSchema, faviconGeneratorResponseSchema } from "@/lib/validators/favicon-generator";
+import { faviconGeneratorRequestSchema } from "@/lib/validators/favicon-generator";
 import { generateFaviconPack, createFaviconZip, validateFaviconImage } from "@/lib/services/favicon-generator";
 
 /**
- * POST /api/favicon-generator
- * Generates a favicon pack from an uploaded image
+ * PUT /api/favicon-generator/download
+ * Downloads favicon pack as ZIP file
  */
-export async function POST(request: NextRequest) {
+export async function PUT(request: NextRequest) {
   try {
-    // Parse and validate request body
     const body = await request.json();
     const validation = faviconGeneratorRequestSchema.safeParse(body);
 
@@ -39,33 +38,24 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate favicon pack
-    let faviconPack;
-    try {
-      faviconPack = await generateFaviconPack(validation.data);
-    } catch (error) {
-      console.error("Favicon generation error:", error);
-      return NextResponse.json(
-        {
-          success: false,
-          error: error instanceof Error ? error.message : "Failed to generate favicons",
-        },
-        { status: 500 }
-      );
-    }
+    const faviconPack = await generateFaviconPack(validation.data);
 
-    // Return successful response
-    const response = faviconGeneratorResponseSchema.parse({
-      success: true,
-      data: faviconPack,
+    // Create ZIP file
+    const zipBuffer = await createFaviconZip(faviconPack);
+
+    // Return ZIP file as download
+    return new NextResponse(new Uint8Array(zipBuffer), {
+      headers: {
+        'Content-Type': 'application/zip',
+        'Content-Disposition': `attachment; filename="favicon-pack-${Date.now()}.zip"`,
+      },
     });
-
-    return NextResponse.json(response);
   } catch (error) {
-    console.error("API error:", error);
+    console.error("Download error:", error);
     return NextResponse.json(
       {
         success: false,
-        error: "An unexpected error occurred",
+        error: "Failed to create download",
       },
       { status: 500 }
     );
