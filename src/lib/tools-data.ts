@@ -7,7 +7,8 @@ import {
   FileCode,
   Eye,
   Regex,
-  Braces
+  Braces,
+  Image
 } from "lucide-react";
 
 /**
@@ -95,6 +96,15 @@ export const tools = [
     badges: ["Free Tool"],
     color: "from-green-500 to-teal-500",
     features: ["JSON Validation", "Pretty Print", "Minify", "Syntax Highlighting", "Error Detection"]
+  },
+  {
+    title: "Favicon Generator",
+    description: "Create complete favicon packs from images with multiple PNG sizes, ICO files, and HTML link tags",
+    icon: Image,
+    href: "/tools/favicon-generator",
+    badges: ["Free Tool"],
+    color: "from-purple-500 to-indigo-500",
+    features: ["Multi-Size PNG", "ICO Generation", "HTML Snippets", "Background Colors", "Quality Control"]
   }
 ] as const;
 
