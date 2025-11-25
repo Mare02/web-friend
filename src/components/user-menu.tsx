@@ -11,19 +11,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useEffect, useState } from "react";
 
 export function UserMenu() {
   const { isSignedIn, user, isLoaded } = useUser();
-  const [hasMounted, setHasMounted] = useState(false);
 
-  // Prevent hydration mismatch by only showing dynamic content after mount
-  useEffect(() => {
-    setHasMounted(true);
-  }, []);
-
-  // Show loading skeleton during SSR and initial client render
-  if (!hasMounted || !isLoaded) {
+  // Show loading state
+  if (!isLoaded) {
     return (
       <div className="h-9 w-9 rounded-full bg-muted animate-pulse" />
     );
