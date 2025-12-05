@@ -8,7 +8,8 @@ import {
   Eye,
   Regex,
   Braces,
-  Image
+  Image,
+  Coins
 } from "lucide-react";
 
 /**
@@ -105,6 +106,15 @@ export const tools = [
     badges: ["Free Tool"],
     color: "from-purple-500 to-indigo-500",
     features: ["Multi-Size PNG", "ICO Generation", "HTML Snippets", "Background Colors", "Quality Control"]
+  },
+  {
+    title: "Currency Converter",
+    description: "Convert currencies effortlessly using up-to-date global rates.",
+    icon: Coins,
+    href: "/tools/currency-exchange",
+    badges: ["Free Tool", "Finance"],
+    color: "from-amber-500 to-orange-500",
+    features: ["Live Rates", "Swap Currencies", "No Caching", "Multi-Currency"]
   }
 ] as const;
 
