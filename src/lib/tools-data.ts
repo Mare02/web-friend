@@ -9,7 +9,8 @@ import {
   Regex,
   Braces,
   Image,
-  Coins
+  Coins,
+  Percent
 } from "lucide-react";
 
 /**
@@ -115,6 +116,15 @@ export const tools = [
     badges: ["Free Tool", "Finance"],
     color: "from-amber-500 to-orange-500",
     features: ["Live Rates", "Swap Currencies", "No Caching", "Multi-Currency"]
+  },
+  {
+    title: "Percentage Calculator",
+    description: "Compute percent of, percent change, and target gaps with rounding control.",
+    icon: Percent,
+    href: "/tools/percentage-calculator",
+    badges: ["Free Tool", "Math"],
+    color: "from-emerald-500 to-teal-500",
+    features: ["Percent Of", "What Percent", "Percent Change", "Target Gap"]
   }
 ] as const;
 
