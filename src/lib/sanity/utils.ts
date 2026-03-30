@@ -1,5 +1,5 @@
 import { createClient } from 'next-sanity'
-import imageUrlBuilder from '@sanity/image-url'
+import { createImageUrlBuilder } from '@sanity/image-url'
 
 // Create a client for image URL building (doesn't need auth)
 const imageClient = createClient({
@@ -9,7 +9,7 @@ const imageClient = createClient({
   useCdn: true,
 })
 
-const builder = imageUrlBuilder(imageClient)
+const builder = createImageUrlBuilder(imageClient)
 
 export function sanityImageUrlBuilder(source: Parameters<typeof builder.image>[0]) {
   return builder.image(source)
