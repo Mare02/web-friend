@@ -1,14 +1,14 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This document serves as the foundational instruction set for all AI agent interactions within the **Web Friend** project. These mandates take absolute precedence over general defaults.
 
 ## Project Overview
 
 This is a comprehensive suite of free digital tools for businesses, creators, and professionals working online. The application features:
 
-- 13+ digital tools including text analysis, QR code generation, color palette creation, API testing, and indexability validation
+- Digital tools including text analysis, QR code generation, color palette creation, API testing, and indexability validation
 - A full CMS-powered blog system using Sanity.io
-- Built with Next.js 16.0 (App Router + Turbopack), TypeScript 5, Tailwind CSS 4, and shadcn/ui
+- Built with Next.js (App Router + Turbopack), TypeScript, Tailwind CSS, and shadcn/ui
 - Cloudflare D1 (SQLite) for user data and Sanity CMS for content management
 - Clerk authentication system
 
