@@ -10,6 +10,7 @@ import { NavigationLoading } from "@/components/navigation-loading";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { getBaseUrl } from "@/lib/config";
+import { Analytics } from "@vercel/analytics/react";
 
 // Structured data for SEO
 const structuredData = {
@@ -110,6 +111,7 @@ export default function RootLayout({
                 {children}
               </main>
               <Footer />
+              <Analytics />
             </LoadingProvider>
           </ClerkThemeProvider>
         </ThemeProvider>
@@ -117,3 +119,4 @@ export default function RootLayout({
     </html>
   );
 }
+
