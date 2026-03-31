@@ -46,8 +46,8 @@ const GRADIENTS = [
 
 const PHONE_MODELS = [
   {
-    id: "iphone15pro",
-    name: "iPhone 15 Pro",
+    id: "iphone-island",
+    name: "iPhone Notch Island",
     width: 393,
     height: 852,
     radius: 48,
@@ -55,8 +55,8 @@ const PHONE_MODELS = [
     notchType: "dynamic-island",
   },
   {
-    id: "iphone14",
-    name: "iPhone 14",
+    id: "iphone-notch",
+    name: "iPhone Classic Notch",
     width: 390,
     height: 844,
     radius: 46,
@@ -64,8 +64,17 @@ const PHONE_MODELS = [
     notchType: "notch",
   },
   {
-    id: "pixel8",
-    name: "Pixel 8 Pro",
+    id: "iphone-classic",
+    name: "iPhone (Home Button)",
+    width: 375,
+    height: 750,
+    radius: 44,
+    bezel: 12,
+    notchType: "home-button",
+  },
+  {
+    id: "android-hole",
+    name: "Android Hole Cutout",
     width: 412,
     height: 892,
     radius: 40,
@@ -73,8 +82,8 @@ const PHONE_MODELS = [
     notchType: "punch-hole",
   },
   {
-    id: "generic",
-    name: "Minimal Android",
+    id: "android-clean",
+    name: "Android Notchless",
     width: 400,
     height: 850,
     radius: 24,
@@ -320,6 +329,35 @@ async function renderMockupToCanvas(
       ctx.beginPath();
       ctx.arc(screenX + screenW / 2, screenY + holeR * 2, holeR, 0, Math.PI * 2);
       ctx.fill();
+    } else if (notchType === "home-button") {
+      // Top bezel area (speaker)
+      const bezelH = 60 * s;
+      ctx.fillStyle = "#000";
+      ctx.fillRect(screenX, screenY, screenW, bezelH);
+
+      const speakerW = 40 * s;
+      const speakerH = 6 * s;
+      ctx.fillStyle = "#18181b";
+      ctx.beginPath();
+      ctx.roundRect(
+        screenX + (screenW - speakerW) / 2,
+        screenY + (bezelH - speakerH) / 2,
+        speakerW,
+        speakerH,
+        speakerH / 2
+      );
+      ctx.fill();
+
+      // Bottom bezel area (Home Button)
+      ctx.fillStyle = "#000";
+      ctx.fillRect(screenX, screenY + screenH - bezelH, screenW, bezelH);
+
+      const btnR = 24 * s;
+      ctx.strokeStyle = "rgba(255,255,255,0.15)";
+      ctx.lineWidth = 1 * s;
+      ctx.beginPath();
+      ctx.arc(screenX + screenW / 2, screenY + screenH - bezelH / 2, btnR, 0, Math.PI * 2);
+      ctx.stroke();
     }
 
     ctx.restore(); // end screen clip
@@ -375,11 +413,24 @@ const Frame = memo(function Frame({
       case "dynamic-island":
         return (
           <div
-            className="absolute top-3 inset-x-0 w-full flex justify-center z-10 pointer-events-none"
-            style={{ transform: `scale(${s})`, transformOrigin: "top center" }}
+            className="absolute inset-x-0 w-full flex justify-center z-10 pointer-events-none"
+            style={{ top: `${8 * s}px` }}
           >
-            <div className="w-[120px] h-[34px] bg-black rounded-full flex items-center justify-end px-3">
-              <div className="w-3 h-3 rounded-full bg-zinc-800/80 border border-white/5" />
+            <div
+              className="bg-black rounded-full flex items-center justify-end"
+              style={{
+                width: `${120 * s}px`,
+                height: `${34 * s}px`,
+                paddingRight: `${12 * s}px`,
+              }}
+            >
+              <div
+                className="rounded-full bg-zinc-800/80 border border-white/5"
+                style={{
+                  width: `${12 * s}px`,
+                  height: `${12 * s}px`,
+                }}
+              />
             </div>
           </div>
         );
@@ -387,18 +438,56 @@ const Frame = memo(function Frame({
         return (
           <div
             className="absolute top-0 inset-x-0 w-full flex justify-center z-10 pointer-events-none"
-            style={{ transform: `scale(${s})`, transformOrigin: "top center" }}
           >
-            <div className="w-[160px] h-[30px] bg-black rounded-b-3xl" />
+            <div
+              className="bg-black"
+              style={{
+                width: `${160 * s}px`,
+                height: `${30 * s}px`,
+                borderBottomLeftRadius: `${24 * s}px`,
+                borderBottomRightRadius: `${24 * s}px`,
+              }}
+            />
           </div>
         );
       case "punch-hole":
         return (
           <div
-            className="absolute top-4 inset-x-0 w-full flex justify-center z-10 pointer-events-none"
-            style={{ transform: `scale(${s})`, transformOrigin: "top center" }}
+            className="absolute inset-x-0 w-full flex justify-center z-10 pointer-events-none"
+            style={{ top: `${20 * s}px` }}
           >
-            <div className="w-5 h-5 bg-black rounded-full border border-zinc-800" />
+            <div
+              className="bg-black rounded-full border border-zinc-800"
+              style={{
+                width: `${20 * s}px`,
+                height: `${20 * s}px`,
+              }}
+            />
+          </div>
+        );
+      case "home-button":
+        return (
+          <div className="absolute inset-0 z-10 pointer-events-none flex flex-col justify-between">
+            {/* Top Speaker Bezel */}
+            <div
+              className="w-full bg-black flex items-center justify-center"
+              style={{ height: `${60 * s}px` }}
+            >
+              <div
+                className="bg-zinc-800 rounded-full"
+                style={{ width: `${40 * s}px`, height: `${6 * s}px` }}
+              />
+            </div>
+            {/* Bottom Home Button Bezel */}
+            <div
+              className="w-full bg-black flex items-center justify-center"
+              style={{ height: `${60 * s}px` }}
+            >
+              <div
+                className="rounded-full border border-zinc-700"
+                style={{ width: `${48 * s}px`, height: `${48 * s}px` }}
+              />
+            </div>
           </div>
         );
       default:
@@ -649,11 +738,11 @@ export function DeviceMockup() {
     },
   ]);
   const [activeSettingsFrame, setActiveSettingsFrame] = useState<string | null>(null);
-  const [modelId, setModelId] = useState("iphone15pro");
+  const [modelId, setModelId] = useState("iphone-island");
   const [padding, setPadding] = useState(64);
   const [gap, setGap] = useState(32);
   const [shadow, setShadow] = useState(30);
-  const [scale, setScale] = useState(70);
+  const [scale, setScale] = useState(80);
   const [isExporting, setIsExporting] = useState(false);
   const [copied, setCopied] = useState(false);
 

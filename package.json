@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "NODE_OPTIONS='--max-old-space-size=4096' next dev --turbopack",
-    "build": "NODE_OPTIONS='--max-old-space-size=4096' next build",
-    "start": "NODE_OPTIONS='--max-old-space-size=2048' next start",
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
     "lint": "eslint",
     "seed:sanity": "npx tsx scripts/seed-sanity-categories.ts",
     "generate:sitemap": "npx tsx scripts/generate-sitemap-data.ts"
