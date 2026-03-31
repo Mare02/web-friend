@@ -10,7 +10,8 @@ import {
   Braces,
   Image,
   Coins,
-  Percent
+  Percent,
+  MonitorSmartphone
 } from "lucide-react";
 
 /**
@@ -125,6 +126,15 @@ export const tools = [
     badges: ["Free Tool", "Math"],
     color: "from-emerald-500 to-teal-500",
     features: ["Percent Of", "What Percent", "Percent Change", "Target Gap"]
+  },
+  {
+    title: "App Screenshot Mockup Generator",
+    description: "Wrap your app screenshots in beautiful, realistic smartphone frames with vibrant gradients.",
+    icon: MonitorSmartphone,
+    href: "/tools/device-mockup-generator",
+    badges: ["Free Tool", "Design"],
+    color: "from-indigo-500 to-pink-500",
+    features: ["Realistic Phones", "Multiple Screens", "Vibrant Gradients", "High-Quality PNG Export"]
   }
 ] as const;
 

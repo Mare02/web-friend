@@ -34,3 +34,14 @@ CREATE TABLE IF NOT EXISTS user_roles (
 INSERT OR IGNORE INTO roles (name, description) VALUES ('admin', 'Administrator with full access to admin panel');
 
 
+
+-- Mockup Projects
+CREATE TABLE IF NOT EXISTS mockup_projects (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  title TEXT DEFAULT 'Untitled Mockup',
+  image_url TEXT NOT NULL,
+  config JSON,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
