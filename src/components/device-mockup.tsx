@@ -577,7 +577,7 @@ const Frame = memo(function Frame({
 
       {/* Screen Canvas Background */}
       <div
-        className={`flex items-center justify-center overflow-hidden transition-colors ${
+        className={`flex items-center justify-center transition-colors ${
           frame.gradient.startsWith("bg-") ? frame.gradient : ""
         }`}
         style={{
@@ -624,99 +624,109 @@ const Frame = memo(function Frame({
                 <input type="file" accept="image/*" className="hidden" onChange={onUpload} />
               </label>
             ) : (
-              <>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={frame.image}
-                  alt={`Screen ${index + 1}`}
-                  className="w-full h-full object-cover block absolute inset-0 pointer-events-none"
-                  style={{
-                    transform: `translate(${frame.imgProps.x}px, ${frame.imgProps.y}px) scale(${frame.imgProps.scale / 100}) rotate(${frame.imgProps.rotate}deg)`,
-                    transformOrigin: "center center",
-                  }}
-                />
-
-                {/* Image Settings Overlay */}
-                {isActiveSettings && (
-                  <div className="absolute inset-x-2 top-2 bg-background/40 backdrop-blur-md border border-border/50 p-3 rounded-lg shadow-xl z-50 flex flex-col gap-3 text-xs">
-                    <div className="flex justify-between items-center pb-1 border-b border-border/50">
-                      <span className="font-semibold text-foreground">Transform</span>
-                      <button
-                        onClick={onToggleSettings}
-                        className="text-muted-foreground hover:text-foreground p-1.5 -mr-1.5 rounded-full hover:bg-muted/50 transition-colors"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-
-                    <div className="flex flex-col gap-1.5">
-                      <div className="flex justify-between text-muted-foreground">
-                        <Label className="text-xs">Scale</Label>
-                        <span>{frame.imgProps.scale}%</span>
-                      </div>
-                      <Slider
-                        min={10}
-                        max={300}
-                        step={1}
-                        value={[frame.imgProps.scale]}
-                        onValueChange={([v]) => onUpdateImgProps({ scale: v })}
-                      />
-                    </div>
-
-                    <div className="flex flex-col gap-1.5">
-                      <div className="flex justify-between text-muted-foreground">
-                        <Label className="text-xs">Horizontal</Label>
-                        <span>{frame.imgProps.x}px</span>
-                      </div>
-                      <Slider
-                        min={-1000}
-                        max={1000}
-                        step={1}
-                        value={[frame.imgProps.x]}
-                        onValueChange={([v]) => onUpdateImgProps({ x: v })}
-                      />
-                    </div>
-
-                    <div className="flex flex-col gap-1.5">
-                      <div className="flex justify-between text-muted-foreground">
-                        <Label className="text-xs">Vertical</Label>
-                        <span>{frame.imgProps.y}px</span>
-                      </div>
-                      <Slider
-                        min={-1000}
-                        max={1000}
-                        step={1}
-                        value={[frame.imgProps.y]}
-                        onValueChange={([v]) => onUpdateImgProps({ y: v })}
-                      />
-                    </div>
-
-                    <div className="flex flex-col gap-1.5">
-                      <div className="flex justify-between text-muted-foreground">
-                        <Label className="text-xs">Rotate</Label>
-                        <span>{frame.imgProps.rotate}°</span>
-                      </div>
-                      <Slider
-                        min={-180}
-                        max={180}
-                        step={1}
-                        value={[frame.imgProps.rotate]}
-                        onValueChange={([v]) => onUpdateImgProps({ rotate: v })}
-                      />
-                    </div>
-
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full text-xs h-7 mt-1 border-dashed bg-background/50 hover:bg-background"
-                      onClick={() => onUpdateImgProps({ scale: 100, x: 0, y: 0, rotate: 0 })}
-                    >
-                      Reset
-                    </Button>
-                  </div>
-                )}
-              </>
+              <img
+                src={frame.image}
+                alt={`Screen ${index + 1}`}
+                className="w-full h-full object-cover block absolute inset-0 pointer-events-none"
+                style={{
+                  transform: `translate(${frame.imgProps.x}px, ${frame.imgProps.y}px) scale(${frame.imgProps.scale / 100}) rotate(${frame.imgProps.rotate}deg)`,
+                  transformOrigin: "center center",
+                }}
+              />
             )}
+          </div>
+        </div>
+
+        {/* Image Settings Side Panel (Inline) */}
+        <div
+          className={`shrink-0 transition-all duration-500 ease-in-out flex items-center group/settings overflow-hidden ${
+            isActiveSettings ? "w-72 opacity-100 ml-6" : "w-0 opacity-0 ml-0 pointer-events-none"
+          }`}
+        >
+          <div className="w-72 bg-background/95 backdrop-blur-xl border border-border/50 p-5 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] flex flex-col gap-5 text-xs">
+            <div className="flex justify-between items-center pb-3 border-b border-border/30">
+              <div className="flex items-center gap-2">
+                <Settings2 className="w-4 h-4 text-primary" />
+                <span className="font-bold text-foreground uppercase tracking-widest text-[10px]">Image Transform</span>
+              </div>
+              <button
+                onClick={onToggleSettings}
+                className="text-muted-foreground hover:text-foreground p-1.5 -mr-1.5 rounded-full hover:bg-muted/50 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <div className="flex justify-between text-muted-foreground font-medium">
+                <Label className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider">Scale</Label>
+                <span className="bg-primary/10 text-primary px-2 rounded-md font-mono">{frame.imgProps.scale}%</span>
+              </div>
+              <Slider
+                min={10}
+                max={300}
+                step={1}
+                value={[frame.imgProps.scale]}
+                onValueChange={([v]) => onUpdateImgProps({ scale: v })}
+                className="py-1 cursor-pointer"
+              />
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <div className="flex justify-between text-muted-foreground font-medium">
+                <Label className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider">Horizontal Position</Label>
+                <span className="bg-zinc-100 dark:bg-zinc-800 px-2 rounded-md font-mono">{frame.imgProps.x}px</span>
+              </div>
+              <Slider
+                min={-1000}
+                max={1000}
+                step={1}
+                value={[frame.imgProps.x]}
+                onValueChange={([v]) => onUpdateImgProps({ x: v })}
+                className="py-1"
+              />
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <div className="flex justify-between text-muted-foreground font-medium">
+                <Label className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider">Vertical Position</Label>
+                <span className="bg-zinc-100 dark:bg-zinc-800 px-2 rounded-md font-mono">{frame.imgProps.y}px</span>
+              </div>
+              <Slider
+                min={-1000}
+                max={1000}
+                step={1}
+                value={[frame.imgProps.y]}
+                onValueChange={([v]) => onUpdateImgProps({ y: v })}
+                className="py-1"
+              />
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <div className="flex justify-between text-muted-foreground font-medium">
+                <Label className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider">Rotation</Label>
+                <span className="bg-zinc-100 dark:bg-zinc-800 px-2 rounded-md font-mono">{frame.imgProps.rotate}°</span>
+              </div>
+              <Slider
+                min={-180}
+                max={180}
+                step={1}
+                value={[frame.imgProps.rotate]}
+                onValueChange={([v]) => onUpdateImgProps({ rotate: v })}
+                className="py-1"
+              />
+            </div>
+
+            <div className="pt-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full text-[10px] h-9 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all font-bold uppercase tracking-widest"
+                onClick={() => onUpdateImgProps({ scale: 100, x: 0, y: 0, rotate: 0 })}
+              >
+                Reset Transform
+              </Button>
+            </div>
           </div>
         </div>
       </div>
