@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { Download, MonitorSmartphone, Upload, Save, Smartphone, Copy, Check, Plus, Minus, X, Pipette, Settings2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -44,6 +44,22 @@ export function DeviceMockup() {
   const [isExporting, setIsExporting] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  const framesRef = useRef(frames);
+  useEffect(() => {
+    framesRef.current = frames;
+  }, [frames]);
+
+  // Cleanup blob URLs on unmount
+  useEffect(() => {
+    return () => {
+      framesRef.current.forEach(frame => {
+        if (frame.image?.startsWith('blob:')) {
+          URL.revokeObjectURL(frame.image);
+        }
+      });
+    };
+  }, []);
+
   const { isLoaded, isSignedIn } = useAuth();
   const exportRef = useRef<HTMLDivElement>(null);
 
@@ -60,19 +76,12 @@ export function DeviceMockup() {
   const handleImageUpload = (frameId: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const dataUrl = event.target?.result as string;
-        setFrames(prev => prev.map(f => {
-          if (f.id === frameId) {
-            // Release old image memory if replacing
-            if (f.image && f.image.startsWith('blob:')) URL.revokeObjectURL(f.image);
-            return { ...f, image: dataUrl };
-          }
-          return f;
-        }));
-      };
-      reader.readAsDataURL(file);
+      const blobUrl = URL.createObjectURL(file);
+      const prevFrame = frames.find(f => f.id === frameId);
+      if (prevFrame?.image?.startsWith('blob:')) {
+        URL.revokeObjectURL(prevFrame.image);
+      }
+      setFrames(prev => prev.map(f => f.id === frameId ? { ...f, image: blobUrl } : f));
     }
   };
 
@@ -90,23 +99,19 @@ export function DeviceMockup() {
 
   const removeFrame = (frameId: string) => {
     if (frames.length <= 1) return;
-    setFrames(prev => {
-      const frameToRemove = prev.find(f => f.id === frameId);
-      if (frameToRemove?.image && frameToRemove.image.startsWith('blob:')) {
-        URL.revokeObjectURL(frameToRemove.image);
-      }
-      return prev.filter(f => f.id !== frameId);
-    });
+    const frameToRemove = frames.find(f => f.id === frameId);
+    if (frameToRemove?.image?.startsWith('blob:')) {
+      URL.revokeObjectURL(frameToRemove.image);
+    }
+    setFrames(prev => prev.filter(f => f.id !== frameId));
   };
 
   const clearImage = (frameId: string) => {
-    setFrames(prev => prev.map(f => {
-      if (f.id === frameId && f.image && f.image.startsWith('blob:')) {
-        URL.revokeObjectURL(f.image);
-        return { ...f, image: null };
-      }
-      return f.id === frameId ? { ...f, image: null } : f;
-    }));
+    const frameToClear = frames.find(f => f.id === frameId);
+    if (frameToClear?.image?.startsWith('blob:')) {
+      URL.revokeObjectURL(frameToClear.image);
+    }
+    setFrames(prev => prev.map(f => f.id === frameId ? { ...f, image: null } : f));
   };
 
   const handleExport = useCallback(async (format: 'png' | 'jpeg') => {
@@ -125,6 +130,9 @@ export function DeviceMockup() {
     const options = {
         filter,
         scale: 2,
+        useCORS: true,
+        cacheBust: false,
+        skipFonts: true,
         fetch: { bypassingCache: true }
     };
 
@@ -157,6 +165,9 @@ export function DeviceMockup() {
     const options = {
         filter,
         scale: 2,
+        useCORS: true,
+        cacheBust: false,
+        skipFonts: true,
         fetch: { bypassingCache: true }
     };
 
@@ -455,6 +466,8 @@ export function DeviceMockup() {
                                   <img
                                     src={frame.image}
                                     alt={`Screen ${index + 1}`}
+                                    crossOrigin="anonymous"
+                                    data-screenshot-no-fetch
                                     className="w-full h-full object-cover block absolute inset-0 pointer-events-none"
                                     style={{
                                       transform: `translate(${frame.imgProps.x}px, ${frame.imgProps.y}px) scale(${frame.imgProps.scale / 100}) rotate(${frame.imgProps.rotate}deg)`,
