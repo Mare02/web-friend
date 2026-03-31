@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
-import { toPng, toJpeg } from "html-to-image";
 import { Download, MonitorSmartphone, Upload, Save, Smartphone, Copy, Check, Plus, Minus, X, Pipette, Settings2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -61,15 +60,19 @@ export function DeviceMockup() {
   const handleImageUpload = (frameId: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const objectUrl = URL.createObjectURL(file);
-      setFrames(prev => prev.map(f => {
-        if (f.id === frameId) {
-          // Release old image memory if replacing
-          if (f.image && f.image.startsWith('blob:')) URL.revokeObjectURL(f.image);
-          return { ...f, image: objectUrl };
-        }
-        return f;
-      }));
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const dataUrl = event.target?.result as string;
+        setFrames(prev => prev.map(f => {
+          if (f.id === frameId) {
+            // Release old image memory if replacing
+            if (f.image && f.image.startsWith('blob:')) URL.revokeObjectURL(f.image);
+            return { ...f, image: dataUrl };
+          }
+          return f;
+        }));
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -106,58 +109,72 @@ export function DeviceMockup() {
     }));
   };
 
-  const handleExport = useCallback((format: 'png' | 'jpeg') => {
+  const handleExport = useCallback(async (format: 'png' | 'jpeg') => {
     if (exportRef.current === null) return;
     setIsExporting(true);
 
-    const filter = (node: HTMLElement) => {
+    const { domToPng, domToJpeg } = await import('modern-screenshot');
+
+    const filter = (node: Node) => {
+      if (!(node instanceof HTMLElement)) return true;
       const exclusionClasses = ['exclude-from-export'];
       return !exclusionClasses.some(classname => node.classList?.contains(classname));
     };
 
-    const action = format === 'png' ? toPng : toJpeg;
+    const action = format === 'png' ? domToPng : domToJpeg;
+    const options = {
+        filter,
+        scale: 2,
+        fetch: { bypassingCache: true }
+    };
 
-    // Scale pixel ratio inversely to zoom level so exported images stay maximum quality
-    const exportPixelRatio = 2 / (scale[0] / 100);
+    try {
+      const dataUrl = await action(exportRef.current, options);
 
-    action(exportRef.current, { cacheBust: true, filter, pixelRatio: exportPixelRatio })
-      .then((dataUrl) => {
-        const link = document.createElement("a");
-        link.download = `mockup-${Date.now()}.${format}`;
-        link.href = dataUrl;
-        link.click();
-      })
-      .catch((err) => {
-        console.error("Oops, something went wrong!", err);
-      })
-      .finally(() => {
-        setIsExporting(false);
-      });
-  }, [exportRef, scale]);
+      const link = document.createElement("a");
+      link.download = `mockup-${Date.now()}.${format}`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error("Oops, something went wrong!", err);
+    } finally {
+      setIsExporting(false);
+    }
+  }, [exportRef]);
 
-  const copyToClipboard = useCallback(() => {
+  const copyToClipboard = useCallback(async () => {
     if (exportRef.current === null) return;
     setIsExporting(true);
 
-    const filter = (node: HTMLElement) => {
+    const { domToPng } = await import('modern-screenshot');
+
+    const filter = (node: Node) => {
+      if (!(node instanceof HTMLElement)) return true;
       const exclusionClasses = ['exclude-from-export'];
       return !exclusionClasses.some(classname => node.classList?.contains(classname));
     };
 
-    toPng(exportRef.current, { cacheBust: true, filter, pixelRatio: 2 })
-      .then(async (dataUrl) => {
-        const res = await fetch(dataUrl);
-        const blob = await res.blob();
-        await navigator.clipboard.write([
-          new ClipboardItem({ 'image/png': blob })
-        ]);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      })
-      .catch((err) => {
-        console.error("Copy failed", err);
-      })
-      .finally(() => setIsExporting(false));
+    const options = {
+        filter,
+        scale: 2,
+        fetch: { bypassingCache: true }
+    };
+
+    try {
+      const dataUrl = await domToPng(exportRef.current, options);
+
+      const res = await fetch(dataUrl);
+      const blob = await res.blob();
+      await navigator.clipboard.write([
+        new ClipboardItem({ 'image/png': blob })
+      ]);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Copy failed", err);
+    } finally {
+      setIsExporting(false);
+    }
   }, [exportRef]);
 
   const handleSave = () => {
@@ -435,16 +452,16 @@ export function DeviceMockup() {
                               ) : (
                                 <>
                                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                                  <img 
-                                    src={frame.image} 
-                                    alt={`Screen ${index + 1}`} 
-                                    className="w-full h-full object-cover block absolute inset-0 pointer-events-none" 
+                                  <img
+                                    src={frame.image}
+                                    alt={`Screen ${index + 1}`}
+                                    className="w-full h-full object-cover block absolute inset-0 pointer-events-none"
                                     style={{
                                       transform: `translate(${frame.imgProps.x}px, ${frame.imgProps.y}px) scale(${frame.imgProps.scale / 100}) rotate(${frame.imgProps.rotate}deg)`,
                                       transformOrigin: 'center center'
                                     }}
                                   />
-                                  
+
                                   {/* Image Settings Overlay */}
                                   {activeSettingsFrame === frame.id && (
                                     <div className="absolute inset-x-2 top-2 bg-background/40 backdrop-blur-md border border-border/50 p-3 rounded-lg shadow-xl z-50 flex flex-col gap-3 text-xs">
@@ -452,27 +469,27 @@ export function DeviceMockup() {
                                         <span className="font-semibold text-foreground">Transform</span>
                                         <button onClick={() => setActiveSettingsFrame(null)} className="text-muted-foreground hover:text-foreground p-1.5 -mr-1.5 rounded-full hover:bg-muted/50 transition-colors"><X className="w-4 h-4"/></button>
                                       </div>
-                                      
+
                                       <div className="flex flex-col gap-1.5">
                                         <div className="flex justify-between text-muted-foreground"><Label className="text-xs">Scale</Label><span>{frame.imgProps.scale}%</span></div>
                                         <Slider min={10} max={300} step={1} value={[frame.imgProps.scale]} onValueChange={([v]) => updateImgProps(frame.id, { scale: v })} />
                                       </div>
-                                      
+
                                       <div className="flex flex-col gap-1.5">
                                         <div className="flex justify-between text-muted-foreground"><Label className="text-xs">Horizontal</Label><span>{frame.imgProps.x}px</span></div>
                                         <Slider min={-1000} max={1000} step={1} value={[frame.imgProps.x]} onValueChange={([v]) => updateImgProps(frame.id, { x: v })} />
                                       </div>
-                                      
+
                                       <div className="flex flex-col gap-1.5">
                                         <div className="flex justify-between text-muted-foreground"><Label className="text-xs">Vertical</Label><span>{frame.imgProps.y}px</span></div>
                                         <Slider min={-1000} max={1000} step={1} value={[frame.imgProps.y]} onValueChange={([v]) => updateImgProps(frame.id, { y: v })} />
                                       </div>
-                                      
+
                                       <div className="flex flex-col gap-1.5">
                                         <div className="flex justify-between text-muted-foreground"><Label className="text-xs">Rotate</Label><span>{frame.imgProps.rotate}°</span></div>
                                         <Slider min={-180} max={180} step={1} value={[frame.imgProps.rotate]} onValueChange={([v]) => updateImgProps(frame.id, { rotate: v })} />
                                       </div>
-                                      
+
                                       <Button variant="outline" size="sm" className="w-full text-xs h-7 mt-1 border-dashed bg-background/50 hover:bg-background" onClick={() => updateImgProps(frame.id, { scale: 100, x: 0, y: 0, rotate: 0 })}>Reset</Button>
                                     </div>
                                   )}
