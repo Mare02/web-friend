@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
-import { Download, MonitorSmartphone, Upload, Save, Smartphone, Copy, Check, Plus, Minus, X, Pipette, Settings2 } from "lucide-react";
+import { Download, MonitorSmartphone, Upload, Save, Copy, Check, Plus, Minus, X, Pipette, Settings2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
@@ -129,7 +129,7 @@ export function DeviceMockup() {
     const action = format === 'png' ? domToPng : domToJpeg;
     const options = {
         filter,
-        scale: 2,
+        scale: 1,
         useCORS: true,
         cacheBust: false,
         skipFonts: true,
@@ -229,7 +229,7 @@ export function DeviceMockup() {
       <div className="flex flex-col gap-8">
 
         {/* Editor Settings */}
-        <div className="w-full">
+        <div className="w-full container mx-auto px-4 pt-8 md:pt-16">
           <Card>
             <CardHeader>
               <CardTitle className="text-xl">Settings</CardTitle>
