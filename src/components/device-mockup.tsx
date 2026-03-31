@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback, memo } from "react";
+import { useState, useCallback, memo } from "react";
 import {
   Download,
   MonitorSmartphone,
@@ -32,7 +32,6 @@ import { useAuth } from "@clerk/nextjs";
 // ---------------------------------------------------------------------------
 
 const MAX_SCREENS = 10;
-const MAX_IMAGE_PX = 1400; // max dimension when downscaling uploaded images
 
 const GRADIENTS = [
   "bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500",
@@ -128,32 +127,14 @@ function parseTailwindGradient(gradient: string): readonly [string, string, stri
 }
 
 /**
- * Downscale a File to a base64 data-URL (quality ~85 jpeg internally, but
- * stored as PNG-compatible base64 so it round-trips losslessly enough for
- * display and canvas draw).  Returns a data-URL string.
+ * Converts a File to a base64 data-URL without any downscaling or re-encoding.
  */
-async function downscaleImage(file: File): Promise<string> {
+async function fileToDataURL(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
-    const url = URL.createObjectURL(file);
-    const img = new Image();
-    img.onload = () => {
-      URL.revokeObjectURL(url); // immediately released – no long-lived blob
-      let { width, height } = img;
-      if (width > MAX_IMAGE_PX || height > MAX_IMAGE_PX) {
-        const ratio = Math.min(MAX_IMAGE_PX / width, MAX_IMAGE_PX / height);
-        width = Math.round(width * ratio);
-        height = Math.round(height * ratio);
-      }
-      const canvas = document.createElement("canvas");
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) { reject(new Error("No 2D context")); return; }
-      ctx.drawImage(img, 0, 0, width, height);
-      resolve(canvas.toDataURL("image/webp", 0.85));
-    };
-    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Image load failed")); };
-    img.src = url;
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
   });
 }
 
@@ -774,7 +755,7 @@ export function DeviceMockup() {
       const file = e.target.files?.[0];
       if (!file) return;
       try {
-        const dataUrl = await downscaleImage(file);
+        const dataUrl = await fileToDataURL(file);
         setFrames((prev) =>
           prev.map((f) => (f.id === frameId ? { ...f, image: dataUrl } : f))
         );
