@@ -2,7 +2,7 @@
 
 import { Sheet, SheetContent, SheetTitle, SheetDescription, SheetTrigger, SheetHeader, SheetClose } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu, Newspaper, Sparkles, Palette, X, Mail } from "lucide-react";
+import { Menu, Newspaper, Sparkles, Wrench, Palette, X } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ToolsNavigation } from "@/components/tools-navigation";
 import Link from "next/link";
@@ -22,7 +22,7 @@ export function MobileMenuSidebar() {
       <SheetContent side="right" className="w-80 p-0 [&>button]:hidden" aria-describedby="mobile-menu-description">
         <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
         <SheetDescription id="mobile-menu-description" className="sr-only">
-          Access tools, blogs, contact, and theme settings
+          Access tools, blogs, and theme settings
         </SheetDescription>
 
         {/* Header */}
@@ -53,13 +53,6 @@ export function MobileMenuSidebar() {
               <Button variant="ghost" className="w-full justify-start gap-3 h-11">
                 <Newspaper className="h-4 w-4" />
                 <span>Blogs</span>
-              </Button>
-            </Link>
-
-            <Link href="/contact" onClick={() => setOpen(false)}>
-              <Button variant="ghost" className="w-full justify-start gap-3 h-11">
-                <Mail className="h-4 w-4" />
-                <span>Contact</span>
               </Button>
             </Link>
 
