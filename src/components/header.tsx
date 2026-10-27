@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sparkles, Newspaper } from "lucide-react";
+import { Sparkles, Newspaper, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UserMenu } from "@/components/user-menu";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -23,6 +23,12 @@ export function Header() {
                 <Button variant="outline" size="sm" className="flex items-center gap-2">
                   <Newspaper className="h-4 w-4" />
                   <span className="hidden sm:inline">Blogs</span>
+                </Button>
+              </Link>
+              <Link href="/contact">
+                <Button variant="outline" size="sm" className="flex items-center gap-2">
+                  <Mail className="h-4 w-4" />
+                  <span className="hidden sm:inline">Contact</span>
                 </Button>
               </Link>
             </div>
